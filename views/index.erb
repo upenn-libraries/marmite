@@ -1,0 +1,6 @@
+<h2>Available Records (by bibID)</h2>
+<ul>
+  <% @records.each do |record| %>
+    <li><%= link_to("records/#{record.bib_id}", record.bib_id) %></li>
+  <% end %>
+</ul>
