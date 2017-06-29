@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(version: 20170628143315) do
   create_table "records", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "bib_id"
     t.string "format"
-    t.text "blob"
+    t.text "blob", limit: 4294967295
   end
 
 end

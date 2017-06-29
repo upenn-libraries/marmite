@@ -1,0 +1,25 @@
+<h2>Harvesting</h2>
+<ul>
+  <li>
+    <strong>URL to harvest Marc XML:</strong>
+    <span>http://HOST:PORT/records/BIB_ID/create</span>
+  </li>
+  <li>
+    <strong>URL to harvest structural XML:</strong>
+    <span>http://HOST:PORT/records/BIB_ID/create?structural_metadata=true&legacy_prefix=LEGACY_PREFIX</span>
+  </li>
+</ul>
+
+<h2>Display</h2>
+<ul>
+  <li>
+    <strong>URL to display XML:</strong>
+    <span>http://HOST:PORT/records/BIB_ID?format=FORMAT</span>
+  </li>
+</ul>
+
+<h2>Other Resources</h2>
+<ul>
+  <li><p><%= link_to('available_formats','List of valid formats here') %></p></li>
+  <li><p><%= link_to('legacy_prefixes','List of valid legacy prefixes here') %></p></li>
+</ul>
