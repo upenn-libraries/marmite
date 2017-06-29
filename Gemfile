@@ -9,6 +9,10 @@ gem 'sinatra-activerecord'
 
 gem 'nokogiri'
 
+gem 'sass'
+gem 'sprockets'
+gem 'sprockets-helpers'
+
 group :development do
   gem 'pry'
   gem 'tux'

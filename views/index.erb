@@ -1,6 +1,13 @@
-<h2>Available Records (by bibID)</h2>
+<h2>MARC XML Records (by bibID)</h2>
 <ul>
-  <% @records.each do |record| %>
-    <li><%= link_to("records/#{record.bib_id}", record.bib_id) %></li>
+  <% @marc21_records.each do |record| %>
+      <li><%= link_to("records/#{record.bib_id}/show?format=marc21", "#{record.bib_id}") %></li>
+  <% end %>
+</ul>
+
+<h2>Structural XML Records (by bibID)</h2>
+<ul>
+  <% @structural_records.each do |record| %>
+      <li><%= link_to("records/#{record.bib_id}/show?format=structural", "#{record.bib_id}") %></li>
   <% end %>
 </ul>
