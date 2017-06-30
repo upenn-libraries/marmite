@@ -1,13 +1,4 @@
-<h2>MARC XML Records (by bibID)</h2>
-<ul>
-  <% @marc21_records.each do |record| %>
-      <li><%= link_to("records/#{record.bib_id}/show?format=marc21", "#{record.bib_id}") %></li>
-  <% end %>
-</ul>
+<h2>Welcome to MARC Alma</h2>
 
-<h2>Structural XML Records (by bibID)</h2>
-<ul>
-  <% @structural_records.each do |record| %>
-      <li><%= link_to("records/#{record.bib_id}/show?format=structural", "#{record.bib_id}") %></li>
-  <% end %>
-</ul>
+<%= erb correct_partial(@marc21_records, 'marc21') %>
+<%= erb correct_partial(@structural_records, 'structural') %>

@@ -62,6 +62,13 @@ class Application < Sinatra::Base
       url = "#{request.scheme}://#{request.host}#{port}/#{url_fragment}"
       return "<a href=\"#{url}\">#{path}</a>"
     end
+
+    def correct_partial(list, list_type)
+      @list_type = list_type
+      @list = list
+      return :_empty if list.empty?
+      return :_list
+    end
   end
 
   LEGACY_PREFIXES = %w[MEDREN PRINT]
@@ -70,17 +77,7 @@ class Application < Sinatra::Base
   bibs_url = 'https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs'
   alma_key = ENV['ALMA_KEY']
 
-  get '/' do
-    redirect '/records'
-  end
-
-  get '/records' do
-    @marc21_records = Record.where(:format => 'marc21')
-    @structural_records = Record.where(:format => 'structural')
-    erb :index
-  end
-
-  get '/records/:bib_id/create' do |bib_id|
+  get '/records/:bib_id/create/?' do |bib_id|
     return 'No key available' if alma_key.nil?
 
     if params[:structural_metadata]
@@ -114,7 +111,7 @@ class Application < Sinatra::Base
 
   end
 
-  get '/records/:bib_id/show' do |bib_id|
+  get '/records/:bib_id/show/?' do |bib_id|
     return "Specify one of the following formats: #{AVAILABLE_FORMATS}" if params[:format].nil?
     format = params[:format]
     blob = Record.where(:bib_id => bib_id, :format => format).pluck(:blob)
@@ -123,32 +120,25 @@ class Application < Sinatra::Base
     return blob
   end
 
-  get '/formats' do
-    @available_formats = AVAILABLE_FORMATS
-    erb :available_formats
+  %w[/? /records/?].each do |path|
+    get path do
+      @marc21_records = Record.where(:format => 'marc21')
+      @structural_records = Record.where(:format => 'structural')
+      erb :index
+    end
   end
 
-  get '/legacy_prefixes' do
-    @legacy_prefixes = LEGACY_PREFIXES
-    erb :legacy_prefixes
+  %w[/formats/? /available_formats/? /records/formats/?].each do |path|
+    get path do
+      @available_formats = AVAILABLE_FORMATS
+      erb :available_formats
+    end
   end
 
-  get '/records/formats' do
-    redirect '/formats'
+  %w[/harvesting/? /records/harvesting/?].each do |path|
+    get path do
+      erb :harvesting
+    end
   end
-
-  get '/records/legacy_prefixes' do
-    redirect '/legacy_prefixes'
-  end
-
-  get '/available_formats' do
-    redirect '/formats'
-  end
-
-  get '/harvesting' do
-    erb :harvesting
-  end
-
-
 
 end
