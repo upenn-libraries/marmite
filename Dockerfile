@@ -1,5 +1,5 @@
 
-FROM ruby:2.4
+FROM ruby:2.4.0
 
 MAINTAINER Kate Lynch <katherly@upenn.edu>
 
