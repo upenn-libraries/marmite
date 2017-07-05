@@ -13,7 +13,7 @@ So far contains a Sinatra app for harvesting and displaying marc21 and structura
 
 ## Requirements
 * Ruby 2.4.0
-* An Alma API key with read access to Bibs API sourced to the $ALMA_KEY environment variable.  Consult the [env.example](env.example) in this repository for an aliasing example. 
+* An Alma API key with read access to Bibs API sourced to the $ALMA_KEY environment variable.  Consult the [alias.example](alias.example) in this repository for an aliasing example. 
 
 ## Example Bib IDs
 * 9957001503503681 
