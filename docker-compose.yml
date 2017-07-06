@@ -1,0 +1,23 @@
+version: '2'
+
+services:
+  db:
+    restart: 'unless-stopped'
+    image: 'mysql/mysql-server:5.7'
+    env_file: '.env'
+    volumes:
+      - 'db:/var/lib/mysql'
+  sinatra:
+    restart: 'unless-stopped'
+    depends_on:
+      - 'db'
+    image: 'marc_alma:latest'
+    ports:
+      - '9292:9292'
+    env_file:
+      - '.env'
+    links:
+      - 'db'
+
+volumes:
+  db:

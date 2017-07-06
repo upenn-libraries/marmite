@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+#!/usr/bin/env ruby
 
 require 'sinatra'
 require 'sinatra/activerecord'
@@ -132,6 +132,13 @@ class Application < Sinatra::Base
     get path do
       @available_formats = AVAILABLE_FORMATS
       erb :available_formats
+    end
+  end
+
+  %w[/legacy_prefixes/? /records/legacy_prefixes/?].each do |path|
+    get path do
+      @legacy_prefixes = LEGACY_PREFIXES
+      erb :legacy_prefixes
     end
   end
 
