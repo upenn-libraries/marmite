@@ -13,7 +13,7 @@ services:
       - 'db'
     image: 'marc_alma:latest'
     ports:
-      - '5000:5000'
+      - '9292:9292'
     env_file:
       - '.env'
     links:

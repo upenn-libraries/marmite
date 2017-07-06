@@ -135,6 +135,13 @@ class Application < Sinatra::Base
     end
   end
 
+  %w[/legacy_prefixes/? /records/legacy_prefixes/?].each do |path|
+    get path do
+      @legacy_prefixes = LEGACY_PREFIXES
+      erb :legacy_prefixes
+    end
+  end
+
   %w[/harvesting/? /records/harvesting/?].each do |path|
     get path do
       erb :harvesting
