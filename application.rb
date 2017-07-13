@@ -21,12 +21,14 @@ def create_record(bib_id, blob, format)
 end
 
 def with_holdings_call_number(holdings, record, alma_key)
-  holdings_url = "#{holdings.first.attributes["link"].value}/?apikey=#{alma_key}"
-  holdings_xml = Nokogiri::XML.parse(open(holdings_url))
-  call_number = holdings_xml.xpath('//holdings/holding/call_number').first.children.first.text
+  call_number = record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="d"]').children.first.text
   replace_cn = record.xpath('//record/datafield[@tag=099]/subfield')
   return record if replace_cn.empty?
   replace_cn.children.first.content = call_number
+  record.at('//record/datafield[@tag="INT"]').remove
+  record.at('//record/datafield[@tag="INST"]').remove
+  record.at('//record/datafield[@tag="AVA"]').remove
+
   return record
 end
 
@@ -88,7 +90,7 @@ class Application < Sinatra::Base
     end
 
     blob = ''
-    path = "#{bibs_url}/?mms_id=#{bib_id}&apikey=#{alma_key}"
+    path = "#{bibs_url}/?mms_id=#{bib_id}&expand=p_avail&apikey=#{alma_key}"
 
     begin
       open(path) { |io| blob = io.read }
