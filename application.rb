@@ -22,13 +22,12 @@ end
 
 def with_holdings_call_number(holdings, record, alma_key)
   call_number = record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="d"]').children.first.text
-  replace_cn = record.xpath('//record/datafield[@tag=099]/subfield')
-  return record if replace_cn.empty?
-  replace_cn.children.first.content = call_number
   record.at('//record/datafield[@tag="INT"]').remove
   record.at('//record/datafield[@tag="INST"]').remove
   record.at('//record/datafield[@tag="AVA"]').remove
-
+  replace_cn = record.xpath('//record/datafield[@tag=099]/subfield')
+  return record if replace_cn.empty?
+  replace_cn.children.first.content = call_number
   return record
 end
 
