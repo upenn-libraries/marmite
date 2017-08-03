@@ -20,17 +20,6 @@ def create_record(bib_id, blob, format)
   record.save!
 end
 
-def with_holdings_call_number(holdings, record, alma_key)
-  call_number = record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="d"]').children.first.text
-  record.at('//record/datafield[@tag="INT"]').remove
-  record.at('//record/datafield[@tag="INST"]').remove
-  record.at('//record/datafield[@tag="AVA"]').remove
-  replace_cn = record.xpath('//record/datafield[@tag=099]/subfield')
-  return record if replace_cn.empty?
-  replace_cn.children.first.content = call_number
-  return record
-end
-
 def with_structural_metadata(bib_id, legacy_prefix)
   structural_endpoint = "http://dla.library.upenn.edu/dla/#{legacy_prefix.downcase}/pageturn.xml?id=#{legacy_prefix.upcase}_#{legacy_bib_id(bib_id)}"
   data = Nokogiri::XML.parse(open(structural_endpoint))
@@ -47,7 +36,7 @@ def with_structural_metadata(bib_id, legacy_prefix)
 end
 
 def legacy_bib_id(bib_id)
-  return bib_id[2..8]
+  return bib_id[2..(bib_id.length-8)] if bib_id.start_with?('99') && bib_id.end_with?('3503681')
 end
 
 class Application < Sinatra::Base
@@ -99,9 +88,30 @@ class Application < Sinatra::Base
 
     return "No record data available at source for #{bib_id}" if blob.empty?
 
-    reader = Nokogiri::XML.parse(blob)
+    reader = Nokogiri::XML(blob)
+
     record = reader.xpath('//bibs/bib/record')
-    record = with_holdings_call_number(reader.xpath('//bibs/bib/holdings'), record, alma_key)
+
+    holding_id =  record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="8"]').children.first.text
+    call_number = record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="d"]').children.first.text
+    library = record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="b"]').children.first.text
+    location = record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="j"]').children.first.text
+
+    record.at('//record/datafield[@tag="INT"]').remove
+    record.at('//record/datafield[@tag="INST"]').remove
+    record.at('//record/datafield[@tag="AVA"]').remove
+
+    Nokogiri::XML::Builder.with(reader.at('record')) do |xml|
+      xml.holdings {
+        xml.holding {
+          xml.holding_id holding_id
+          xml.call_number call_number
+          xml.library library
+          xml.location location
+        }
+      }
+    end
+    record = reader.xpath('//bibs/bib/record')
     builder = Nokogiri::XML::Builder.new do |xml|
       xml['marc'].records('xmlns:marc' => 'http://www.loc.gov/MARC21/slim', 'xmlns:xsi'=> 'http://www.w3.org/2001/XMLSchema-instance', 'xsi:schemaLocation' => 'http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd') {
         xml << record.to_xml
@@ -109,7 +119,6 @@ class Application < Sinatra::Base
     end
     create_record(bib_id, builder.to_xml, 'marc21')
     redirect "/records/#{bib_id}/show?format=marc21"
-
   end
 
   get '/records/:bib_id/show/?' do |bib_id|
