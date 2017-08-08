@@ -97,9 +97,9 @@ class Application < Sinatra::Base
     library = record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="b"]').children.first.text
     location = record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="j"]').children.first.text
 
-    record.at('//record/datafield[@tag="INT"]').remove
-    record.at('//record/datafield[@tag="INST"]').remove
-    record.at('//record/datafield[@tag="AVA"]').remove
+    record.search('//record/datafield[@tag="INT"]').remove
+    record.search('//record/datafield[@tag="INST"]').remove
+    record.search('//record/datafield[@tag="AVA"]').remove
 
     Nokogiri::XML::Builder.with(reader.at('record')) do |xml|
       xml.holdings {
