@@ -89,35 +89,105 @@ class Application < Sinatra::Base
     return "No record data available at source for #{bib_id}" if blob.empty?
 
     reader = Nokogiri::XML(blob)
-
     record = reader.xpath('//bibs/bib/record')
 
-    holding_id =  record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="8"]').children.first.text
-    call_number = record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="d"]').children.first.text
-    library = record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="b"]').children.first.text
-    location = record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="j"]').children.first.text
+    holdings = {}
+
+    for i in 0..(record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="8"]').children.length-1)
+      holdings[i] = { :holding_id => record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="8"]').children[i].text,
+                      :call_number => record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="d"]').children[i].text,
+                      :library => record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="b"]').children[i].text,
+                      :location => record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="j"]').children[i].text
+      }
+    end
+
+    return 'No key available' if alma_key.nil?
+
+    if params[:structural_metadata]
+      return 'Specify legacy_prefix' if params[:legacy_prefix].nil?
+      structural_record = with_structural_metadata(bib_id, params[:legacy_prefix])
+      create_record(bib_id, structural_record.to_xml, 'structural')
+      redirect "/records/#{bib_id}/show?format=structural"
+    end
+
+    blob = ''
+    path = "#{bibs_url}/?mms_id=#{bib_id}&expand=p_avail&apikey=#{alma_key}"
+
+    begin
+      open(path) { |io| blob = io.read }
+    rescue => exception
+      return "#{exception.message} returned by source for #{bib_id}"
+    end
+
+    return "No record data available at source for #{bib_id}" if blob.empty?
+
+    reader = Nokogiri::XML(blob)
+    record = reader.xpath('//bibs/bib/record')
+
+    holdings = {}
+
+    for i in 0..(record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="8"]').children.length-1)
+      holdings[i] = { :holding_id => record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="8"]').children[i].text,
+                      :call_number => record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="d"]').children[i].text,
+                      :library => record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="b"]').children[i].text,
+                      :location => record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="j"]').children[i].text
+      }
+    end
+
+    Nokogiri::XML::Builder.with(reader.at('record')) do |xml|
+      xml.holdings {
+        holdings.each do |holding_key, holding|
+          xml.holding {
+            xml.holding_id holding[:holding_id]
+            xml.call_number holding[:call_number]
+            xml.library holding[:library]
+            xml.location holding[:location]
+          }
+        end
+      }
+    end
 
     record.search('//record/datafield[@tag="INT"]').remove
     record.search('//record/datafield[@tag="INST"]').remove
     record.search('//record/datafield[@tag="AVA"]').remove
 
-    Nokogiri::XML::Builder.with(reader.at('record')) do |xml|
-      xml.holdings {
-        xml.holding {
-          xml.holding_id holding_id
-          xml.call_number call_number
-          xml.library library
-          xml.location location
-        }
-      }
-    end
     record = reader.xpath('//bibs/bib/record')
     builder = Nokogiri::XML::Builder.new do |xml|
       xml['marc'].records('xmlns:marc' => 'http://www.loc.gov/MARC21/slim', 'xmlns:xsi'=> 'http://www.w3.org/2001/XMLSchema-instance', 'xsi:schemaLocation' => 'http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd') {
         xml << record.to_xml
       }
     end
+
     create_record(bib_id, builder.to_xml, 'marc21')
+
+    redirect "/records/#{bib_id}/show?format=marc21"
+
+    Nokogiri::XML::Builder.with(reader.at('record')) do |xml|
+      xml.holdings {
+        holdings.each do |holding|
+          xml.holding {
+            xml.holding_id holding[:holding_id]
+            xml.call_number holding[:call_number]
+            xml.library holding[:library]
+            xml.location holding[:location]
+          }
+        end
+      }
+    end
+
+    record.search('//record/datafield[@tag="INT"]').remove
+    record.search('//record/datafield[@tag="INST"]').remove
+    record.search('//record/datafield[@tag="AVA"]').remove
+
+    record = reader.xpath('//bibs/bib/record')
+    builder = Nokogiri::XML::Builder.new do |xml|
+      xml['marc'].records('xmlns:marc' => 'http://www.loc.gov/MARC21/slim', 'xmlns:xsi'=> 'http://www.w3.org/2001/XMLSchema-instance', 'xsi:schemaLocation' => 'http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd') {
+        xml << record.to_xml
+      }
+    end
+
+    create_record(bib_id, builder.to_xml, 'marc21')
+
     redirect "/records/#{bib_id}/show?format=marc21"
   end
 

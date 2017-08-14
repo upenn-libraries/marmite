@@ -16,6 +16,8 @@ ActiveRecord::Schema.define(version: 20170628143315) do
     t.string "bib_id"
     t.string "format"
     t.text "blob", limit: 4294967295
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end
