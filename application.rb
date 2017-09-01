@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+
 require 'sinatra'
 require 'sinatra/activerecord'
 require 'open-uri'
@@ -10,6 +11,8 @@ require 'sprockets-helpers'
 
 require 'pry' if development?
 
+use Rack::Logger
+
 class Record < ActiveRecord::Base
 end
 
@@ -17,6 +20,7 @@ def create_record(bib_id, blob, format)
   record = Record.find_or_initialize_by(:bib_id => bib_id, :format => format)
   record.format = format
   record.blob = blob
+  record.touch
   record.save!
 end
 
@@ -39,10 +43,28 @@ def legacy_bib_id(bib_id)
   return bib_id[2..(bib_id.length-8)] if bib_id.start_with?('99') && bib_id.end_with?('3503681')
 end
 
+def fresh_check(bib_id, updated_at)
+  if still_fresh?(updated_at)
+    logger.info("NOT RECREATING #{bib_id} -- object was updated within past 24 hours")
+    return true
+  else
+    logger.info("CREATING/RECREATING #{bib_id} -- object has not been updated within past 24 hours")
+    return false
+  end
+end
+
+def still_fresh?(updated_at)
+  current_time = Time.now.gmtime
+  yesterday = current_time - 1.day
+  return (yesterday..current_time).cover?(Time.at(updated_at).gmtime)
+end
+
 class Application < Sinatra::Base
   set :assets, Sprockets::Environment.new(root)
 
   configure do
+    enable :logging
+    use Rack::CommonLogger, STDOUT
     assets.append_path File.join(root, 'assets', 'stylesheets')
   end
 
@@ -69,6 +91,14 @@ class Application < Sinatra::Base
 
   get '/records/:bib_id/create/?' do |bib_id|
     return 'No key available' if alma_key.nil?
+
+    format = params[:structural_metadata].nil? ? 'marc21' : 'structural'
+
+    record_check = Record.find_or_initialize_by(:bib_id => bib_id, :format => format)
+
+    fresh = record_check.updated_at.nil? ? false : fresh_check(bib_id, record_check.updated_at)
+
+    redirect "/records/#{bib_id}/show?format=#{format}" if fresh
 
     if params[:structural_metadata]
       return 'Specify legacy_prefix' if params[:legacy_prefix].nil?
@@ -100,8 +130,6 @@ class Application < Sinatra::Base
                       :location => record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="j"]').children[i].text
       }
     end
-
-    return 'No key available' if alma_key.nil?
 
     if params[:structural_metadata]
       return 'Specify legacy_prefix' if params[:legacy_prefix].nil?
