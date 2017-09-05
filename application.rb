@@ -20,7 +20,7 @@ def create_record(bib_id, blob, format)
   record = Record.find_or_initialize_by(:bib_id => bib_id, :format => format)
   record.format = format
   record.blob = blob
-  record.touch
+  record.touch unless record.new_record?
   record.save!
 end
 
