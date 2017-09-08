@@ -212,6 +212,15 @@ class Application < Sinatra::Base
       else
         return
     end
+
+    Record.error_message = "Invalid specified format #{format}" unless AVAILABLE_FORMATS.include?(format)
+
+    unless Record.error_message.empty?
+      error = "#{''.html_safe+Record.error_message}"
+      logger.warn(error)
+      halt(404, error)
+    end
+    
     redirect "/records/#{bib_id}/show?format=#{format}"
   end
 
@@ -220,7 +229,6 @@ class Application < Sinatra::Base
 
     format = params[:format]
 
-    Record.error_message = "Invalid specified format #{format}" unless AVAILABLE_FORMATS.include?(format)
     blob = Record.where(:bib_id => bib_id, :format => format).pluck(:blob)
     Record.error_message = "Record #{bib_id} in #{format} format not found" if blob.empty?
 
