@@ -5,6 +5,7 @@ ruby '2.4.0'
 gem 'sinatra'
 gem 'mysql2'
 gem 'activerecord'
+gem 'activesupport'
 gem 'sinatra-activerecord'
 gem 'rake'
 
