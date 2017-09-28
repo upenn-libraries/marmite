@@ -7,6 +7,8 @@ require 'active_support/core_ext/string/output_safety'
 require 'open-uri'
 require 'nokogiri'
 
+require 'dbi'
+
 require 'sprockets'
 require 'sprockets-helpers'
 
@@ -60,6 +62,20 @@ def create_record(bib_id, format, options = {})
                         :library => record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="b"]').children[i].text,
                         :location => record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="j"]').children[i].text
         }
+      end
+
+      for i in 0..(record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children.length-2)
+        if record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.start_with?('PRO ')
+          provenance = record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.gsub(/^PRO /,'')
+          Nokogiri::XML::Builder.with(reader.at('record')) do |xml|
+            xml.datafield('ind1' => ' ', 'ind2' => ' ', 'tag' => '561') {
+              xml.subfield(provenance, 'code' => 'a')
+            }
+          end
+          record.xpath('//record/datafield[@tag="561"]')
+          record.at_xpath('//record/datafield[@tag="999"]').add_child("<marc:subfield code=\"z\">#{record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text}</marc:subfield>")
+          #record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].remove
+        end
       end
 
       Nokogiri::XML::Builder.with(reader.at('record')) do |xml|
@@ -220,7 +236,7 @@ class Application < Sinatra::Base
       logger.warn(error)
       halt(404, error)
     end
-    
+
     redirect "/records/#{bib_id}/show?format=#{format}"
   end
 
