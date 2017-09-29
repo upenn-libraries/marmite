@@ -74,14 +74,13 @@ def create_record(bib_id, format, options = {})
             }
           end
           record.at_xpath('//record/datafield[@tag="999"]').add_child("<marc:subfield code=\"z\">#{record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text}</marc:subfield>")
-          #record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].remove
         end
       end
 
+      record.search('//record/datafield[@tag="650"]/subfield[@code="a"][starts-with(text(), "PRO ")]').remove
       record.search('//record/datafield[@tag="INT"]').remove
       record.search('//record/datafield[@tag="INST"]').remove
       record.search('//record/datafield[@tag="AVA"]').remove
-
 
       leader  = record.xpath('//record/leader')
       control  = record.xpath('//record/controlfield')
