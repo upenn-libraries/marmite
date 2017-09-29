@@ -90,20 +90,23 @@ def create_record(bib_id, format, options = {})
 
       builder = Nokogiri::XML::Builder.new do |xml|
         xml['marc'].records('xmlns:marc' => 'http://www.loc.gov/MARC21/slim', 'xmlns:xsi'=> 'http://www.w3.org/2001/XMLSchema-instance', 'xsi:schemaLocation' => 'http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd') {
-          xml << leader.to_xml
-          xml << control.to_xml
-          sorted.each do |datafield|
-            xml << datafield.to_xml
-          end
-          xml.holdings {
-            holdings.each do |holding_key, holding|
-              xml.holding {
-                xml.holding_id holding[:holding_id]
-                xml.call_number holding[:call_number]
-                xml.library holding[:library]
-                xml.location holding[:location]
-              }
+          xml.record {
+            xml << leader.to_xml
+            xml << control.to_xml
+            sorted.each do |datafield|
+              xml << datafield.to_xml
             end
+            xml.holdings {
+              holdings.each do |holding_key, holding|
+                xml.holding {
+                  xml.holding_id holding[:holding_id]
+                  xml.call_number holding[:call_number]
+                  xml.library holding[:library]
+                  xml.location holding[:location]
+                }
+              end
+            }
+
           }
         }
 
