@@ -7,8 +7,6 @@ require 'active_support/core_ext/string/output_safety'
 require 'open-uri'
 require 'nokogiri'
 
-require 'dbi'
-
 require 'sprockets'
 require 'sprockets-helpers'
 
@@ -51,7 +49,10 @@ def create_record(bib_id, format, options = {})
         return
       end
 
-      reader = Nokogiri::XML(source_blob)
+      reader = Nokogiri::XML(source_blob) do |config|
+        config.options = Nokogiri::XML::ParseOptions::NOBLANKS
+      end
+
       record = reader.xpath('//bibs/bib/record')
 
       holdings = {}
@@ -72,34 +73,41 @@ def create_record(bib_id, format, options = {})
               xml.subfield(provenance, 'code' => 'a')
             }
           end
-          record.xpath('//record/datafield[@tag="561"]')
           record.at_xpath('//record/datafield[@tag="999"]').add_child("<marc:subfield code=\"z\">#{record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text}</marc:subfield>")
           #record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].remove
         end
-      end
-
-      Nokogiri::XML::Builder.with(reader.at('record')) do |xml|
-        xml.holdings {
-          holdings.each do |holding_key, holding|
-            xml.holding {
-              xml.holding_id holding[:holding_id]
-              xml.call_number holding[:call_number]
-              xml.library holding[:library]
-              xml.location holding[:location]
-            }
-          end
-        }
       end
 
       record.search('//record/datafield[@tag="INT"]').remove
       record.search('//record/datafield[@tag="INST"]').remove
       record.search('//record/datafield[@tag="AVA"]').remove
 
-      record = reader.xpath('//bibs/bib/record')
+
+      leader  = record.xpath('//record/leader')
+      control  = record.xpath('//record/controlfield')
+      unsorted  = record.xpath('//datafield')
+
+      sorted = unsorted.sort_by{ |n| n.attribute('tag').value }
+
       builder = Nokogiri::XML::Builder.new do |xml|
         xml['marc'].records('xmlns:marc' => 'http://www.loc.gov/MARC21/slim', 'xmlns:xsi'=> 'http://www.w3.org/2001/XMLSchema-instance', 'xsi:schemaLocation' => 'http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd') {
-          xml << record.to_xml
+          xml << leader.to_xml
+          xml << control.to_xml
+          sorted.each do |datafield|
+            xml << datafield.to_xml
+          end
+          xml.holdings {
+            holdings.each do |holding_key, holding|
+              xml.holding {
+                xml.holding_id holding[:holding_id]
+                xml.call_number holding[:call_number]
+                xml.library holding[:library]
+                xml.location holding[:location]
+              }
+            end
+          }
         }
+
       end
       blob = builder.to_xml
     when 'structural'
