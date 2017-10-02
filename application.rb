@@ -66,7 +66,7 @@ def create_record(bib_id, format, options = {})
       end
 
       for i in 0..(record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children.length-1)
-        
+
         if record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.start_with?('PRO ')
           provenance = record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.gsub(/^PRO /,'')
           Nokogiri::XML::Builder.with(reader.at('record')) do |xml|
@@ -81,7 +81,7 @@ def create_record(bib_id, format, options = {})
           date = record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.gsub(/^CHR /,'')
           Nokogiri::XML::Builder.with(reader.at('record')) do |xml|
             xml.datafield('ind1' => ' ', 'ind2' => ' ', 'tag' => '651') {
-              xml.subfield(date, 'code' => 'a')
+              xml.subfield(date, 'code' => 'y')
             }
           end
           record.at_xpath('//record/datafield[@tag="999"]').add_child("<marc:subfield code=\"z\">#{record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text}</marc:subfield>")
