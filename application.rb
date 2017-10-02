@@ -49,7 +49,10 @@ def create_record(bib_id, format, options = {})
         return
       end
 
-      reader = Nokogiri::XML(source_blob)
+      reader = Nokogiri::XML(source_blob) do |config|
+        config.options = Nokogiri::XML::ParseOptions::NOBLANKS
+      end
+
       record = reader.xpath('//bibs/bib/record')
 
       holdings = {}
@@ -62,28 +65,64 @@ def create_record(bib_id, format, options = {})
         }
       end
 
-      Nokogiri::XML::Builder.with(reader.at('record')) do |xml|
-        xml.holdings {
-          holdings.each do |holding_key, holding|
-            xml.holding {
-              xml.holding_id holding[:holding_id]
-              xml.call_number holding[:call_number]
-              xml.library holding[:library]
-              xml.location holding[:location]
+      for i in 0..(record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children.length-1)
+
+        if record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.start_with?('PRO ')
+          provenance = record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.gsub(/^PRO /,'')
+          Nokogiri::XML::Builder.with(reader.at('record')) do |xml|
+            xml.datafield('ind1' => ' ', 'ind2' => ' ', 'tag' => '561') {
+              xml.subfield(provenance, 'code' => 'a')
             }
           end
-        }
+          record.at_xpath('//record/datafield[@tag="999"]').add_child("<marc:subfield code=\"z\">#{record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text}</marc:subfield>")
+        end
+
+        if record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.start_with?('CHR ')
+          date = record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.gsub(/^CHR /,'')
+          Nokogiri::XML::Builder.with(reader.at('record')) do |xml|
+            xml.datafield('ind1' => ' ', 'ind2' => ' ', 'tag' => '651') {
+              xml.subfield(date, 'code' => 'y')
+            }
+          end
+          record.at_xpath('//record/datafield[@tag="999"]').add_child("<marc:subfield code=\"z\">#{record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text}</marc:subfield>")
+        end
+
       end
 
+      record.search('//record/datafield[@tag="650"]/subfield[@code="a"][starts-with(text(), "CHR ")]').remove
+      record.search('//record/datafield[@tag="650"]/subfield[@code="a"][starts-with(text(), "PRO ")]').remove
       record.search('//record/datafield[@tag="INT"]').remove
       record.search('//record/datafield[@tag="INST"]').remove
       record.search('//record/datafield[@tag="AVA"]').remove
 
-      record = reader.xpath('//bibs/bib/record')
+      leader  = record.xpath('//record/leader')
+      control  = record.xpath('//record/controlfield')
+      unsorted  = record.xpath('//datafield')
+
+      sorted = unsorted.sort_by{ |n| n.attribute('tag').value }
+
       builder = Nokogiri::XML::Builder.new do |xml|
         xml['marc'].records('xmlns:marc' => 'http://www.loc.gov/MARC21/slim', 'xmlns:xsi'=> 'http://www.w3.org/2001/XMLSchema-instance', 'xsi:schemaLocation' => 'http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd') {
-          xml << record.to_xml
+          xml.record {
+            xml << leader.to_xml
+            xml << control.to_xml
+            sorted.each do |datafield|
+              xml << datafield.to_xml
+            end
+            xml.holdings {
+              holdings.each do |holding_key, holding|
+                xml.holding {
+                  xml.holding_id holding[:holding_id]
+                  xml.call_number holding[:call_number]
+                  xml.library holding[:library]
+                  xml.location holding[:location]
+                }
+              end
+            }
+
+          }
         }
+
       end
       blob = builder.to_xml
     when 'structural'
@@ -220,7 +259,7 @@ class Application < Sinatra::Base
       logger.warn(error)
       halt(404, error)
     end
-    
+
     redirect "/records/#{bib_id}/show?format=#{format}"
   end
 
