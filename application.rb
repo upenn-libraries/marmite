@@ -56,6 +56,7 @@ def create_record(bib_id, format, options = {})
       record = reader.xpath('//bibs/bib/record')
 
       holdings = {}
+      unsanitized_values = []
 
       for i in 0..(record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="8"]').children.length-1)
         holdings[i] = { :holding_id => record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="8"]').children[i].text,
@@ -66,31 +67,37 @@ def create_record(bib_id, format, options = {})
       end
 
       for i in 0..(record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children.length-1)
-
         if record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.start_with?('PRO ')
+          unsanitized_values << record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text
           provenance = record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.gsub(/^PRO /,'')
           Nokogiri::XML::Builder.with(reader.at('record')) do |xml|
             xml.datafield('ind1' => ' ', 'ind2' => ' ', 'tag' => '561') {
               xml.subfield(provenance, 'code' => 'a')
             }
           end
-          record.at_xpath('//record/datafield[@tag="999"]').add_child("<marc:subfield code=\"z\">#{record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text}</marc:subfield>")
         end
-
         if record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.start_with?('CHR ')
+          unsanitized_values << record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text
           date = record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.gsub(/^CHR /,'')
           Nokogiri::XML::Builder.with(reader.at('record')) do |xml|
             xml.datafield('ind1' => ' ', 'ind2' => ' ', 'tag' => '651') {
               xml.subfield(date, 'code' => 'y')
             }
           end
-          record.at_xpath('//record/datafield[@tag="999"]').add_child("<marc:subfield code=\"z\">#{record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text}</marc:subfield>")
         end
+      end
 
+      Nokogiri::XML::Builder.with(reader.at('record')) do |xml|
+        xml.datafield('ind1' => ' ', 'ind2' => ' ', 'tag' => '999') {
+          unsanitized_values.each do |value|
+            xml.subfield(value, 'code' => 'z')
+          end
+        }
       end
 
       record.search('//record/datafield[@tag="650"]/subfield[@code="a"][starts-with(text(), "CHR ")]').remove
       record.search('//record/datafield[@tag="650"]/subfield[@code="a"][starts-with(text(), "PRO ")]').remove
+      record.search('//record/datafield[@tag="650"][not(node())]').remove
       record.search('//record/datafield[@tag="INT"]').remove
       record.search('//record/datafield[@tag="INST"]').remove
       record.search('//record/datafield[@tag="AVA"]').remove
@@ -130,20 +137,15 @@ def create_record(bib_id, format, options = {})
         Record.error_message = "No sceti_prefix specified for #{bib_id}"
         return
       end
-      blob = with_structural_metadata(bib_id, options[:sceti_prefix])
+      blob = dla_structural_metadata(bib_id, options[:sceti_prefix])
     when 'dla'
-      if options[:sceti_prefix].nil?
-        Record.error_message = "No sceti_prefix specified for #{bib_id}"
-        return
-      end
-      create_record(bib_id, 'structural', options)
       create_record(bib_id, 'marc21')
-
       marc21 = Record.where(:bib_id => bib_id, :format => 'marc21').pluck(:blob).first
-      struct = Record.where(:bib_id => bib_id, :format => 'structural').pluck(:blob).first
-
       descriptive = Nokogiri::XML(marc21).search('//marc:records/marc:record')
-      pages = Nokogiri::XML(struct).search('//record/pages')
+
+      structural_endpoint = "http://mgibney-dev.library.upenn.int:8084/lookup/#{legacy_bib_id(bib_id)}.xml"
+      data = Nokogiri::XML.parse(open(structural_endpoint))
+      pages = data.xpath('//pagelevel')
 
       dla = Nokogiri::XML::Builder.new do |xml|
         xml.record('xmlns:marc' => 'http://www.loc.gov/MARC21/slim', 'xmlns:xsi'=> 'http://www.w3.org/2001/XMLSchema-instance', 'xsi:schemaLocation' => 'http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd') {
@@ -154,11 +156,10 @@ def create_record(bib_id, format, options = {})
           xml.xml('name' => 'pages') {
             xml << pages.to_xml
           }
+
         }
       end
-
       blob = dla.to_xml
-
     else
       return
   end
@@ -169,7 +170,7 @@ def create_record(bib_id, format, options = {})
   record.save!
 end
 
-def with_structural_metadata(bib_id, sceti_prefix)
+def dla_structural_metadata(bib_id, sceti_prefix)
   structural_endpoint = "http://dla.library.upenn.edu/dla/#{sceti_prefix.downcase}/pageturn.xml?id=#{sceti_prefix.upcase}_#{legacy_bib_id(bib_id)}"
   data = Nokogiri::XML.parse(open(structural_endpoint))
   pages = data.xpath('//xml/page')
