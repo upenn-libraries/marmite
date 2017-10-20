@@ -35,7 +35,7 @@ def create_record(bib_id, format, options = {})
       alma_key = ENV['ALMA_KEY']
       return logger.warn('No key available') if alma_key.nil?
       source_blob = ''
-      path = "#{bibs_url}/?mms_id=#{bib_id}&expand=p_avail&apikey=#{alma_key}"
+      path = "#{bibs_url}/?mms_id=#{validate_bib_id(bib_id)}&expand=p_avail&apikey=#{alma_key}"
 
       begin
         open(path) { |io| source_blob = io.read }
@@ -142,8 +142,7 @@ def create_record(bib_id, format, options = {})
       create_record(bib_id, 'marc21')
       marc21 = Record.where(:bib_id => bib_id, :format => 'marc21').pluck(:blob).first
       descriptive = Nokogiri::XML(marc21).search('//marc:records/marc:record')
-
-      structural_endpoint = "http://mgibney-dev.library.upenn.int:8084/lookup/#{legacy_bib_id(bib_id)}.xml"
+      structural_endpoint = "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
       data = Nokogiri::XML.parse(open(structural_endpoint))
       pages = data.xpath('//pagelevel')
 
@@ -183,6 +182,10 @@ def dla_structural_metadata(bib_id, sceti_prefix)
     }
   end
   return record.to_xml
+end
+
+def validate_bib_id(bib_id)
+  return bib_id.length <= 7 ? "99#{bib_id}3503681" : bib_id
 end
 
 def legacy_bib_id(bib_id)
