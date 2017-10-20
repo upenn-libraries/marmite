@@ -35,6 +35,7 @@ def create_record(bib_id, format, options = {})
       alma_key = ENV['ALMA_KEY']
       return logger.warn('No key available') if alma_key.nil?
       source_blob = ''
+      bib_id = validate_bib_id(bib_id)
       path = "#{bibs_url}/?mms_id=#{bib_id}&expand=p_avail&apikey=#{alma_key}"
 
       begin
@@ -139,11 +140,10 @@ def create_record(bib_id, format, options = {})
       end
       blob = dla_structural_metadata(bib_id, options[:sceti_prefix])
     when 'dla'
-      create_record(bib_id, 'marc21')
-      marc21 = Record.where(:bib_id => bib_id, :format => 'marc21').pluck(:blob).first
+      create_record(validate_bib_id(bib_id), 'marc21') unless still_fresh?(validate_bib_id(bib_id), 'marc21')
+      marc21 = Record.where(:bib_id => validate_bib_id(bib_id), :format => 'marc21').pluck(:blob).first
       descriptive = Nokogiri::XML(marc21).search('//marc:records/marc:record')
-
-      structural_endpoint = "http://mgibney-dev.library.upenn.int:8084/lookup/#{legacy_bib_id(bib_id)}.xml"
+      structural_endpoint = "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
       data = Nokogiri::XML.parse(open(structural_endpoint))
       pages = data.xpath('//pagelevel')
 
@@ -185,12 +185,18 @@ def dla_structural_metadata(bib_id, sceti_prefix)
   return record.to_xml
 end
 
+def validate_bib_id(bib_id)
+  return bib_id.length <= 7 ? "99#{bib_id}3503681" : bib_id
+end
+
 def legacy_bib_id(bib_id)
   return bib_id[2..(bib_id.length-8)] if bib_id.start_with?('99') and bib_id.end_with?('3503681')
 end
 
-def fresh_check(bib_id, updated_at)
-  if still_fresh?(updated_at)
+def still_fresh?(bib_id, format)
+  record_check = Record.find_or_initialize_by(:bib_id => bib_id, :format => format)
+  fresh = record_check.updated_at.nil? ? false : fresh_check(record_check.updated_at)
+  if fresh
     logger.info("NOT RECREATING #{bib_id} -- object was updated within past 24 hours")
     return true
   else
@@ -199,7 +205,7 @@ def fresh_check(bib_id, updated_at)
   end
 end
 
-def still_fresh?(updated_at)
+def fresh_check(updated_at)
   current_time = Time.now.gmtime
   yesterday = current_time - 1.day
   return (yesterday..current_time).cover?(Time.at(updated_at).gmtime)
@@ -237,8 +243,7 @@ class Application < Sinatra::Base
 
     format = params[:format].nil? ? 'marc21' : params[:format]
 
-    record_check = Record.find_or_initialize_by(:bib_id => bib_id, :format => format)
-    fresh = record_check.updated_at.nil? ? false : fresh_check(bib_id, record_check.updated_at)
+    fresh = still_fresh?(bib_id, format)
 
     redirect "/records/#{bib_id}/show?format=#{format}" if fresh
 
