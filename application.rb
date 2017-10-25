@@ -28,6 +28,10 @@ class Record < ActiveRecord::Base
 
 end
 
+def xpath_empty?(array)
+  return array.nil?
+end
+
 def create_record(bib_id, format, options = {})
   case format
     when 'marc21'
@@ -60,11 +64,12 @@ def create_record(bib_id, format, options = {})
       unsanitized_values = []
 
       for i in 0..(record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="8"]').children.length-1)
-        holdings[i] = { :holding_id => record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="8"]').children[i].text,
-                        :call_number => record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="d"]').children[i].text,
-                        :library => record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="b"]').children[i].text,
-                        :location => record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="j"]').children[i].text
-        }
+        holdings_hash = {}
+        holdings_hash[:holding_id] = record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="8"]').children[i].text unless record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="8"]').children[i].nil?
+        holdings_hash[:call_number] = record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="d"]').children[i].text unless record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="d"]').children[i].nil?
+        holdings_hash[:library] = record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="b"]').children[i].text unless record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="b"]').children[i].nil?
+        holdings_hash[:location] = record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="j"]').children[i].text unless record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="j"]').children[i].nil?
+        holdings[i] = holdings_hash
       end
 
       for i in 0..(record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children.length-1)
@@ -120,10 +125,10 @@ def create_record(bib_id, format, options = {})
             xml.holdings {
               holdings.each do |holding_key, holding|
                 xml.holding {
-                  xml.holding_id holding[:holding_id]
-                  xml.call_number holding[:call_number]
-                  xml.library holding[:library]
-                  xml.location holding[:location]
+                  xml.holding_id holding[:holding_id] unless holding[:holding_id].nil?
+                  xml.call_number holding[:call_number] unless holding[:call_number].nil?
+                  xml.library holding[:library] unless holding[:library].nil?
+                  xml.location holding[:location] unless holding[:location].nil?
                 }
               end
             }
