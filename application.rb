@@ -14,6 +14,10 @@ require 'pry' if development?
 
 use Rack::Logger
 
+use Rack::Deflater, :if => lambda {
+    |*, body| body.map(&:bytesize).reduce(0, :+) > 512
+}
+
 class Record < ActiveRecord::Base
 
   @error_message = ''
@@ -30,6 +34,14 @@ end
 
 def xpath_empty?(array)
   return array.nil?
+end
+
+def inflate(string)
+  zstream = Zlib::Inflate.new(-Zlib::MAX_WBITS)
+  buf = zstream.inflate(Base64::decode64(string))
+  zstream.finish
+  zstream.close
+  buf
 end
 
 def create_record(bib_id, format, options = {})
@@ -146,7 +158,7 @@ def create_record(bib_id, format, options = {})
       blob = dla_structural_metadata(bib_id, options[:sceti_prefix])
     when 'dla'
       create_record(validate_bib_id(bib_id), 'marc21') unless still_fresh?(validate_bib_id(bib_id), 'marc21')
-      marc21 = Record.where(:bib_id => validate_bib_id(bib_id), :format => 'marc21').pluck(:blob).first
+      marc21 = inflate(Record.where(:bib_id => validate_bib_id(bib_id), :format => 'marc21').pluck(:blob).first)
       descriptive = Nokogiri::XML(marc21).search('//marc:records/marc:record')
       structural_endpoint = "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
       data = Nokogiri::XML.parse(open(structural_endpoint))
@@ -170,13 +182,21 @@ def create_record(bib_id, format, options = {})
   end
   record = Record.find_or_initialize_by(:bib_id => bib_id, :format => format)
   record.format = format
-  record.blob = blob
+  record.blob = Base64.encode64(Zlib::Deflate.new(nil, -Zlib::MAX_WBITS).deflate(blob, Zlib::FINISH))
   record.touch unless record.new_record?
   record.save!
 end
 
 def dla_structural_metadata(bib_id, sceti_prefix)
-  structural_endpoint = "http://dla.library.upenn.edu/dla/#{sceti_prefix.downcase}/pageturn.xml?id=#{sceti_prefix.upcase}_#{legacy_bib_id(bib_id)}"
+  case sceti_prefix.downcase
+    when 'medren'
+      bib_id = validate_bib_id(bib_id)
+    when 'print'
+      bib_id = legacy_bib_id(bib_id)
+    else
+      # do nothing
+  end
+  structural_endpoint = "http://dla.library.upenn.edu/dla/#{sceti_prefix.downcase}/pageturn.xml?id=#{sceti_prefix.upcase}_#{bib_id}"
   data = Nokogiri::XML.parse(open(structural_endpoint))
   pages = data.xpath('//xml/page')
   record = Nokogiri::XML::Builder.new do |xml|
@@ -289,7 +309,7 @@ class Application < Sinatra::Base
     end
 
     content_type('text/xml')
-    return blob
+    return inflate(blob.first)
   end
 
   %w[/? /records/?].each do |path|
