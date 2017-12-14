@@ -105,12 +105,14 @@ def create_record(bib_id, format, options = {})
         end
       end
 
-      Nokogiri::XML::Builder.with(reader.at('record')) do |xml|
-        xml.datafield('ind1' => ' ', 'ind2' => ' ', 'tag' => '999') {
-          unsanitized_values.each do |value|
-            xml.subfield(value, 'code' => 'z')
-          end
-        }
+      unless unsanitized_values.empty?
+        Nokogiri::XML::Builder.with(reader.at('record')) do |xml|
+          xml.datafield('ind1' => ' ', 'ind2' => ' ', 'tag' => '999') {
+            unsanitized_values.each do |value|
+              xml.subfield(value, 'code' => 'z')
+            end
+          }
+        end
       end
 
       record.search('//record/datafield[@tag="650"]/subfield[@code="a"][starts-with(text(), "CHR ")]').remove
