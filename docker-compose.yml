@@ -11,7 +11,7 @@ services:
     restart: 'unless-stopped'
     depends_on:
       - 'db'
-    image: 'marc_alma:latest'
+    image: 'marmite:latest'
     ports:
       - '9292:9292'
     env_file:
