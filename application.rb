@@ -190,14 +190,7 @@ def create_record(bib_id, format, options = {})
 end
 
 def dla_structural_metadata(bib_id, sceti_prefix)
-  case sceti_prefix.downcase
-    when 'medren'
-      bib_id = validate_bib_id(bib_id)
-    when 'print'
-      bib_id = validate_bib_id(bib_id)
-    else
-      # do nothing
-  end
+  bib_id = validate_bib_id(bib_id)
   structural_endpoint = "http://dla.library.upenn.edu/dla/#{sceti_prefix.downcase}/pageturn.xml?id=#{sceti_prefix.upcase}_#{bib_id}"
   data = Nokogiri::XML.parse(open(structural_endpoint))
   pages = data.xpath('//xml/page')
