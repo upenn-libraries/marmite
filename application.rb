@@ -194,7 +194,7 @@ def dla_structural_metadata(bib_id, sceti_prefix)
     when 'medren'
       bib_id = validate_bib_id(bib_id)
     when 'print'
-      bib_id = legacy_bib_id(bib_id)
+      bib_id = validate_bib_id(bib_id)
     else
       # do nothing
   end
