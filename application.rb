@@ -122,6 +122,26 @@ def create_record(bib_id, format, options = {})
       record.search('//record/datafield[@tag="INST"]').remove
       record.search('//record/datafield[@tag="AVA"]').remove
 
+      collection_names = []
+
+      record.xpath('//record/datafield[@tag="710"]').each do |xml_snippet|
+        if xml_snippet.children.search('subfield[@code="5"]').any?
+          xml_snippet.children.search('subfield[@code="a"]').children.each do |c_name|
+            collection_names << c_name.text
+          end
+        end
+      end
+
+      if collection_names.any?
+        collection_names.each do |cn|
+          Nokogiri::XML::Builder.with(reader.at('record')) do |xml|
+            xml.datafield('ind1' => '0', 'ind2' => '0', 'tag' => '773') {
+              xml.subfield(cn, 'code' => 't')
+            }
+          end
+        end
+      end
+
       leader  = record.xpath('//record/leader')
       control  = record.xpath('//record/controlfield')
       unsorted  = record.xpath('//datafield')
