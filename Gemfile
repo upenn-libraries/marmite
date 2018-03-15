@@ -17,5 +17,6 @@ gem 'sprockets-helpers'
 
 group :development do
   gem 'pry'
+  gem 'pry-byebug'
   gem 'tux'
 end
