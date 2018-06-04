@@ -199,6 +199,22 @@ def create_record(bib_id, format, options = {})
         }
       end
       blob = dla.to_xml
+    when 'openn'
+      create_record(validate_bib_id(bib_id), 'marc21') unless still_fresh?(validate_bib_id(bib_id), 'marc21')
+      marc21 = inflate(Record.where(:bib_id => validate_bib_id(bib_id), :format => 'marc21').pluck(:blob).first)
+      descriptive = Nokogiri::XML(marc21).search('//marc:records/marc:record')
+      structural_endpoint = "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
+      data = Nokogiri::XML.parse(open(structural_endpoint))
+      pages = data.xpath('//pagelevel/page')
+      page_sequence = Nokogiri::XML::Builder.new do |xml|
+        xml.xml('name' => 'marcrecord') {
+          xml << descriptive.to_xml
+        }
+        xml.xml('name' => 'pages') {
+          process_pages(pages, xml, options[:image_id_prefix])
+        }
+      end
+      blob = page_sequence.to_xml
     else
       return
   end
@@ -207,6 +223,24 @@ def create_record(bib_id, format, options = {})
   record.blob = Base64.encode64(Zlib::Deflate.new(nil, -Zlib::MAX_WBITS).deflate(blob, Zlib::FINISH))
   record.touch unless record.new_record?
   record.save!
+end
+
+def process_pages(pages, xml, image_id_prefix = '')
+  side_hash = { 'r' => 'recto',
+                'v' => 'verso'
+  }
+  pages.each do |page|
+    sequence = page.at_xpath('sequence').children.first.to_s
+    filename = page.at_xpath('filename').children.first.to_s
+    visible_page = page.at_xpath('visiblepage').children.first.to_s
+    side = side_hash[visible_page.last]
+    xml.send('page',{'number' => sequence,
+                     'seq' => sequence,
+                     'side' => side,
+                     'image.id' => "#{image_id_prefix}#{filename}",
+                     'image' => filename,
+                     'visiblepage' => visible_page})
+  end
 end
 
 def dla_structural_metadata(bib_id, sceti_prefix)
@@ -276,7 +310,7 @@ class Application < Sinatra::Base
   end
 
   SCETI_PREFIXES = %w[MEDREN PRINT]
-  AVAILABLE_FORMATS = %w[marc21 structural dla]
+  AVAILABLE_FORMATS = %w[marc21 structural dla openn]
 
   get '/records/:bib_id/create/?' do |bib_id|
     Record.error_message = ''
@@ -294,6 +328,8 @@ class Application < Sinatra::Base
         create_record(bib_id, 'marc21')
       when 'dla'
         create_record(bib_id, 'dla', params)
+      when 'openn'
+        create_record(bib_id, 'openn', params)
       else
         return
     end
