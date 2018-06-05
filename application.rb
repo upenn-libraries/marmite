@@ -53,7 +53,6 @@ def create_record(bib_id, format, options = {})
       source_blob = ''
       bib_id = validate_bib_id(bib_id)
       path = "#{bibs_url}/?mms_id=#{bib_id}&expand=p_avail&apikey=#{alma_key}"
-
       begin
         open(path) { |io| source_blob = io.read }
       rescue => exception
@@ -207,11 +206,16 @@ def create_record(bib_id, format, options = {})
       data = Nokogiri::XML.parse(open(structural_endpoint))
       pages = data.xpath('//pagelevel/page')
       page_sequence = Nokogiri::XML::Builder.new do |xml|
-        xml.xml('name' => 'marcrecord') {
-          xml << descriptive.to_xml
-        }
-        xml.xml('name' => 'pages') {
-          process_pages(pages, xml, options[:image_id_prefix])
+        xml.page {
+          xml.result('xmlns:marc' => 'http://www.loc.gov/MARC21/slim', 'xmlns:xsi'=> 'http://www.w3.org/2001/XMLSchema-instance', 'xsi:schemaLocation' => 'http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd') {
+            xml.xml('name' => 'marcrecord') {
+              xml << descriptive.to_xml
+            }
+            xml.xml('name' => 'pages') {
+              process_pages(pages, xml, options[:image_id_prefix])
+            }
+          }
+
         }
       end
       blob = page_sequence.to_xml
@@ -237,7 +241,7 @@ def process_pages(pages, xml, image_id_prefix = '')
     xml.send('page',{'number' => sequence,
                      'seq' => sequence,
                      'side' => side,
-                     'image.id' => "#{image_id_prefix}#{filename}",
+                     'image.id' => "#{image_id_prefix.downcase}#{filename}",
                      'image' => filename,
                      'visiblepage' => visible_page})
   end
@@ -311,6 +315,7 @@ class Application < Sinatra::Base
 
   SCETI_PREFIXES = %w[MEDREN PRINT]
   AVAILABLE_FORMATS = %w[marc21 structural dla openn]
+  IMAGE_IDENTIFIER_PREFIXES = %w[medren_ print_]
 
   get '/records/:bib_id/create/?' do |bib_id|
     Record.error_message = ''
@@ -368,6 +373,7 @@ class Application < Sinatra::Base
       @marc21_records = Record.where(:format => 'marc21')
       @structural_records = Record.where(:format => 'structural')
       @dla_records = Record.where(:format => 'dla')
+      @openn_records = Record.where(:format => 'openn')
       erb :index
     end
   end
@@ -383,6 +389,13 @@ class Application < Sinatra::Base
     get path do
       @sceti_prefixes = SCETI_PREFIXES
       erb :sceti_prefixes
+    end
+  end
+
+  %w[/image_identifier_prefixes/? /records/image_identifier_prefixes/?].each do |path|
+    get path do
+      @image_identifier_prefixes = IMAGE_IDENTIFIER_PREFIXES
+      erb :image_identifier_prefixes
     end
   end
 
