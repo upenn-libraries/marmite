@@ -172,11 +172,18 @@ def create_record(bib_id, format, options = {})
       end
       blob = builder.to_xml
     when 'structural'
-      if options[:sceti_prefix].nil?
-        Record.error_message = "No sceti_prefix specified for #{bib_id}"
-        return
+      structural_endpoint = "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
+      data = Nokogiri::XML.parse(open(structural_endpoint))
+      pages = data.xpath('//pagelevel/page')
+      structural = Nokogiri::XML::Builder.new do |xml|
+        xml.record {
+          xml.bib_id bib_id
+          xml.pages {
+            process_pages(pages, xml, options[:image_id_prefix])
+          }
+        }
       end
-      blob = dla_structural_metadata(bib_id, options[:sceti_prefix])
+      blob = structural.to_xml
     when 'dla'
       create_record(validate_bib_id(bib_id), 'marc21') unless still_fresh?(validate_bib_id(bib_id), 'marc21')
       marc21 = inflate(Record.where(:bib_id => validate_bib_id(bib_id), :format => 'marc21').pluck(:blob).first)
@@ -205,7 +212,7 @@ def create_record(bib_id, format, options = {})
       structural_endpoint = "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
       data = Nokogiri::XML.parse(open(structural_endpoint))
       pages = data.xpath('//pagelevel/page')
-      page_sequence = Nokogiri::XML::Builder.new do |xml|
+      openn = Nokogiri::XML::Builder.new do |xml|
         xml.page {
           xml.result('xmlns:marc' => 'http://www.loc.gov/MARC21/slim', 'xmlns:xsi'=> 'http://www.w3.org/2001/XMLSchema-instance', 'xsi:schemaLocation' => 'http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd') {
             xml.xml('name' => 'marcrecord') {
@@ -218,7 +225,7 @@ def create_record(bib_id, format, options = {})
 
         }
       end
-      blob = page_sequence.to_xml
+      blob = openn.to_xml
     else
       return
   end
@@ -238,10 +245,11 @@ def process_pages(pages, xml, image_id_prefix = '')
     filename = page.at_xpath('filename').children.first.to_s
     visible_page = page.at_xpath('visiblepage').children.first.to_s
     side = side_hash[visible_page.last]
+    filename = "#{image_id_prefix.downcase}#{filename}" unless image_id_prefix.nil?
     xml.send('page',{'number' => sequence,
                      'seq' => sequence,
                      'side' => side,
-                     'image.id' => "#{image_id_prefix.downcase}#{filename}",
+                     'image.id' => filename,
                      'image' => filename,
                      'visiblepage' => visible_page})
   end
@@ -313,9 +321,8 @@ class Application < Sinatra::Base
     end
   end
 
-  SCETI_PREFIXES = %w[MEDREN PRINT]
   AVAILABLE_FORMATS = %w[marc21 structural dla openn]
-  IMAGE_IDENTIFIER_PREFIXES = %w[medren_ print_]
+  IMAGE_ID_PREFIXES = %w[medren_ print_]
 
   get '/records/:bib_id/create/?' do |bib_id|
     Record.error_message = ''
@@ -385,17 +392,10 @@ class Application < Sinatra::Base
     end
   end
 
-  %w[/sceti_prefixes/? /records/sceti_prefixes/?].each do |path|
+  %w[/image_id_prefixes/? /records/image_id_prefixes/?].each do |path|
     get path do
-      @sceti_prefixes = SCETI_PREFIXES
-      erb :sceti_prefixes
-    end
-  end
-
-  %w[/image_identifier_prefixes/? /records/image_identifier_prefixes/?].each do |path|
-    get path do
-      @image_identifier_prefixes = IMAGE_IDENTIFIER_PREFIXES
-      erb :image_identifier_prefixes
+      @image_id_prefixes = IMAGE_ID_PREFIXES
+      erb :image_id_prefixes
     end
   end
 
