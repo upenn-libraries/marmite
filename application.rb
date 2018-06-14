@@ -244,6 +244,8 @@ def process_pages(pages, xml, image_id_prefix = '')
     sequence = page.at_xpath('sequence').children.first.to_s
     filename = page.at_xpath('filename').children.first.to_s
     visible_page = page.at_xpath('visiblepage').children.first.to_s
+    tocentry = page.at_xpath('tocs/toc/title').nil? ? nil : page.at_xpath('tocs/toc/title').children.first.to_s
+    tocentry.slice!(0..4) if !(tocentry.nil?) && tocentry[0..4] == 'TOC: '
     side = side_hash[visible_page.last]
     filename = "#{image_id_prefix.downcase}#{filename}" unless image_id_prefix.nil?
     xml.send('page',{'number' => sequence,
@@ -251,7 +253,9 @@ def process_pages(pages, xml, image_id_prefix = '')
                      'side' => side,
                      'image.id' => filename,
                      'image' => filename,
-                     'visiblepage' => visible_page})
+                     'visiblepage' => visible_page}) {
+      xml.send('tocentry', {'name' => 'toc'}, tocentry) unless tocentry.nil?
+    }
   end
 end
 
