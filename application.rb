@@ -53,7 +53,6 @@ def create_record(bib_id, format, options = {})
       source_blob = ''
       bib_id = validate_bib_id(bib_id)
       path = "#{bibs_url}/?mms_id=#{bib_id}&expand=p_avail&apikey=#{alma_key}"
-
       begin
         open(path) { |io| source_blob = io.read }
       rescue => exception
@@ -173,11 +172,18 @@ def create_record(bib_id, format, options = {})
       end
       blob = builder.to_xml
     when 'structural'
-      if options[:sceti_prefix].nil?
-        Record.error_message = "No sceti_prefix specified for #{bib_id}"
-        return
+      structural_endpoint = "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
+      data = Nokogiri::XML.parse(open(structural_endpoint))
+      pages = data.xpath('//pagelevel/page')
+      structural = Nokogiri::XML::Builder.new do |xml|
+        xml.record {
+          xml.bib_id bib_id
+          xml.pages {
+            process_pages(pages, xml, options[:image_id_prefix])
+          }
+        }
       end
-      blob = dla_structural_metadata(bib_id, options[:sceti_prefix])
+      blob = structural.to_xml
     when 'dla'
       create_record(validate_bib_id(bib_id), 'marc21') unless still_fresh?(validate_bib_id(bib_id), 'marc21')
       marc21 = inflate(Record.where(:bib_id => validate_bib_id(bib_id), :format => 'marc21').pluck(:blob).first)
@@ -199,6 +205,27 @@ def create_record(bib_id, format, options = {})
         }
       end
       blob = dla.to_xml
+    when 'openn'
+      create_record(validate_bib_id(bib_id), 'marc21') unless still_fresh?(validate_bib_id(bib_id), 'marc21')
+      marc21 = inflate(Record.where(:bib_id => validate_bib_id(bib_id), :format => 'marc21').pluck(:blob).first)
+      descriptive = Nokogiri::XML(marc21).search('//marc:records/marc:record')
+      structural_endpoint = "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
+      data = Nokogiri::XML.parse(open(structural_endpoint))
+      pages = data.xpath('//pagelevel/page')
+      openn = Nokogiri::XML::Builder.new do |xml|
+        xml.page {
+          xml.result('xmlns:marc' => 'http://www.loc.gov/MARC21/slim', 'xmlns:xsi'=> 'http://www.w3.org/2001/XMLSchema-instance', 'xsi:schemaLocation' => 'http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd') {
+            xml.xml('name' => 'marcrecord') {
+              xml << descriptive.to_xml
+            }
+            xml.xml('name' => 'pages') {
+              process_pages(pages, xml, options[:image_id_prefix])
+            }
+          }
+
+        }
+      end
+      blob = openn.to_xml
     else
       return
   end
@@ -207,6 +234,29 @@ def create_record(bib_id, format, options = {})
   record.blob = Base64.encode64(Zlib::Deflate.new(nil, -Zlib::MAX_WBITS).deflate(blob, Zlib::FINISH))
   record.touch unless record.new_record?
   record.save!
+end
+
+def process_pages(pages, xml, image_id_prefix = '')
+  side_hash = { 'r' => 'recto',
+                'v' => 'verso'
+  }
+  pages.each do |page|
+    sequence = page.at_xpath('sequence').children.first.to_s
+    filename = page.at_xpath('filename').children.first.to_s
+    visible_page = page.at_xpath('visiblepage').children.first.to_s
+    tocentry = page.at_xpath('tocs/toc/title').nil? ? nil : page.at_xpath('tocs/toc/title').children.first.to_s
+    tocentry.slice!(0..4) if !(tocentry.nil?) && tocentry[0..4] == 'TOC: '
+    side = side_hash[visible_page.last]
+    filename = "#{image_id_prefix.downcase}#{filename}" unless image_id_prefix.nil?
+    xml.send('page',{'number' => sequence,
+                     'seq' => sequence,
+                     'side' => side,
+                     'image.id' => filename,
+                     'image' => filename,
+                     'visiblepage' => visible_page}) {
+      xml.send('tocentry', {'name' => 'toc'}, tocentry) unless tocentry.nil?
+    }
+  end
 end
 
 def dla_structural_metadata(bib_id, sceti_prefix)
@@ -275,8 +325,8 @@ class Application < Sinatra::Base
     end
   end
 
-  SCETI_PREFIXES = %w[MEDREN PRINT]
-  AVAILABLE_FORMATS = %w[marc21 structural dla]
+  AVAILABLE_FORMATS = %w[marc21 structural dla openn]
+  IMAGE_ID_PREFIXES = %w[medren_ print_]
 
   get '/records/:bib_id/create/?' do |bib_id|
     Record.error_message = ''
@@ -294,6 +344,8 @@ class Application < Sinatra::Base
         create_record(bib_id, 'marc21')
       when 'dla'
         create_record(bib_id, 'dla', params)
+      when 'openn'
+        create_record(bib_id, 'openn', params)
       else
         return
     end
@@ -332,6 +384,7 @@ class Application < Sinatra::Base
       @marc21_records = Record.where(:format => 'marc21')
       @structural_records = Record.where(:format => 'structural')
       @dla_records = Record.where(:format => 'dla')
+      @openn_records = Record.where(:format => 'openn')
       erb :index
     end
   end
@@ -343,10 +396,10 @@ class Application < Sinatra::Base
     end
   end
 
-  %w[/sceti_prefixes/? /records/sceti_prefixes/?].each do |path|
+  %w[/image_id_prefixes/? /records/image_id_prefixes/?].each do |path|
     get path do
-      @sceti_prefixes = SCETI_PREFIXES
-      erb :sceti_prefixes
+      @image_id_prefixes = IMAGE_ID_PREFIXES
+      erb :image_id_prefixes
     end
   end
 

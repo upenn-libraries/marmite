@@ -1,5 +1,9 @@
 <h2>Welcome to MARC Alma</h2>
+<ul>
+  <li><%= link_to('harvesting','Harvesting documentation') %></li>
+</ul>
 
 <%= erb correct_partial(@marc21_records, 'marc21') %>
 <%= erb correct_partial(@structural_records, 'structural') %>
 <%= erb correct_partial(@dla_records, 'dla') %>
+<%= erb correct_partial(@openn_records, 'openn') %>

@@ -6,11 +6,15 @@
   </li>
   <li>
     <strong>URL to harvest structural XML:</strong>
-    <span>http://HOST:PORT/records/BIB_ID/create?format=structural&sceti_prefix=SCETI_PREFIX</span>
+    <span>http://HOST:PORT/records/BIB_ID/create?format=structural&image_id_prefix=IMAGE_ID_PREFIX</span>
   </li>
   <li>
     <strong>URL to harvest DLA-compliant XML:</strong>
     <span>http://HOST:PORT/records/BIB_ID/create?format=dla</span>
+  </li>
+  <li>
+    <strong>URL to harvest OPenn-compliant XML (second argument optional)</strong>
+    <span>http://HOST:PORT/records/BIB_ID/create?format=openn&image_id_prefix=IMAGE_ID_PREFIX</span>
   </li>
 </ul>
 
@@ -18,12 +22,12 @@
 <ul>
   <li>
     <strong>URL to display XML:</strong>
-    <span>http://HOST:PORT/records/BIB_ID?format=FORMAT</span>
+    <span>http://HOST:PORT/records/BIB_ID/show?format=FORMAT</span>
   </li>
 </ul>
 
 <h2>Other Resources</h2>
 <ul>
   <li><p><%= link_to('available_formats','List of valid formats here') %></p></li>
-  <li><p><%= link_to('sceti_prefixes','List of valid SCETI prefixes here') %></p></li>
+  <li><p><%= link_to('image_id_prefixes','List of valid SCETI Image Identifier prefixes here') %></p></li>
 </ul>
