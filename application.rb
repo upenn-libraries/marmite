@@ -308,6 +308,7 @@ class Application < Sinatra::Base
     enable :logging
     use Rack::CommonLogger, STDOUT
     assets.append_path File.join(root, 'assets', 'stylesheets')
+    assets.append_path File.join(root, 'assets', 'images')
   end
 
   helpers do
