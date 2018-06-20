@@ -237,16 +237,22 @@ def create_record(bib_id, format, options = {})
 end
 
 def process_pages(pages, xml, image_id_prefix = '')
-  side_hash = { 'r' => 'recto',
-                'v' => 'verso'
-  }
+
   pages.each do |page|
     sequence = page.at_xpath('sequence').children.first.to_s
     filename = page.at_xpath('filename').children.first.to_s
     visible_page = page.at_xpath('visiblepage').children.first.to_s
-    tocentry = page.at_xpath('tocs/toc/title').nil? ? nil : page.at_xpath('tocs/toc/title').children.first.to_s
-    tocentry.slice!(0..4) if !(tocentry.nil?) && tocentry[0..4] == 'TOC: '
-    side = side_hash[visible_page.last]
+    tocentries = []
+    if !(page.at_xpath('tocs').nil?)
+      page.at_xpath('tocs').children.each do |c|
+        child_text = c.at_xpath('title').children.first.to_s
+        prefix = %w[TOC: ILL:].include?(child_text[0..3]) ? child_text.slice!(0..4) : ''
+        tocentries << [prefix[0..2].downcase, child_text]
+      end
+    end
+
+    side = determine_side(visible_page, sequence)
+
     filename = "#{image_id_prefix.downcase}#{filename}" unless image_id_prefix.nil?
     xml.send('page',{'number' => sequence,
                      'seq' => sequence,
@@ -254,9 +260,21 @@ def process_pages(pages, xml, image_id_prefix = '')
                      'image.id' => filename,
                      'image' => filename,
                      'visiblepage' => visible_page}) {
-      xml.send('tocentry', {'name' => 'toc'}, tocentry) unless tocentry.nil?
+      tocentries.each do |tocentry|
+        xml.send('tocentry', {'name' => tocentry[0]}, tocentry[1])
+      end
     }
   end
+end
+
+def determine_side(side_value, sequence)
+  side_hash = { 'r' => 'recto',
+                'v' => 'verso'
+  }
+
+  return side_hash[side_value[1]] unless (/\A[[:digit:]][[:alnum:]]*[rv]\Z/ =~ side_value).nil?
+
+  return sequence.to_i.odd? ? 'recto' : 'verso'
 end
 
 def dla_structural_metadata(bib_id, sceti_prefix)
