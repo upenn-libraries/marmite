@@ -246,7 +246,7 @@ def process_pages(pages, xml, image_id_prefix = '')
     if !(page.at_xpath('tocs').nil?)
       page.at_xpath('tocs').children.each do |c|
         child_text = c.at_xpath('title').children.first.to_s
-        prefix = %w[TOC: ILL:].include?(child_text[0..3]) ? child_text.slice!(0..4) : ''
+        prefix = %w[TOC: ILL:].include?(child_text[0..3]) ? child_text.slice!(0..4) : 'toc'
         tocentries << [prefix[0..2].downcase, child_text]
       end
     end
