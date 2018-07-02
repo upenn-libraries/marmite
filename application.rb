@@ -44,6 +44,17 @@ def inflate(string)
   buf
 end
 
+def retrieve_pages(bib_id)
+  structural_endpoint = "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
+  data = Nokogiri::XML.parse(open(structural_endpoint))
+  pages = data.xpath('//pagelevel/page')
+  if pages.empty? && bib_id.length > 7
+    bib_id = bib_id[2..-8]
+    pages = retrieve_pages(bib_id)
+  end
+  return pages
+end
+
 def create_record(bib_id, format, options = {})
   case format
     when 'marc21'
@@ -172,14 +183,12 @@ def create_record(bib_id, format, options = {})
       end
       blob = builder.to_xml
     when 'structural'
-      structural_endpoint = "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
-      data = Nokogiri::XML.parse(open(structural_endpoint))
-      pages = data.xpath('//pagelevel/page')
+      pages = retrieve_pages(bib_id)
       structural = Nokogiri::XML::Builder.new do |xml|
         xml.record {
           xml.bib_id bib_id
           xml.pages {
-            process_pages(pages, xml, options[:image_id_prefix])
+            process_pages(pages, xml, bib_id, options[:image_id_prefix])
           }
         }
       end
@@ -209,9 +218,7 @@ def create_record(bib_id, format, options = {})
       create_record(validate_bib_id(bib_id), 'marc21') unless still_fresh?(validate_bib_id(bib_id), 'marc21')
       marc21 = inflate(Record.where(:bib_id => validate_bib_id(bib_id), :format => 'marc21').pluck(:blob).first)
       descriptive = Nokogiri::XML(marc21).search('//marc:records/marc:record')
-      structural_endpoint = "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
-      data = Nokogiri::XML.parse(open(structural_endpoint))
-      pages = data.xpath('//pagelevel/page')
+      pages = retrieve_pages(bib_id)
       openn = Nokogiri::XML::Builder.new do |xml|
         xml.page {
           xml.result('xmlns:marc' => 'http://www.loc.gov/MARC21/slim', 'xmlns:xsi'=> 'http://www.w3.org/2001/XMLSchema-instance', 'xsi:schemaLocation' => 'http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd') {
@@ -219,7 +226,7 @@ def create_record(bib_id, format, options = {})
               xml << descriptive.to_xml
             }
             xml.xml('name' => 'pages') {
-              process_pages(pages, xml, options[:image_id_prefix])
+              process_pages(pages, xml, bib_id, options[:image_id_prefix])
             }
           }
 
@@ -236,9 +243,10 @@ def create_record(bib_id, format, options = {})
   record.save!
 end
 
-def process_pages(pages, xml, image_id_prefix = '')
+def process_pages(pages, xml, bib_id, image_id_prefix = '')
 
   pages.each do |page|
+    pid = page.at_xpath('p_id').children.first.to_s
     sequence = page.at_xpath('sequence').children.first.to_s
     filename = page.at_xpath('filename').children.first.to_s
     visible_page = page.at_xpath('visiblepage').children.first.to_s
@@ -255,6 +263,7 @@ def process_pages(pages, xml, image_id_prefix = '')
 
     filename = "#{image_id_prefix.downcase}#{filename}" unless image_id_prefix.nil?
     xml.send('page',{'number' => sequence,
+                     'id' => "#{bib_id}_#{pid}",
                      'seq' => sequence,
                      'side' => side,
                      'image.id' => filename,
