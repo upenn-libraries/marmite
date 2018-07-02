@@ -259,7 +259,7 @@ def process_pages(pages, xml, bib_id, image_id_prefix = '')
       end
     end
 
-    side = determine_side(visible_page, sequence)
+    side = sequence.to_i.odd? ? 'recto' : 'verso'
 
     filename = "#{image_id_prefix.downcase}#{filename}" unless image_id_prefix.nil?
     xml.send('page',{'number' => sequence,
@@ -276,6 +276,11 @@ def process_pages(pages, xml, bib_id, image_id_prefix = '')
   end
 end
 
+###
+#
+# Deprecated method -- leaving in for potential re-use for visiblepage
+#
+###
 def determine_side(side_value, sequence)
   side_hash = { 'r' => 'recto',
                 'v' => 'verso'
