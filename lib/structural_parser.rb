@@ -1,5 +1,3 @@
-#! /usr/bin/env ruby
-
 require 'pry-byebug'
 require 'rubyXL'
 
