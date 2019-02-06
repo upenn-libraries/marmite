@@ -8,6 +8,7 @@ gem 'activerecord'
 gem 'activesupport'
 gem 'sinatra-activerecord'
 gem 'rake'
+gem 'rubyXL'
 
 gem 'nokogiri'
 
