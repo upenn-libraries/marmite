@@ -396,6 +396,7 @@ class Application < Sinatra::Base
 
   get '/records/:bib_id/show/?' do |bib_id|
     return "Specify one of the following formats: #{AVAILABLE_FORMATS}" if params[:format].nil?
+    Record.error_message = ''
 
     format = params[:format]
 
