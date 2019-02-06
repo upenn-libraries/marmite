@@ -21,6 +21,7 @@ class StructuralParser
     vispage_index = headers.index('VISIBLE PAGE')
     toc_index = headers.index('TOC ENTRY')
     filename_index = headers.index('FILENAME')
+    bib_index = headers.index('BIB ID')
 
     # Reference: https://stackoverflow.com/a/28916684
     contents = Hash.new {|h,k| h[k] = []}
@@ -32,6 +33,7 @@ class StructuralParser
       end
 
       ark_id = values[ark_index] || ''
+      bib_id = values[bib_index] || ''
       seq = values[seq_index].presence || 0 # Note: rows missing sequence # will be sorted to the top
       vispage = values[vispage_index] || ''
       toc = values[toc_index] || ''
@@ -41,8 +43,7 @@ class StructuralParser
       # i+2 used for line number to account for removal of header row and zero-based indexing
       errors << "#{xlsx_filename}(#{i+2}): ARK ID missing" if ark_id.empty?
       errors << "#{xlsx_filename}(#{i+2}): FILENAME missing" if filename.empty?
-
-      contents[ark_id] << {:seq => seq, :vispage => vispage, :toc => toc, :filename => filename}
+      contents[[ark_id,bib_id]] << {:seq => seq, :vispage => vispage, :toc => toc, :filename => filename}
     end
 
     raise errors.join("\n") unless errors.empty?
@@ -53,10 +54,11 @@ class StructuralParser
     return contents
   end
 
-  def self.generateXML(ark_id, rows)
+  def self.generateXML(ark_id, bib_id = '', rows)
     builder = Nokogiri::XML::Builder.new do |xml|
       xml.record {
         xml.ark_id(ark_id)
+        xml.bib_id(bib_id) unless bib_id.empty?
         xml.pages {
           rows.each_with_index do |row, i|
             xml.page(:number => i+1,

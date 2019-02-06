@@ -22,8 +22,9 @@ namespace :marmite do
         next
       end
 
-      contents.each do |ark_id, rows|
-        xml = StructuralParser.generateXML(ark_id, rows)
+      contents.each do |key, rows|
+        ark_id, bib_id = key
+        xml = StructuralParser.generateXML(ark_id, bib_id, rows)
         record = Record.find_or_initialize_by(:bib_id => ark_id.tr(":/", "+="), :format => format)
         record.format = format
         record.blob = Base64.encode64(Zlib::Deflate.new(nil, -Zlib::MAX_WBITS).deflate(xml, Zlib::FINISH))
