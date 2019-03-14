@@ -358,7 +358,7 @@ class Application < Sinatra::Base
     end
   end
 
-  AVAILABLE_FORMATS = %w[marc21 structural structural_ark dla openn]
+  AVAILABLE_FORMATS = %w[marc21 structural structural_ark combined_ark dla openn]
   IMAGE_ID_PREFIXES = %w[medren_ print_]
 
   get '/records/:bib_id/create/?' do |bib_id|
@@ -418,6 +418,7 @@ class Application < Sinatra::Base
       @marc21_records = Record.where(:format => 'marc21')
       @structural_records = Record.where(:format => 'structural')
       @structural_ark_records = Record.where(:format => 'structural_ark')
+      @combined_ark_records = Record.where(:format => 'combined_ark')
       @dla_records = Record.where(:format => 'dla')
       @openn_records = Record.where(:format => 'openn')
       erb :index
