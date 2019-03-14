@@ -49,7 +49,7 @@ class CombinedParser
     filename = File.basename(filename, File.extname(filename)) unless filename.empty?
 
     builder = Nokogiri::XML::Builder.new do |xml|
-      xml.record {
+      xml.record('xmlns:pqc' => 'http://www.library.upenn.edu/pqc') {
         xml.ark_id(ark_id)
         xml.descriptive {
           values.each do |k,v|
