@@ -59,9 +59,8 @@ namespace :marmite do
         next
       end
 
-      contents.each do |key, rows|
-        ark_id, bib_id = key
-        xml = CombinedParser.generateXML(ark_id, rows)
+      contents.each do |ark_id, rows|
+        xml = CombinedParser.generateXML(rows)
         record = Record.find_or_initialize_by(:bib_id => ark_id.tr(":/", "+="), :format => format)
         record.format = format
         record.blob = Base64.encode64(Zlib::Deflate.new(nil, -Zlib::MAX_WBITS).deflate(xml, Zlib::FINISH))
