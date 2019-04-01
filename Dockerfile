@@ -9,7 +9,7 @@ EXPOSE 9292
 
 RUN apt-get update && apt-get install -qq -y --no-install-recommends \
          build-essential \
-         libmysqlclient-dev
+         default-libmysqlclient-dev
 
 RUN mkdir -p /usr/src/app
 
