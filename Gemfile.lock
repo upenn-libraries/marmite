@@ -93,7 +93,7 @@ DEPENDENCIES
   tux
 
 RUBY VERSION
-   ruby 2.4.0p0
+   ruby 2.4.5p335
 
 BUNDLED WITH
-   1.16.4
+   1.17.3
