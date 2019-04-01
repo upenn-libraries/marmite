@@ -9,7 +9,7 @@ workflows:
     jobs:
       - gitleaks/check_local:
           image: quay.io/upennlibraries/gitleaks:v1.24.0
-          options: --redact
+          options: --redact --repo-config
       - docker-publish/publish:
           context: quay.io
           registry: quay.io
