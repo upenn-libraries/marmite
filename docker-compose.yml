@@ -11,7 +11,7 @@ services:
     restart: 'unless-stopped'
     depends_on:
       - 'db'
-    image: 'marmite:latest'
+    image: 'quay.io/upennlibraries/marmite:afd4aa3'
     ports:
       - '9292:9292'
     env_file:
