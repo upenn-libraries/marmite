@@ -1,0 +1,10 @@
+*.example
+.circleci
+.dockerignore
+.git
+.gitignore
+.gitleaks.toml
+Dockerfile
+docker-compose.yml
+LICENSE
+README.md
