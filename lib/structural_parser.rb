@@ -31,6 +31,7 @@ class StructuralParser
       values = row.cells.map do |cell|
         value(cell)
       end
+      next if values.all?(&:empty?) # accounts for rows with all empty values
 
       ark_id = values[ark_index] || ''
       bib_id = values[bib_index] || ''
