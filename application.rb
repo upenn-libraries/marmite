@@ -6,6 +6,8 @@ require 'sinatra/activerecord'
 require 'active_support/core_ext/string/output_safety'
 require 'open-uri'
 require 'nokogiri'
+require 'json'
+require 'iiif/presentation'
 
 require 'sprockets'
 require 'sprockets-helpers'
@@ -233,6 +235,49 @@ def create_record(bib_id, format, options = {})
         }
       end
       blob = openn.to_xml
+    when 'iiif_presentation'
+      image_ids_endpoint = "#{ENV['IMAGE_ID_ENDPOINT_PREFIX']}/#{bib_id}/#{ENV['IMAGE_ID_ENDPOINT_SUFFIX']}"
+      image_ids = JSON.parse(open(image_ids_endpoint).read)
+
+      seed = { 'label' => 'IIIF Manifest' }
+
+      manifest = IIIF::Presentation::Manifest.new(seed)
+
+      manifest["@id"] = "#{ENV['IIIF_SERVER']}/iiif/2/#{bib_id}/manifest"
+      manifest["license"] = "https://creativecommons.org/licenses/by/3.0/"
+      manifest["attribution"] = "University of Pennsylvania Libraries"
+
+      sequence = IIIF::Presentation::Sequence.new(
+        '@id' => "#{ENV['IIIF_SERVER']}/#{bib_id}/sequence/normal",
+        'label' => 'Current order'
+      )
+
+      image_ids.each_with_index do |iiif, i|
+        iiif_server = "#{ENV['IIIF_SERVER']}/iiif/2/"
+        p = Net::HTTP.get(URI.parse(iiif_server + iiif))
+        canvas_json = JSON.parse(p)
+
+        canvas = IIIF::Presentation::Canvas.new()
+        canvas["height"] = canvas_json["height"]
+        canvas["width"] = canvas_json["width"]
+        canvas["@id"] = "#{ENV['IIIF_SERVER']}/#{bib_id}/canvas/p#{i+1}"
+        canvas["label"] = "p. #{i+1}"
+
+        annotation = IIIF::Presentation::Annotation.new
+        base_uri = "#{iiif_server}#{iiif}"
+        params = {service_id: base_uri}
+        annotation.resource = IIIF::Presentation::ImageResource.create_image_api_image_resource(params)
+        annotation["on"] = (canvas["@id"])
+
+        canvas.images << annotation
+
+        sequence.canvases << canvas
+
+      end
+
+      manifest.sequences << sequence
+
+      blob = manifest.to_json
     else
       return
   end
@@ -358,7 +403,8 @@ class Application < Sinatra::Base
     end
   end
 
-  AVAILABLE_FORMATS = %w[marc21 structural structural_ark combined_ark dla openn]
+  AVAILABLE_FORMATS = %w[marc21 structural structural_ark combined_ark dla openn iiif_presentation]
+  FORMAT_OVERRIDES = { 'iiif_presentation' => 'application/json' }
   IMAGE_ID_PREFIXES = %w[medren_ print_]
 
   get '/records/:bib_id/create/?' do |bib_id|
@@ -379,6 +425,8 @@ class Application < Sinatra::Base
         create_record(bib_id, 'dla', params)
       when 'openn'
         create_record(bib_id, 'openn', params)
+      when 'iiif_presentation'
+        create_record(bib_id, 'iiif_presentation', params)
       else
         return
     end
@@ -409,7 +457,7 @@ class Application < Sinatra::Base
       halt(404, error)
     end
 
-    content_type('text/xml')
+    content_type(FORMAT_OVERRIDES[format] || 'text/xml')
     return inflate(blob.first)
   end
 
@@ -421,6 +469,7 @@ class Application < Sinatra::Base
       @combined_ark_records = Record.where(:format => 'combined_ark')
       @dla_records = Record.where(:format => 'dla')
       @openn_records = Record.where(:format => 'openn')
+      @iiif_presentation_records = Record.where(:format => 'iiif_presentation')
       erb :index
     end
   end
