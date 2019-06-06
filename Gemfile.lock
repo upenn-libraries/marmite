@@ -17,10 +17,18 @@ GEM
     byebug (10.0.0)
     coderay (1.1.1)
     concurrent-ruby (1.0.5)
+    faraday (0.15.4)
+      multipart-post (>= 1.2, < 3)
     i18n (0.8.4)
+    iiif-presentation (0.2.0)
+      activesupport (>= 3.2.18)
+      faraday (>= 0.9)
+      json
+    json (2.2.0)
     method_source (0.8.2)
     mini_portile2 (2.2.0)
     minitest (5.10.2)
+    multipart-post (2.1.1)
     mysql2 (0.4.6)
     nokogiri (1.8.0)
       mini_portile2 (~> 2.2.0)
@@ -79,6 +87,8 @@ PLATFORMS
 DEPENDENCIES
   activerecord
   activesupport
+  iiif-presentation
+  json
   mysql2
   nokogiri
   pry
@@ -96,4 +106,4 @@ RUBY VERSION
    ruby 2.4.5p335
 
 BUNDLED WITH
-   1.17.3
+   2.0.1

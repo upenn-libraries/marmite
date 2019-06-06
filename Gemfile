@@ -9,6 +9,8 @@ gem 'activesupport'
 gem 'sinatra-activerecord'
 gem 'rake'
 gem 'rubyXL'
+gem 'json'
+gem 'iiif-presentation'
 
 gem 'nokogiri'
 
