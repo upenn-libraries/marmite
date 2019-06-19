@@ -382,6 +382,7 @@ class Application < Sinatra::Base
   set :assets, Sprockets::Environment.new(root)
 
   configure do
+    set :protection, :except => [:json_csrf]
     enable :logging
     use Rack::CommonLogger, STDOUT
     assets.append_path File.join(root, 'assets', 'stylesheets')
