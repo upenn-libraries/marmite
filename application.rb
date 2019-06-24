@@ -237,9 +237,11 @@ def create_record(bib_id, format, options = {})
       blob = openn.to_xml
     when 'iiif_presentation'
       image_ids_endpoint = "#{ENV['IMAGE_ID_ENDPOINT_PREFIX']}/#{bib_id}/#{ENV['IMAGE_ID_ENDPOINT_SUFFIX']}"
-      image_ids = JSON.parse(open(image_ids_endpoint).read)
+      response = JSON.parse(open(image_ids_endpoint).read)
+      image_ids = response['image_ids']
+      title = response['title']
 
-      seed = { 'label' => 'IIIF Manifest' }
+      seed = { 'label' => title }
 
       manifest = IIIF::Presentation::Manifest.new(seed)
 
@@ -254,7 +256,7 @@ def create_record(bib_id, format, options = {})
 
       image_ids.each_with_index do |iiif, i|
         iiif_server = "#{ENV['IIIF_SERVER']}/iiif/2/"
-        p = Net::HTTP.get(URI.parse(iiif_server + iiif))
+        p = Net::HTTP.get(URI.parse(iiif_server + iiif + "/info.json"))
         canvas_json = JSON.parse(p)
 
         canvas = IIIF::Presentation::Canvas.new()
