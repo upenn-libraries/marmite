@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require './lib/marmite'
 
 require 'sinatra'
 require 'sinatra/activerecord'
@@ -495,6 +496,26 @@ class Application < Sinatra::Base
     get path do
       erb :harvesting
     end
+  end
+
+  get '/run/:format/*' do |format, subpath|
+    return "Invalid format specified" unless ['structural_ark', 'combined_ark'].member?(format)
+    basepath = Pathname.new(ENV['TASK_BASE_PATH'] || '/home/clemenc')
+    subpath.chomp!('/')
+    targetpath = Pathname.new(basepath.to_path + "/" + subpath)
+
+    # ensure we end up in a subdir of the base path
+    in_subdir = targetpath.relative_path_from(basepath).to_path == subpath
+    return "Invalid subpath specified" unless in_subdir && targetpath.exist?
+
+    if format == 'structural_ark'
+      parse_errors = IndexMetadata.index_structural(targetpath.to_path, format)
+    elsif format == 'combined_ark'
+      parse_errors = IndexMetadata.index_combined(targetpath.to_path, format)
+    end
+
+    content_type('application/json')
+    return JSON(parse_errors)
   end
 
 end
