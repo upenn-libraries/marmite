@@ -499,14 +499,21 @@ class Application < Sinatra::Base
   end
 
   get '/run/:format/*' do |format, subpath|
-    return "Invalid format specified" unless ['structural_ark', 'combined_ark'].member?(format)
+    unless ['structural_ark', 'combined_ark'].member?(format)
+      status 400
+      return "Invalid format specified"
+    end
+
     basepath = Pathname.new(ENV['TASK_BASE_PATH'] || '/home/clemenc')
     subpath.chomp!('/')
     targetpath = Pathname.new(basepath.to_path + "/" + subpath)
 
     # ensure we end up in a subdir of the base path
     in_subdir = targetpath.relative_path_from(basepath).to_path == subpath
-    return "Invalid subpath specified" unless in_subdir && targetpath.exist?
+    unless in_subdir && targetpath.exist?
+      status 400
+      return "Invalid subpath specified"
+    end
 
     if format == 'structural_ark'
       parse_errors = IndexMetadata.index_structural(targetpath.to_path, format)
@@ -514,6 +521,7 @@ class Application < Sinatra::Base
       parse_errors = IndexMetadata.index_combined(targetpath.to_path, format)
     end
 
+    status 500 unless parse_errors.empty?
     content_type('application/json')
     return JSON(parse_errors)
   end
