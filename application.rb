@@ -59,6 +59,8 @@ def retrieve_pages(bib_id)
 end
 
 def create_record(bib_id, format, options = {})
+  skip_update = false
+
   case format
     when 'marc21'
       bibs_url = 'https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs'
@@ -281,14 +283,37 @@ def create_record(bib_id, format, options = {})
       manifest.sequences << sequence
 
       blob = manifest.to_json
+    when 'structural_ark'
+      skip_update = true
+      targetpath = Pathname.new(ENV['TASK_BASE_PATH'] + "/" + bib_id + ".xlsx")
+      parse_errors = IndexMetadata.index_structural(targetpath.to_path, format)
+
+      if !parse_errors.empty?
+        status 500 unless parse_errors.empty?
+        content_type('application/json')
+        return JSON(parse_errors)
+      end
+    when 'combined_ark'
+      skip_update = true
+      targetpath = Pathname.new(ENV['TASK_BASE_PATH'] + "/" + bib_id + ".xlsx")
+      parse_errors = IndexMetadata.index_combined(targetpath.to_path, format)
+
+      if !parse_errors.empty?
+        status 500 unless parse_errors.empty?
+        content_type('application/json')
+        return JSON(parse_errors)
+      end
     else
       return
   end
-  record = Record.find_or_initialize_by(:bib_id => bib_id, :format => format)
-  record.format = format
-  record.blob = Base64.encode64(Zlib::Deflate.new(nil, -Zlib::MAX_WBITS).deflate(blob, Zlib::FINISH))
-  record.touch unless record.new_record?
-  record.save!
+
+  unless skip_update
+    record = Record.find_or_initialize_by(:bib_id => bib_id, :format => format)
+    record.format = format
+    record.blob = Base64.encode64(Zlib::Deflate.new(nil, -Zlib::MAX_WBITS).deflate(blob, Zlib::FINISH))
+    record.touch unless record.new_record?
+    record.save!
+  end
 end
 
 def process_pages(pages, xml, bib_id, image_id_prefix = '')
@@ -364,6 +389,9 @@ def legacy_bib_id(bib_id)
 end
 
 def still_fresh?(bib_id, format)
+  # Recreate ark formats every time
+  return false if ['structural_ark', 'combined_ark'].member?(format)
+
   record_check = Record.find_or_initialize_by(:bib_id => bib_id, :format => format)
   fresh = record_check.updated_at.nil? ? false : fresh_check(record_check.updated_at)
   if fresh
@@ -431,6 +459,10 @@ class Application < Sinatra::Base
         create_record(bib_id, 'openn', params)
       when 'iiif_presentation'
         create_record(bib_id, 'iiif_presentation', params)
+      when 'structural_ark'
+        create_record(bib_id, 'structural_ark', params)
+      when 'combined_ark'
+        create_record(bib_id, 'combined_ark', params)
       else
         return
     end
@@ -496,34 +528,6 @@ class Application < Sinatra::Base
     get path do
       erb :harvesting
     end
-  end
-
-  get '/run/:format/*' do |format, subpath|
-    unless ['structural_ark', 'combined_ark'].member?(format)
-      status 400
-      return "Invalid format specified"
-    end
-
-    basepath = Pathname.new(ENV['TASK_BASE_PATH'] || '/home/clemenc')
-    subpath.chomp!('/')
-    targetpath = Pathname.new(basepath.to_path + "/" + subpath)
-
-    # ensure we end up in a subdir of the base path
-    in_subdir = targetpath.relative_path_from(basepath).to_path == subpath
-    unless in_subdir && targetpath.exist?
-      status 400
-      return "Invalid subpath specified"
-    end
-
-    if format == 'structural_ark'
-      parse_errors = IndexMetadata.index_structural(targetpath.to_path, format)
-    elsif format == 'combined_ark'
-      parse_errors = IndexMetadata.index_combined(targetpath.to_path, format)
-    end
-
-    status 500 unless parse_errors.empty?
-    content_type('application/json')
-    return JSON(parse_errors)
   end
 
 end
