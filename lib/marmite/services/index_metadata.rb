@@ -1,9 +1,16 @@
 class IndexMetadata
 
-  def self.index_structural(xlsx_dir, format)
+  def self.index_structural(xlsx_path, format)
     parse_errors = []
+    files_to_parse = []
 
-    Dir.glob("#{xlsx_dir}/*.xlsx").each do |filename|
+    if(File.file?(xlsx_path))
+      files_to_parse = [xlsx_path]
+    elsif(File.directory?(xlsx_path))
+      files_to_parse = Dir.glob("#{xlsx_path}/*.xlsx")
+    end
+
+    files_to_parse.each do |filename|
       begin
         contents = StructuralParser.parseXLSX(filename)
       rescue => parse_error
@@ -25,10 +32,17 @@ class IndexMetadata
     return parse_errors
   end
 
-  def self.index_combined(xlsx_dir, format)
+  def self.index_combined(xlsx_path, format)
     parse_errors = []
+    files_to_parse = []
 
-    Dir.glob("#{xlsx_dir}/*.xlsx").each do |filename|
+    if(File.file?(xlsx_path))
+      files_to_parse = [xlsx_path]
+    elsif(File.directory?(xlsx_path))
+      files_to_parse = Dir.glob("#{xlsx_path}/*.xlsx")
+    end
+
+    files_to_parse.each do |filename|
       begin
         contents = CombinedParser.parseXLSX(filename)
       rescue => parse_error
