@@ -9,6 +9,7 @@ require 'open-uri'
 require 'nokogiri'
 require 'json'
 require 'iiif/presentation'
+require 'htmlentities'
 
 require 'sprockets'
 require 'sprockets-helpers'
@@ -244,7 +245,15 @@ def create_record(bib_id, format, options = {})
       image_ids = response['image_ids']
       title = response['title']
 
-      seed = { 'label' => title }
+      # Title is already HTML-escaped and will be escaped again when
+      # transformed to JSON. This prevents double escaping. We could
+      # disable HTML escaping entirely, but this is the only field
+      # that requires special handling.
+      #
+      # To disable escaping entirely, un-comment the next line:
+      # ActiveSupport::JSON::Encoding.escape_html_entities_in_json = false
+
+      seed = { 'label' => HTMLEntities.new.decode(title) }
 
       manifest = IIIF::Presentation::Manifest.new(seed)
 

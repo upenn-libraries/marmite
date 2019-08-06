@@ -11,6 +11,7 @@ gem 'rake'
 gem 'rubyXL'
 gem 'json'
 gem 'iiif-presentation'
+gem 'htmlentities'
 
 gem 'nokogiri'
 
