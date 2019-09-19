@@ -34,7 +34,7 @@ class StructuralParser
       next if values.all?(&:empty?) # accounts for rows with all empty values
 
       ark_id = values[ark_index] || ''
-      bib_id = values[bib_index] || ''
+      bib_id = (values.dig(bib_index) unless bib_index.nil?) || ''
       seq = values[seq_index].presence || 0 # Note: rows missing sequence # will be sorted to the top
       vispage = values[vispage_index] || ''
       toc = values[toc_index] || ''
