@@ -258,7 +258,7 @@ def create_record(bib_id, format, options = {})
       manifest = IIIF::Presentation::Manifest.new(seed)
 
       manifest["@id"] = "#{ENV['IIIF_SERVER']}/iiif/2/#{bib_id}/manifest"
-      manifest["license"] = "https://creativecommons.org/licenses/by/3.0/"
+      manifest["license"] = options[:license]
       manifest["attribution"] = "University of Pennsylvania Libraries"
 
       sequence = IIIF::Presentation::Sequence.new(
