@@ -312,8 +312,8 @@ def create_record(bib_id, format, options = {})
         content_type('application/json')
         return JSON(parse_errors)
       end
-    else
-      return
+  else
+    return
   end
 
   unless skip_update
@@ -473,7 +473,7 @@ class Application < Sinatra::Base
       when 'combined_ark'
         create_record(bib_id, 'combined_ark', params)
       else
-        return
+        return "Invalid format \"#{format}\" specified"
     end
 
     Record.error_message = "Invalid specified format #{format}" unless AVAILABLE_FORMATS.include?(format)
