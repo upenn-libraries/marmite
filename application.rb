@@ -239,7 +239,7 @@ def create_record(bib_id, format, options = {})
         }
       end
       blob = openn.to_xml
-    when 'iiif_presentation'
+  when 'iiif_presentation'
       image_ids_endpoint = "#{ENV['IMAGE_ID_ENDPOINT_PREFIX']}/#{bib_id}/#{ENV['IMAGE_ID_ENDPOINT_SUFFIX']}"
       response = JSON.parse(open(image_ids_endpoint).read)
       image_ids = response['image_ids']
@@ -267,6 +267,7 @@ def create_record(bib_id, format, options = {})
       )
 
       image_ids.each_with_index do |iiif, i|
+        continue unless iiif.ends_with?('.tif.jpeg')
         iiif_server = "#{ENV['IIIF_SERVER']}/iiif/2/"
         p = Net::HTTP.get(URI.parse(iiif_server + iiif + "/info.json"))
         canvas_json = JSON.parse(p)
