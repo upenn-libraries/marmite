@@ -267,7 +267,9 @@ def create_record(bib_id, format, options = {})
       )
 
       image_ids.each_with_index do |iiif, i|
-        continue unless iiif.ends_with?('.tif.jpeg')
+
+        next unless iiif.ends_with?('.tif.jpeg')
+
         iiif_server = "#{ENV['IIIF_SERVER']}/iiif/2/"
         p = Net::HTTP.get(URI.parse(iiif_server + iiif + "/info.json"))
         canvas_json = JSON.parse(p)
