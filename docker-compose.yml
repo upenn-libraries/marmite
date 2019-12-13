@@ -10,6 +10,7 @@ services:
     depends_on:
       - 'db'
     image: 'quay.io/upennlibraries/marmite:354a7e6'
+    env_file: '.env'
     ports:
       - '9292:9292'
     env_file:
