@@ -244,7 +244,6 @@ def create_record(bib_id, format, options = {})
       response = JSON.parse(open(image_ids_endpoint).read)
       image_ids = response['image_ids']
       title = response['title']
-
       # Title is already HTML-escaped and will be escaped again when
       # transformed to JSON. This prevents double escaping. We could
       # disable HTML escaping entirely, but this is the only field
@@ -266,33 +265,49 @@ def create_record(bib_id, format, options = {})
         'label' => 'Current order'
       )
 
-      image_ids.each_with_index do |iiif, i|
+      structures = []
 
-        next unless iiif.ends_with?('.tif.jpeg')
+      image_ids.each_with_index do |(iiif, i), index|
+
+        next unless iiif.ends_with?('.tif')
 
         iiif_server = "#{ENV['IIIF_SERVER']}/iiif/2/"
-        p = Net::HTTP.get(URI.parse(iiif_server + iiif + "/info.json"))
-        canvas_json = JSON.parse(p)
+        #p = Net::HTTP.get(URI.parse(iiif_server + "#{iiif}.jpeg" + "/info.json"))
+        #canvas_json = JSON.parse(p)
 
         canvas = IIIF::Presentation::Canvas.new()
-        canvas["height"] = canvas_json["height"]
-        canvas["width"] = canvas_json["width"]
-        canvas["@id"] = "#{ENV['IIIF_SERVER']}/#{bib_id}/canvas/p#{i+1}"
-        canvas["label"] = "p. #{i+1}"
+        canvas["height"] = "400" #canvas_json["height"]
+        canvas["width"] = "450" #canvas_json["width"]
+
+        canvas["@id"] = "#{ENV['IIIF_SERVER']}/#{bib_id}/canvas/p#{index+1}"
+        canvas["label"] = i["page_number"].present? ? i["page_number"] : "p. #{index+1}"
 
         annotation = IIIF::Presentation::Annotation.new
         base_uri = "#{iiif_server}#{iiif}"
         params = {service_id: base_uri}
-        annotation.resource = IIIF::Presentation::ImageResource.create_image_api_image_resource(params)
+        #annotation.resource = IIIF::Presentation::ImageResource.create_image_api_image_resource(params)
         annotation["on"] = (canvas["@id"])
 
         canvas.images << annotation
 
         sequence.canvases << canvas
 
+        struct_desc = i['description'].length > 2 ? "#{i["description"]};" : nil
+        struct_tocentry = i['tocentry_data'].present? ? i["tocentry_data"]['ill'] : nil #TODO: ensure that ill is the only legacy use case
+        structural_label = "#{struct_desc}#{struct_tocentry}"
+
+        structures << { "@id" => "#{ENV['IMAGE_ID_ENDPOINT_PREFIX']}/#{bib_id}/p#{index+1}",
+                       "@type" => "sc:Range",
+                        "label" => structural_label,
+                        "canvases" => [canvas["@id"]]
+
+        } if structural_label.present?
+
       end
 
       manifest.sequences << sequence
+
+      manifest.structures = structures
 
       blob = manifest.to_json
     when 'structural_ark'
