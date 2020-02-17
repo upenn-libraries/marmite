@@ -274,11 +274,18 @@ def create_record(bib_id, format, options = {})
       if image_ids.is_a? Array
 
         image_ids.each_with_index do |iiif, i|
-          binding.pry
 
           iiif_server = "#{ENV['IIIF_SERVER']}/iiif/2/"
 
-          p = Net::HTTP.get(URI.parse(iiif_server + iiif + "/info.json"))
+          # Account for legacy image ID paths
+
+          iiif = URI(iiif).path.gsub('/iiif/2/','')
+          iiif_string = iiif.end_with?("/info.json") ? iiif : iiif + "/info.json"
+
+          p = Net::HTTP.get(URI.parse(iiif_server + iiif_string))
+
+          binding.pry
+
           canvas_json = JSON.parse(p)
 
           canvas = IIIF::Presentation::Canvas.new()
