@@ -241,7 +241,11 @@ def create_record(bib_id, format, options = {})
       blob = openn.to_xml
   when 'iiif_presentation'
       image_ids_endpoint = "#{ENV['IMAGE_ID_ENDPOINT_PREFIX']}/#{bib_id}/#{ENV['IMAGE_ID_ENDPOINT_SUFFIX']}"
+
+      logger.info("ATTEMPTING TO PARSE #{image_ids_endpoint}")
+
       response = JSON.parse(open(image_ids_endpoint).read)
+
       image_ids = response['image_ids']
       title = response['title']
       reading_direction = response['reading_direction']
