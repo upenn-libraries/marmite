@@ -283,13 +283,13 @@ def create_record(bib_id, format, options = {})
 
           # Account for legacy image ID paths
 
-          iiif = URI(iiif).path.gsub('/phalt/iiif/2/','')
+          iiif = URI(iiif).path.gsub('phalt/','')
+          iiif = URI(iiif).path.gsub('iiif/2/','')
           iiif_string = iiif.end_with?("/info.json") ? iiif : iiif + "/info.json"
 
           p = Net::HTTP.get(URI.parse(iiif_server + iiif_string))
 
           logger.info("ARRAY -- ITERATING THROUGH #{iiif_server + iiif_string}")
-
 
           canvas_json = JSON.parse(p)
 
@@ -301,12 +301,12 @@ def create_record(bib_id, format, options = {})
 
           annotation = IIIF::Presentation::Annotation.new
           base_uri = "#{iiif_server}#{iiif}"
+          base_uri.gsub!("/info.json", "") if base_uri.ends_with?("/info.json")
           params = {service_id: base_uri}
           annotation.resource = IIIF::Presentation::ImageResource.create_image_api_image_resource(params)
           annotation["on"] = (canvas["@id"])
 
           canvas.images << annotation
-
           sequence.canvases << canvas
 
         end
