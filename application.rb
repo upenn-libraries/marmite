@@ -288,7 +288,7 @@ def create_record(bib_id, format, options = {})
 
           p = Net::HTTP.get(URI.parse(iiif_server + iiif_string))
 
-          logger.info("ITERATING THROUGH #{p}")
+          logger.info("ARRAY -- ITERATING THROUGH #{p}")
 
 
           canvas_json = JSON.parse(p)
@@ -322,6 +322,9 @@ def create_record(bib_id, format, options = {})
           iiif_string = iiif.start_with?(iiif_server) ? "#{iiif}/info.json" : iiif_server + "#{iiif}/info.json"
 
           p = Net::HTTP.get(URI.parse(iiif_string))
+
+          logger.info("HASH -- ITERATING THROUGH #{p}")
+
           canvas_json = JSON.parse(p)
 
           canvas = IIIF::Presentation::Canvas.new()
