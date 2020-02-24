@@ -283,7 +283,7 @@ def create_record(bib_id, format, options = {})
 
           # Account for legacy image ID paths
 
-          iiif = URI(iiif).path.gsub('/iiif/2/','')
+          iiif = URI(iiif).path.gsub('/phalt/iiif/2/','')
           iiif_string = iiif.end_with?("/info.json") ? iiif : iiif + "/info.json"
 
           p = Net::HTTP.get(URI.parse(iiif_server + iiif_string))
