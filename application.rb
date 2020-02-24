@@ -288,7 +288,7 @@ def create_record(bib_id, format, options = {})
 
           p = Net::HTTP.get(URI.parse(iiif_server + iiif_string))
 
-          logger.info("ARRAY -- ITERATING THROUGH #{p}")
+          logger.info("ARRAY -- ITERATING THROUGH #{iiif_server + iiif_string}")
 
 
           canvas_json = JSON.parse(p)
@@ -323,7 +323,7 @@ def create_record(bib_id, format, options = {})
 
           p = Net::HTTP.get(URI.parse(iiif_string))
 
-          logger.info("HASH -- ITERATING THROUGH #{p}")
+          logger.info("HASH -- ITERATING THROUGH #{iiif_string}")
 
           canvas_json = JSON.parse(p)
 
