@@ -241,9 +241,14 @@ def create_record(bib_id, format, options = {})
       blob = openn.to_xml
   when 'iiif_presentation'
       image_ids_endpoint = "#{ENV['IMAGE_ID_ENDPOINT_PREFIX']}/#{bib_id}/#{ENV['IMAGE_ID_ENDPOINT_SUFFIX']}"
+
+      logger.info("ATTEMPTING TO PARSE #{image_ids_endpoint}")
+
       response = JSON.parse(open(image_ids_endpoint).read)
+
       image_ids = response['image_ids']
       title = response['title']
+      reading_direction = response['reading_direction']
 
       # Title is already HTML-escaped and will be escaped again when
       # transformed to JSON. This prevents double escaping. We could
@@ -260,39 +265,105 @@ def create_record(bib_id, format, options = {})
       manifest["@id"] = "#{ENV['IIIF_SERVER']}/iiif/2/#{bib_id}/manifest"
       manifest["license"] = options[:license]
       manifest["attribution"] = "University of Pennsylvania Libraries"
+      manifest["viewingHint"] = reading_direction == "right-to-left" ? "paged" : "individuals"
+      manifest["viewingDirection"] = reading_direction
 
       sequence = IIIF::Presentation::Sequence.new(
         '@id' => "#{ENV['IIIF_SERVER']}/#{bib_id}/sequence/normal",
         'label' => 'Current order'
       )
 
-      image_ids.each_with_index do |iiif, i|
+      structures = []
+      
+      if image_ids.is_a? Array
 
-        next unless iiif.ends_with?('.tif.jpeg')
+        image_ids.each_with_index do |iiif, i|
 
-        iiif_server = "#{ENV['IIIF_SERVER']}/iiif/2/"
-        p = Net::HTTP.get(URI.parse(iiif_server + iiif + "/info.json"))
-        canvas_json = JSON.parse(p)
+          iiif_server = "#{ENV['IIIF_SERVER']}/iiif/2/"
 
-        canvas = IIIF::Presentation::Canvas.new()
-        canvas["height"] = canvas_json["height"]
-        canvas["width"] = canvas_json["width"]
-        canvas["@id"] = "#{ENV['IIIF_SERVER']}/#{bib_id}/canvas/p#{i+1}"
-        canvas["label"] = "p. #{i+1}"
+          # Account for legacy image ID paths
 
-        annotation = IIIF::Presentation::Annotation.new
-        base_uri = "#{iiif_server}#{iiif}"
-        params = {service_id: base_uri}
-        annotation.resource = IIIF::Presentation::ImageResource.create_image_api_image_resource(params)
-        annotation["on"] = (canvas["@id"])
+          iiif = URI(iiif).path.gsub('phalt/','')
+          iiif = URI(iiif).path.gsub('iiif/2/','')
+          iiif_string = iiif.end_with?("/info.json") ? iiif : iiif + "/info.json"
 
-        canvas.images << annotation
+          p = Net::HTTP.get(URI.parse(iiif_server + iiif_string))
 
-        sequence.canvases << canvas
+          logger.info("ARRAY -- ITERATING THROUGH #{iiif_server + iiif_string}")
+
+          canvas_json = JSON.parse(p)
+
+          canvas = IIIF::Presentation::Canvas.new()
+          canvas["height"] = canvas_json["height"]
+          canvas["width"] = canvas_json["width"]
+          canvas["@id"] = "#{ENV['IIIF_SERVER']}/#{bib_id}/canvas/p#{i+1}"
+          canvas["label"] = "p. #{i+1}"
+
+          annotation = IIIF::Presentation::Annotation.new
+          base_uri = "#{iiif_server}#{iiif}"
+          base_uri.gsub!("/info.json", "") if base_uri.ends_with?("/info.json")
+          params = {service_id: base_uri}
+          annotation.resource = IIIF::Presentation::ImageResource.create_image_api_image_resource(params)
+          annotation["on"] = (canvas["@id"])
+
+          canvas.images << annotation
+          sequence.canvases << canvas
+
+        end
+
+      elsif image_ids.is_a? Hash
+
+        image_ids.each_with_index do |(iiif, i), index|
+
+          next unless iiif.ends_with?('.tif.jpeg')
+
+          iiif_server = "#{ENV['IIIF_SERVER']}/iiif/2/"
+
+          iiif_string = iiif.start_with?(iiif_server) ? "#{iiif}/info.json" : iiif_server + "#{iiif}/info.json"
+
+          p = Net::HTTP.get(URI.parse(iiif_string))
+
+          logger.info("HASH -- ITERATING THROUGH #{iiif_string}")
+
+          canvas_json = JSON.parse(p)
+
+          canvas = IIIF::Presentation::Canvas.new()
+          canvas["height"] = canvas_json["height"]
+          canvas["width"] = canvas_json["width"]
+
+          canvas["@id"] = "#{ENV['IIIF_SERVER']}/#{bib_id}/canvas/p#{index+1}"
+          canvas["label"] = i["description"].present? ? i["description"] : "p. #{index+1}"
+
+          annotation = IIIF::Presentation::Annotation.new
+          base_uri = "#{iiif_server}#{iiif}"
+          params = {service_id: base_uri}
+          annotation.resource = IIIF::Presentation::ImageResource.create_image_api_image_resource(params)
+          annotation["on"] = (canvas["@id"])
+
+          canvas.images << annotation
+
+          sequence.canvases << canvas
+
+          struct_desc = i['description'].length > 2 ? "#{i["description"]};" : nil
+          struct_tocentry = i['tocentry_data'].present? ? "#{i["tocentry_data"]['ill']};" : nil
+          structural_label = "#{struct_desc}#{struct_tocentry}"
+
+          structures << { "@id" => "#{ENV['IMAGE_ID_ENDPOINT_PREFIX']}/#{bib_id}/p#{index+1}",
+                          "@type" => "sc:Range",
+                          "label" => structural_label,
+                          "canvases" => [canvas["@id"]]
+
+          } if structural_label.present?
+
+        end
+
+      else
 
       end
 
       manifest.sequences << sequence
+
+      manifest.structures = structures
 
       blob = manifest.to_json
     when 'structural_ark'
