@@ -51,6 +51,11 @@ The application makes the following XML metadata formats available:
 
   Where the `NFS_ADDR` and `NFS_DEVISE` values correspond to correct values for the NFS machine address and device path.
 
+## Deployment workflow 
+
+This illustration represents the current deployment workflow for marmite.
+
+![Marmite deployment workflow](marmite_deployment.png)
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at [https://github.com/upenn-libraries/marmite](https://github.com/upenn-libraries/marmite).
