@@ -20,6 +20,7 @@ workflows:
             - gitleaks/check_local
           pre-steps:
             - run:
+                name: Set Environment Variables for Slack Notification
                 environment:
                   GIT_URL: << pipeline.project.git_url >>/compare/<< pipeline.git.base_revision >>..<< pipeline.git.revision >>
                 command: |
