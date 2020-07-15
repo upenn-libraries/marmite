@@ -23,7 +23,7 @@ workflows:
                 environment:
                   GIT_URL: << pipeline.project.git_url >>/compare/<< pipeline.git.base_revision >>..<< pipeline.git.revision >>
                 command: |
-                  echo "export GIT_COMMIT_DESC='$(git --git-dir /root/project/.git log --format=%B -n 1 $CIRCLE_SHA1)'" >> $BASH_ENV
+                  echo "export GIT_COMMIT_DESC='$(git --git-dir /home/circleci/project/.git log --format=%B -n 1 $CIRCLE_SHA1)'" >> $BASH_ENV
                   source $BASH_ENV
           post-steps:
             - slack/status:
