@@ -21,10 +21,9 @@ workflows:
           post-steps:
             - run:
                 name: Set Environment Variables for Slack Notification
-                environment:
-                  GIT_URL: << pipeline.project.git_url >>/compare/<< pipeline.git.base_revision >>..<< pipeline.git.revision >>
                 command: |
-                  echo "export GIT_COMMIT_DESC='$(git --git-dir /home/circleci/project/.git log --format=%B -n 1 $CIRCLE_SHA1)'" >> $BASH_ENV
+                  echo "export GIT_COMMIT_DESC='$(git --git-dir $HOME/project/.git log --format=%B -n 1 $CIRCLE_SHA1)'" >> $BASH_ENV
+                  echo "export GIT_URL=<< pipeline.project.git_url >>/compare/<< pipeline.git.base_revision >>..<< pipeline.git.revision >>" >> $BASH_ENV
                   source $BASH_ENV
             - slack/status:
                 channel: marmite-notifications
