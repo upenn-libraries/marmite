@@ -13,10 +13,20 @@ workflows:
           options: --redact --repo-config
       - docker-publish/publish:
           context: quay.io
+          extra_build_args: >-
+            --label "edu.upenn.library.build-system=circleci"
+            --label "edu.upenn.library.circleci.build-number=${CIRCLE_BUILD_NUM}"
+            --label "edu.upenn.library.circleci.build-timestamp=$(date -uIs)"
+            --label "edu.upenn.library.circleci.build-url=${CIRCLE_BUILD_URL}"
+            --label "edu.upenn.library.circleci.git-branch=${CIRCLE_BRANCH}"
+            --label "edu.upenn.library.circleci.git-commit=${CIRCLE_SHA1}"
+            --label "edu.upenn.library.circleci.git-repo-url=${CIRCLE_REPOSITORY_URL}"
+            --label "edu.upenn.library.circleci.workflow-id=${CIRCLE_WORKFLOW_ID}"
           registry: quay.io
           image: upennlibraries/marmite
           requires:
             - gitleaks/check_local
+          tag: ${CIRCLE_SHA1}, ${CIRCLE_SHA1:0:7}
           post-steps:
             - run:
                 name: Set Environment Variables for Slack Notification
