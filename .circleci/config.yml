@@ -5,14 +5,21 @@ orbs:
   gitleaks: upenn-libraries/gitleaks@0.1.1
   slack: circleci/slack@3.4.2
 
-workflows:
-  build_and_test:
-    jobs:
-      - gitleaks/check_local:
-          image: quay.io/upennlibraries/gitleaks:v1.24.0
-          options: --redact --repo-config
-      - docker/publish:
-          context: quay.io
+jobs:
+  build_and_push:
+    executor: docker/docker
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run:
+          name: Set Environment Variables for Slack Notification
+          command: |
+            echo "export GIT_COMMIT_DESC='$(git --git-dir $HOME/project/.git log --format=%B -n 1 $CIRCLE_SHA1)'" >> $BASH_ENV
+            echo "export GIT_URL=<< pipeline.project.git_url >>/compare/<< pipeline.git.base_revision >>..<< pipeline.git.revision >>" >> $BASH_ENV
+            source $BASH_ENV
+      - docker/check:
+          registry: quay.io
+      - docker/build:
           extra_build_args: >-
             --label "edu.upenn.library.build-system=circleci"
             --label "edu.upenn.library.circleci.build-number=${CIRCLE_BUILD_NUM}"
@@ -23,19 +30,25 @@ workflows:
             --label "edu.upenn.library.circleci.git-repo-url=${CIRCLE_REPOSITORY_URL}"
             --label "edu.upenn.library.circleci.workflow-id=${CIRCLE_WORKFLOW_ID}"
           image: upennlibraries/marmite
-          post-steps:
-            - run:
-                name: Set Environment Variables for Slack Notification
-                command: |
-                  echo "export GIT_COMMIT_DESC='$(git --git-dir $HOME/project/.git log --format=%B -n 1 $CIRCLE_SHA1)'" >> $BASH_ENV
-                  echo "export GIT_URL=<< pipeline.project.git_url >>/compare/<< pipeline.git.base_revision >>..<< pipeline.git.revision >>" >> $BASH_ENV
-                  source $BASH_ENV
-            - slack/status:
-                channel: marmite-notifications
-                failure_message: ":red_circle: Failure! ${CIRCLE_USERNAME}'s workflow (<${CIRCLE_BUILD_URL}|${CIRCLE_JOB}>) in <${GIT_URL}|${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}>, Message: ${GIT_COMMIT_DESC}"
-                success_message: ":tada: Success! ${CIRCLE_USERNAME}'s workflow (<${CIRCLE_BUILD_URL}|${CIRCLE_JOB}>) in <${GIT_URL}|${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}>, Message: ${GIT_COMMIT_DESC}"
-                webhook: ${SLACK_WEBHOOK}
           registry: quay.io
+          tag: "${CIRCLE_SHA1},${CIRCLE_SHA1:0:7}"
+      - docker/push:
+          image: upennlibraries/marmite
+          registry: quay.io
+          tag: "${CIRCLE_SHA1},${CIRCLE_SHA1:0:7}"
+      - slack/status:
+          channel: marmite-notifications
+          failure_message: ":red_circle: Docker publish failed! ${CIRCLE_USERNAME}'s workflow (<${CIRCLE_BUILD_URL}|${CIRCLE_JOB}>) in <${GIT_URL}|${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}>, Message: ${GIT_COMMIT_DESC}"
+          success_message: ":tada: Docker publish succeeded! ${CIRCLE_USERNAME}'s workflow (<${CIRCLE_BUILD_URL}|${CIRCLE_JOB}>) in <${GIT_URL}|${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}>, Message: ${GIT_COMMIT_DESC}"
+          webhook: ${SLACK_WEBHOOK}
+
+workflows:
+  build_and_test:
+    jobs:
+      - gitleaks/check_local:
+          image: quay.io/upennlibraries/gitleaks:v1.24.0
+          options: --redact --repo-config
+      - build_and_push:
+          context: quay.io
           requires:
             - gitleaks/check_local
-          tag: "${CIRCLE_SHA1},${CIRCLE_SHA1:0:7}"
