@@ -23,10 +23,6 @@ workflows:
             --label "edu.upenn.library.circleci.git-repo-url=${CIRCLE_REPOSITORY_URL}"
             --label "edu.upenn.library.circleci.workflow-id=${CIRCLE_WORKFLOW_ID}"
           image: upennlibraries/marmite
-          registry: quay.io
-          requires:
-            - gitleaks/check_local
-          tag: "${CIRCLE_SHA1},${CIRCLE_SHA1:0:7}"
           post-steps:
             - run:
                 name: Set Environment Variables for Slack Notification
@@ -39,3 +35,7 @@ workflows:
                 failure_message: ":red_circle: Failure! ${CIRCLE_USERNAME}'s workflow (<${CIRCLE_BUILD_URL}|${CIRCLE_JOB}>) in <${GIT_URL}|${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}>, Message: ${GIT_COMMIT_DESC}"
                 success_message: ":tada: Success! ${CIRCLE_USERNAME}'s workflow (<${CIRCLE_BUILD_URL}|${CIRCLE_JOB}>) in <${GIT_URL}|${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}>, Message: ${GIT_COMMIT_DESC}"
                 webhook: ${SLACK_WEBHOOK}
+          registry: quay.io
+          requires:
+            - gitleaks/check_local
+          tag: "${CIRCLE_SHA1},${CIRCLE_SHA1:0:7}"
