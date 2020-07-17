@@ -22,8 +22,8 @@ workflows:
             --label "edu.upenn.library.circleci.git-commit=${CIRCLE_SHA1}"
             --label "edu.upenn.library.circleci.git-repo-url=${CIRCLE_REPOSITORY_URL}"
             --label "edu.upenn.library.circleci.workflow-id=${CIRCLE_WORKFLOW_ID}"
-          registry: quay.io
           image: upennlibraries/marmite
+          registry: quay.io
           requires:
             - gitleaks/check_local
           tag: "${CIRCLE_SHA1},${CIRCLE_SHA1:0:7}"
