@@ -3,7 +3,6 @@
 require './lib/marmite'
 
 require 'sinatra'
-require 'sinatra/activerecord'
 require 'active_support/core_ext/string/output_safety'
 require 'open-uri'
 require 'nokogiri'
@@ -21,20 +20,6 @@ use Rack::Logger
 use Rack::Deflater, :if => lambda {
     |*, body| body.map(&:bytesize).reduce(0, :+) > 512
 }
-
-class Record < ActiveRecord::Base
-
-  @error_message = ''
-
-  def self.error_message
-    return @error_message
-  end
-
-  def self.error_message=(value)
-    @error_message = value
-  end
-
-end
 
 def xpath_empty?(array)
   return array.nil?
