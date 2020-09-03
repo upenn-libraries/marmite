@@ -507,11 +507,6 @@ class Application < Sinatra::Base
     end
   end
 
-  get '/' do
-    response.write 'Hi!'
-    response.close
-  end
-
   get '/records/:bib_id/create/?' do |bib_id|
     Record.error_message = ''
 
