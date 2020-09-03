@@ -522,6 +522,11 @@ class Application < Sinatra::Base
   FORMAT_OVERRIDES = { 'iiif_presentation' => 'application/json' }
   IMAGE_ID_PREFIXES = %w[medren_ print_]
 
+  get '/' do
+    response.write 'Hi!'
+    response.close
+  end
+
   get '/records/:bib_id/create/?' do |bib_id|
     Record.error_message = ''
 
