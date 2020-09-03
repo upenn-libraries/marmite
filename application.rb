@@ -480,6 +480,10 @@ end
 class Application < Sinatra::Base
   set :assets, Sprockets::Environment.new(root)
 
+  AVAILABLE_FORMATS = %w[marc21 structural structural_ark combined_ark dla openn iiif_presentation]
+  FORMAT_OVERRIDES = { 'iiif_presentation' => 'application/json' }
+  IMAGE_ID_PREFIXES = %w[medren_ print_]
+
   configure do
     set :protection, :except => [:json_csrf]
     enable :logging
@@ -502,10 +506,6 @@ class Application < Sinatra::Base
       return :_list
     end
   end
-
-  AVAILABLE_FORMATS = %w[marc21 structural structural_ark combined_ark dla openn iiif_presentation]
-  FORMAT_OVERRIDES = { 'iiif_presentation' => 'application/json' }
-  IMAGE_ID_PREFIXES = %w[medren_ print_]
 
   get '/' do
     response.write 'Hi!'
