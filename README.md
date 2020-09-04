@@ -33,9 +33,17 @@ The application makes the following XML metadata formats available:
 
 * Clone the repository.
 * Run ```bundle install```
+* Build Docker MySQL image 
+```
+docker build -t marmite-mysql db
+docker run -p 3306:3306 -d --name marmite-mysql marmite-mysql
+```
 * Run ```rake db:create && rake db:migrate```
 * Run ```rackup```
 * Visit [http://localhost:9292/harvesting](http://localhost:9292/harvesting) to learn available commands and endpoints.
+
+To remove Docker MySQL image
+* ```docker rm -f marmite-mysql```
 
 ## Production setup
 
