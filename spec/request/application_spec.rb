@@ -31,4 +31,14 @@ RSpec.describe 'Marmite', type: :request do
       expect(last_response.body).to include *all_image_id_prefixes
     end
   end
+  context 'harvesting information display' do
+    it 'shows harvesting endpoints info at /harvesting' do
+      get '/harvesting'
+      expect(last_response.body).to include 'Harvesting', 'Rake Tasks'
+    end
+    it 'shows harvesting endpoints info at /records/harvesting' do
+      get '/records/harvesting'
+      expect(last_response.body).to include 'Harvesting', 'Rake Tasks'
+    end
+  end
 end

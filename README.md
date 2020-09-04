@@ -7,6 +7,7 @@ Marmite is an [ETL](https://www.webopedia.com/TERM/E/ETL.html) Sinatra applicati
 * [Requirements](#requirements)
 * [Functionalities](#functionalities)
 * [Development setup](#development-setup)
+* [Running the Test Suite](#running-the-test-suite)
 * [Production setup](#production-setup)
 * [Contributing](#contributing)
 * [License](#license)
@@ -44,6 +45,16 @@ docker run -p 3306:3306 -d --name marmite-mysql marmite-mysql
 
 To remove Docker MySQL image
 * ```docker rm -f marmite-mysql```
+
+## Running the Test Suite
+
+* Run through development setup
+* Run MySQL docker image
+* Ensure test DB is up-to-date 
+```
+rake db:migrate RACK_ENV=test
+```
+* Run `rspec`
 
 ## Production setup
 
