@@ -1,5 +1,3 @@
-require File.expand_path '../../spec_helper.rb', __FILE__
-
 RSpec.describe Record, type: :model do
   it 'has class methods' do
     expect(Record).to respond_to :error_message, :error_message=

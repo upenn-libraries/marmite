@@ -25,12 +25,9 @@ def xpath_empty?(array)
   return array.nil?
 end
 
+# TODO: refactor as you find usages of this
 def inflate(string)
-  zstream = Zlib::Inflate.new(-Zlib::MAX_WBITS)
-  buf = zstream.inflate(Base64::decode64(string))
-  zstream.finish
-  zstream.close
-  buf
+  BlobHandler.uncompress string
 end
 
 def retrieve_pages(bib_id)
@@ -552,6 +549,9 @@ class Application < Sinatra::Base
 
     format = params[:format]
 
+    # TODO: due to the use of where here, >1 record could be returned - is this a feature or an oversight?
+    # I think it should be
+    # blob = Record.find_by(bib_id: bib_id, format: format).pluck(:blob)
     blob = Record.where(:bib_id => bib_id, :format => format).pluck(:blob)
     Record.error_message = "Record #{bib_id} in #{format} format not found" if blob.empty?
 

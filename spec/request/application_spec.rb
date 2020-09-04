@@ -1,5 +1,3 @@
-require File.expand_path '../../spec_helper.rb', __FILE__
-
 RSpec.describe 'Marmite', type: :request do
   context 'supported formats display' do
     let :all_formats do
@@ -39,6 +37,25 @@ RSpec.describe 'Marmite', type: :request do
     it 'shows harvesting endpoints info at /records/harvesting' do
       get '/records/harvesting'
       expect(last_response.body).to include 'Harvesting', 'Rake Tasks'
+    end
+  end
+  context 'all record display' do
+    it 'shows a saved record' do
+      record = structural_record
+      get '/records'
+      expect(last_response.body).to include record.bib_id
+    end
+  end
+  context 'record show' do
+    context 'for a structural record' do
+      let(:record) { structural_record }
+      it 'shows the record info' do
+        get "/records/#{record.bib_id}/show", format: :structural
+        expect(last_response).to be_ok
+        expect(last_response.body).to include(
+          BlobHandler.uncompress(record.blob)
+        )
+      end
     end
   end
 end
