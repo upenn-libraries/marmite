@@ -57,5 +57,15 @@ RSpec.describe 'Marmite', type: :request do
         )
       end
     end
+    context 'for a IIIF presentation manifest' do
+      let(:record) { iiif_presentation_record }
+      it 'shows the manifest' do
+        get "/records/#{record.bib_id}/show", format: :iiif_presentation
+        expect(last_response).to be_ok
+        expect(last_response.body).to include(
+          BlobHandler.uncompress(record.blob)
+        )
+      end
+    end
   end
 end
