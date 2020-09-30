@@ -182,7 +182,7 @@ def create_record(bib_id, format, options = {})
       end
       blob = structural.to_xml
     when 'dla'
-      create_record(validate_bib_id(bib_id), 'marc21') unless still_fresh?(validate_bib_id(bib_id), 'marc21')
+      create_record(validate_bib_id(bib_id), 'marc21') if eligible_to_recreate?(validate_bib_id(bib_id), 'marc21')
       marc21 = inflate(Record.where(:bib_id => validate_bib_id(bib_id), :format => 'marc21').pluck(:blob).first)
       descriptive = Nokogiri::XML(marc21).search('//marc:records/marc:record')
       structural_endpoint = "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
@@ -203,7 +203,7 @@ def create_record(bib_id, format, options = {})
       end
       blob = dla.to_xml
     when 'openn'
-      create_record(validate_bib_id(bib_id), 'marc21') unless still_fresh?(validate_bib_id(bib_id), 'marc21')
+      create_record(validate_bib_id(bib_id), 'marc21') if eligible_to_recreate?(validate_bib_id(bib_id), 'marc21')
       marc21 = inflate(Record.where(:bib_id => validate_bib_id(bib_id), :format => 'marc21').pluck(:blob).first)
       descriptive = Nokogiri::XML(marc21).search('//marc:records/marc:record')
       pages = retrieve_pages(bib_id)
@@ -453,29 +453,31 @@ def legacy_bib_id(bib_id)
   return bib_id[2..(bib_id.length-8)] if bib_id.start_with?('99') and bib_id.end_with?('3503681')
 end
 
-def still_fresh?(bib_id, format)
-  # Always recreate ark & iiif formats
-  return false if always_consider_fresh? format
+def eligible_to_recreate?(bib_id, format)
+  return true if always_recreate? format
 
-  record_check = Record.find_or_initialize_by(:bib_id => bib_id, :format => format)
-  fresh = record_check.updated_at.nil? ? false : fresh_check(record_check.updated_at)
-  if fresh
+  record = Record.find_by bib_id: bib_id, format: format
+
+  return true unless record
+
+  if updated_recently? record
     logger.info("NOT RECREATING #{bib_id} -- object was updated within past 24 hours")
-    return true
+    true
   else
     logger.info("CREATING/RECREATING #{bib_id} -- object has not been updated within past 24 hours")
-    return false
+    false
   end
 end
 
-def always_consider_fresh?(format)
+def always_recreate?(format)
   %w[structural_ark combined_ark iiif_presentation].member?(format)
 end
 
-def fresh_check(updated_at)
+# @param [Record] record
+def updated_recently?(record)
   current_time = Time.now.gmtime
   yesterday = current_time - 1.day
-  return (yesterday..current_time).cover?(Time.at(updated_at).gmtime)
+  (yesterday..current_time).cover?(Time.at(record.updated_at).gmtime)
 end
 
 class Application < Sinatra::Base
@@ -510,16 +512,12 @@ class Application < Sinatra::Base
 
   get '/records/:bib_id/create/?' do |bib_id|
     Record.error_message = ''
-
     format = params[:format].nil? ? 'marc21' : params[:format]
-
-    fresh = still_fresh?(bib_id, format)
-
-    redirect "/records/#{bib_id}/show?format=#{format}" if fresh
+    redirect "/records/#{bib_id}/show?format=#{format}" unless eligible_to_recreate? bib_id, format
 
     case format
       when 'structural'
-         create_record(bib_id, 'structural', params)
+        create_record(bib_id, 'structural', params)
       when 'marc21'
         create_record(bib_id, 'marc21')
       when 'dla'
