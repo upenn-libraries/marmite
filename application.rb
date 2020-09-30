@@ -472,8 +472,8 @@ def legacy_bib_id(bib_id)
 end
 
 def still_fresh?(bib_id, format)
-  # Recreate ark formats every time
-  return false if ['structural_ark', 'combined_ark'].member?(format)
+  # Always recreate ark & iiif formats
+  return false if always_consider_fresh? format
 
   record_check = Record.find_or_initialize_by(:bib_id => bib_id, :format => format)
   fresh = record_check.updated_at.nil? ? false : fresh_check(record_check.updated_at)
@@ -484,6 +484,10 @@ def still_fresh?(bib_id, format)
     logger.info("CREATING/RECREATING #{bib_id} -- object has not been updated within past 24 hours")
     return false
   end
+end
+
+def always_consider_fresh?(format)
+  %w[structural_ark combined_ark iiif_presentation].member?(format)
 end
 
 def fresh_check(updated_at)
