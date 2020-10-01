@@ -43,6 +43,11 @@ docker run -p 3306:3306 -d --name marmite-mysql marmite-mysql
 * Run ```rackup```
 * Visit [http://localhost:9292/harvesting](http://localhost:9292/harvesting) to learn available commands and endpoints.
 
+Later, to start db image:
+```
+docker start marmite-mysql
+```
+
 To remove Docker MySQL image
 * ```docker rm -f marmite-mysql```
 
