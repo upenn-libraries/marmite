@@ -27,7 +27,7 @@ The application makes the following XML metadata formats available:
 * `marc21` - descriptive metadata transformed from Alma bib and holdings XML payloads, with minor term transformations and fixes for ease of machine processing
 * `structural` - structural metadata transformed from dla structural XML payloads, in [Bulwark](https://github.com/upenn-libraries/bulwark)-compliant format
 * `dla` - marc21 descriptive metadata and a DLA-compliant structural XML payload
-* `openn` - descriptive and structural metadata in a single paylod, in the format used by the OPenn package generation tools
+* `openn` - descriptive and structural metadata in a single payload, in the format used by the OPenn package generation tools
 * `iiif_presentation` - IIIF presentation 2.0 manifests
 
 ## Development Setup
@@ -38,15 +38,15 @@ The application makes the following XML metadata formats available:
 * Install Lando following instructions here: https://docs.lando.dev/basics/installation.html#system-requirements
 
 ### Start Development/Test Environment
-* Build development/test containers via Lando, run: `rake bulwark:start`
+* Build development/test containers via Lando, run: `rake marmite:start`
 * Run `rackup` to start the application
 * Visit [http://localhost:9292/harvesting](http://localhost:9292/harvesting) to learn available commands and endpoints.
 
 ### Stop Development/Test Environment
-To stop the Lando containers: `rake bulwark:stop`
+To stop the Lando containers: `rake marmite:stop`
 
 ### Remove (Clean) Containers
-To remove Lando containers: `rake bulwark:clean`
+To remove Lando containers: `rake marmite:clean`
 
 ## Running the Test Suite
 To set up test environment and run through test suite, run:
