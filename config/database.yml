@@ -6,19 +6,20 @@ default: &default
   username: root
   password:
   host: 127.0.0.1
-  port: 3306
+  port: 3308
 
 development:
   <<: *default
-  database: marc_alma_dev
+  database: marmite_dev
 
 test:
   <<: *default
-  database: marc_alma_test
+  database: marmite_test
 
 production:
   <<: *default
   host: db
+  port: 3306
   database: <%= ENV['MYSQL_DATABASE'] %>
   username: <%= ENV['MYSQL_USER'] %>
   password: <%= ENV['MYSQL_PASSWORD'] %>

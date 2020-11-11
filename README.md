@@ -30,36 +30,31 @@ The application makes the following XML metadata formats available:
 * `openn` - descriptive and structural metadata in a single paylod, in the format used by the OPenn package generation tools
 * `iiif_presentation` - IIIF presentation 2.0 manifests
 
-## Development setup
+## Development Setup
+### Initial Setup
 
-* Clone the repository.
-* Run ```bundle install```
-* Build Docker MySQL image 
-```
-docker build -t marmite-mysql db
-docker run -p 3306:3306 -d --name marmite-mysql marmite-mysql
-```
-* Run ```rake db:create && rake db:migrate```
-* Run ```rackup```
+* Clone the repository
+* Install necessary gems by running `bundle install`
+* Install Lando following instructions here: https://docs.lando.dev/basics/installation.html#system-requirements
+
+### Start Development/Test Environment
+* Build development/test containers via Lando, run: `rake bulwark:start`
+* Run `rackup` to start the application
 * Visit [http://localhost:9292/harvesting](http://localhost:9292/harvesting) to learn available commands and endpoints.
 
-Later, to start db image:
-```
-docker start marmite-mysql
-```
+### Stop Development/Test Environment
+To stop the Lando containers: `rake bulwark:stop`
 
-To remove Docker MySQL image
-* ```docker rm -f marmite-mysql```
+### Remove (Clean) Containers
+To remove Lando containers: `rake bulwark:clean`
 
 ## Running the Test Suite
-
-* Run through development setup
-* Run MySQL docker image
-* Ensure test DB is up-to-date 
+To set up test environment and run through test suite, run:
 ```
-rake db:migrate RACK_ENV=test
+rake marmite:start
+rspec
+rake marmite:stop
 ```
-* Run `rspec`
 
 ## Production setup
 
@@ -75,7 +70,7 @@ rake db:migrate RACK_ENV=test
 
   Where the `NFS_ADDR` and `NFS_DEVISE` values correspond to correct values for the NFS machine address and device path.
 
-## Deployment workflow 
+## Deployment workflow
 
 This illustration represents the current deployment workflow for marmite.
 
