@@ -1,0 +1,5 @@
+name: marmite
+services:
+  mysql:
+    type: mysql:5.7
+    portforward: 3308

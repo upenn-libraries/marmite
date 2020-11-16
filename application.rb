@@ -3,7 +3,6 @@
 require './lib/marmite'
 
 require 'sinatra'
-require 'sinatra/activerecord'
 require 'active_support/core_ext/string/output_safety'
 require 'open-uri'
 require 'nokogiri'
@@ -22,30 +21,13 @@ use Rack::Deflater, :if => lambda {
     |*, body| body.map(&:bytesize).reduce(0, :+) > 512
 }
 
-class Record < ActiveRecord::Base
-
-  @error_message = ''
-
-  def self.error_message
-    return @error_message
-  end
-
-  def self.error_message=(value)
-    @error_message = value
-  end
-
-end
-
 def xpath_empty?(array)
   return array.nil?
 end
 
+# TODO: refactor as you find usages of this
 def inflate(string)
-  zstream = Zlib::Inflate.new(-Zlib::MAX_WBITS)
-  buf = zstream.inflate(Base64::decode64(string))
-  zstream.finish
-  zstream.close
-  buf
+  BlobHandler.uncompress string
 end
 
 def retrieve_pages(bib_id)
@@ -495,6 +477,10 @@ end
 class Application < Sinatra::Base
   set :assets, Sprockets::Environment.new(root)
 
+  AVAILABLE_FORMATS = %w[marc21 structural structural_ark combined_ark dla openn iiif_presentation]
+  FORMAT_OVERRIDES = { 'iiif_presentation' => 'application/json' }
+  IMAGE_ID_PREFIXES = %w[medren_ print_]
+
   configure do
     set :protection, :except => [:json_csrf]
     enable :logging
@@ -517,10 +503,6 @@ class Application < Sinatra::Base
       return :_list
     end
   end
-
-  AVAILABLE_FORMATS = %w[marc21 structural structural_ark combined_ark dla openn iiif_presentation]
-  FORMAT_OVERRIDES = { 'iiif_presentation' => 'application/json' }
-  IMAGE_ID_PREFIXES = %w[medren_ print_]
 
   get '/records/:bib_id/create/?' do |bib_id|
     Record.error_message = ''
@@ -567,6 +549,9 @@ class Application < Sinatra::Base
 
     format = params[:format]
 
+    # TODO: due to the use of where here, >1 record could be returned - is this a feature or an oversight?
+    # I think it should be
+    # blob = Record.find_by(bib_id: bib_id, format: format).pluck(:blob)
     blob = Record.where(:bib_id => bib_id, :format => format).pluck(:blob)
     Record.error_message = "Record #{bib_id} in #{format} format not found" if blob.empty?
 
