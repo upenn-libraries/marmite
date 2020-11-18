@@ -2,7 +2,7 @@ require 'sinatra/activerecord'
 
 class Record < ActiveRecord::Base
 
-  FORMATS_TO_ALWAYS_RECREATE = %w[structural_ark combined_ark]
+  FORMATS_TO_ALWAYS_RECREATE = %w[structural_ark combined_ark iiif_presentation]
 
   @error_message = ''
 
@@ -20,9 +20,9 @@ class Record < ActiveRecord::Base
   # - less than 1 day old
   # @return [TrueClass, FalseClass]
   def fresh?
-    return true if format.in? FORMATS_TO_ALWAYS_RECREATE
+    return false if FORMATS_TO_ALWAYS_RECREATE.include?(format)
 
-    return false unless updated_at
+    return false unless updated_at # new record
 
     current_time = Time.now.gmtime
     yesterday = current_time - 1.day

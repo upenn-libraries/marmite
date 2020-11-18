@@ -511,6 +511,7 @@ class Application < Sinatra::Base
     # TODO: this is not quite right...
     Record.error_message = ''
 
+    # return existing record if the record is still 'fresh'
     redirect "/records/#{bib_id}/show?format=#{format}" if record.fresh?
 
     # TODO: pass in initialized record
