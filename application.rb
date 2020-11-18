@@ -505,17 +505,18 @@ class Application < Sinatra::Base
   end
 
   get '/records/:bib_id/create/?' do |bib_id|
+    format = params[:format] || 'marc21'
+    record = Record.find_or_initialize_by bib_id: bib_id, format: format
+
+    # TODO: this is not quite right...
     Record.error_message = ''
 
-    format = params[:format].nil? ? 'marc21' : params[:format]
+    redirect "/records/#{bib_id}/show?format=#{format}" if record.fresh?
 
-    fresh = still_fresh?(bib_id, format)
-
-    redirect "/records/#{bib_id}/show?format=#{format}" if fresh
-
+    # TODO: pass in initialized record
     case format
       when 'structural'
-         create_record(bib_id, 'structural', params)
+        create_record(bib_id, 'structural', params)
       when 'marc21'
         create_record(bib_id, 'marc21')
       when 'dla'
