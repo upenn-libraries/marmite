@@ -16,13 +16,13 @@ class Record < ActiveRecord::Base
 
   # A record is fresh if it is:
   # - NOT one of the FORMATS_TO_ALWAYS_RECREATE
-  # OR
+  # AND
   # - less than 1 day old
   # @return [TrueClass, FalseClass]
   def fresh?
     return false if FORMATS_TO_ALWAYS_RECREATE.include?(format)
 
-    return false unless updated_at # new record
+    return false unless updated_at # new record - too fresh!
 
     current_time = Time.now.gmtime
     yesterday = current_time - 1.day
