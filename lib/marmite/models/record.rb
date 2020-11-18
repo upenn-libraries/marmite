@@ -15,7 +15,7 @@ class Record < ActiveRecord::Base
   end
 
   # A record is fresh if it is:
-  # - considered one of the ALWAYS_FRESH_TYPES
+  # - NOT one of the FORMATS_TO_ALWAYS_RECREATE
   # OR
   # - less than 1 day old
   # @return [TrueClass, FalseClass]
