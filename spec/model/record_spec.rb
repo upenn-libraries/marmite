@@ -19,6 +19,9 @@ RSpec.describe Record, type: :model do
     let :fresh_marc_record do
       Record.new format: 'marc21', updated_at: fresh_time
     end
+    let :fresh_iiif_record do
+      Record.new format: 'iiif_presentation', updated_at: fresh_time
+    end
     it 'returns false if stale and not an always recreated type' do
       expect(stale_marc_record.fresh?).to eq false
     end
@@ -27,6 +30,10 @@ RSpec.describe Record, type: :model do
     end
     it 'returns true if fresh and not an always recreated type' do
       expect(fresh_marc_record.fresh?).to eq true
+    end
+    # Record::FORMATS_TO_ALWAYS_RECREATE format records are never considered fresh
+    it 'returns false if fresh and an always recreated type' do
+      expect(fresh_iiif_record.fresh?).to eq false
     end
   end
 end
