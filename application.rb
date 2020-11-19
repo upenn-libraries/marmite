@@ -208,7 +208,7 @@ def create_record(record, options = {})
     when 'openn'
       # corresponding marc record is needed for openn
       marc_record = Record.find_or_initialize_by bib_id: validated_bib_id, format: 'marc21'
-      create_record(marc_record) unless marc_rcord.fresh?
+      create_record(marc_record) unless marc_record.fresh?
       marc21 = inflate(marc_record.blob)
       descriptive = Nokogiri::XML(marc21).search('//marc:records/marc:record')
       pages = retrieve_pages(bib_id)
