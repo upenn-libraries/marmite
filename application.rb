@@ -41,26 +41,27 @@ def retrieve_pages(bib_id)
   return pages
 end
 
-def create_record(bib_id, format, options = {})
+def create_record(record, options = {})
   skip_update = false
-
+  bib_id = record.bib_id
+  validated_bib_id = validate_bib_id(bib_id)
+  format = record.format
   case format
     when 'marc21'
       bibs_url = 'https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs'
       alma_key = ENV['ALMA_KEY']
       return logger.warn('No key available') if alma_key.nil?
       source_blob = ''
-      bib_id = validate_bib_id(bib_id)
-      path = "#{bibs_url}/?mms_id=#{bib_id}&expand=p_avail&apikey=#{alma_key}"
+      path = "#{bibs_url}/?mms_id=#{validated_bib_id}&expand=p_avail&apikey=#{alma_key}"
       begin
         open(path) { |io| source_blob = io.read }
       rescue => exception
-        Record.error_message = "#{exception.message} returned by source for #{bib_id}"
+        Record.error_message = "#{exception.message} returned by source for #{validated_bib_id}"
         return
       end
 
       if source_blob.empty?
-        Record.error_message = "No record data available at source for #{bib_id}"
+        Record.error_message = "No record data available at source for #{validated_bib_id}"
         return
       end
 
@@ -182,8 +183,10 @@ def create_record(bib_id, format, options = {})
       end
       blob = structural.to_xml
     when 'dla'
-      create_record(validate_bib_id(bib_id), 'marc21') unless still_fresh?(validate_bib_id(bib_id), 'marc21')
-      marc21 = inflate(Record.where(:bib_id => validate_bib_id(bib_id), :format => 'marc21').pluck(:blob).first)
+      # corresponding marc record is needed for dla
+      marc_record = Record.find_or_initialize_by bib_id: validated_bib_id, format: 'marc21'
+      create_record(marc_record) unless marc_record.fresh?
+      marc21 = inflate(marc_record.blob)
       descriptive = Nokogiri::XML(marc21).search('//marc:records/marc:record')
       structural_endpoint = "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
       data = Nokogiri::XML.parse(open(structural_endpoint))
@@ -203,8 +206,10 @@ def create_record(bib_id, format, options = {})
       end
       blob = dla.to_xml
     when 'openn'
-      create_record(validate_bib_id(bib_id), 'marc21') unless still_fresh?(validate_bib_id(bib_id), 'marc21')
-      marc21 = inflate(Record.where(:bib_id => validate_bib_id(bib_id), :format => 'marc21').pluck(:blob).first)
+      # corresponding marc record is needed for openn
+      marc_record = Record.find_or_initialize_by bib_id: validated_bib_id, format: 'marc21'
+      create_record(marc_record) unless marc_rcord.fresh?
+      marc21 = inflate(marc_record.blob)
       descriptive = Nokogiri::XML(marc21).search('//marc:records/marc:record')
       pages = retrieve_pages(bib_id)
       openn = Nokogiri::XML::Builder.new do |xml|
@@ -373,7 +378,6 @@ def create_record(bib_id, format, options = {})
   end
 
   unless skip_update
-    record = Record.find_or_initialize_by(:bib_id => bib_id, :format => format)
     record.format = format
     record.blob = Base64.encode64(Zlib::Deflate.new(nil, -Zlib::MAX_WBITS).deflate(blob, Zlib::FINISH))
     record.touch unless record.new_record?
@@ -453,27 +457,6 @@ def legacy_bib_id(bib_id)
   return bib_id[2..(bib_id.length-8)] if bib_id.start_with?('99') and bib_id.end_with?('3503681')
 end
 
-def still_fresh?(bib_id, format)
-  # Recreate ark formats every time
-  return false if ['structural_ark', 'combined_ark'].member?(format)
-
-  record_check = Record.find_or_initialize_by(:bib_id => bib_id, :format => format)
-  fresh = record_check.updated_at.nil? ? false : fresh_check(record_check.updated_at)
-  if fresh
-    logger.info("NOT RECREATING #{bib_id} -- object was updated within past 24 hours")
-    return true
-  else
-    logger.info("CREATING/RECREATING #{bib_id} -- object has not been updated within past 24 hours")
-    return false
-  end
-end
-
-def fresh_check(updated_at)
-  current_time = Time.now.gmtime
-  yesterday = current_time - 1.day
-  return (yesterday..current_time).cover?(Time.at(updated_at).gmtime)
-end
-
 class Application < Sinatra::Base
   set :assets, Sprockets::Environment.new(root)
 
@@ -506,36 +489,24 @@ class Application < Sinatra::Base
 
   get '/records/:bib_id/create/?' do |bib_id|
     format = params[:format] || 'marc21'
+
+    # initialize or retrieve existing record
     record = Record.find_or_initialize_by bib_id: bib_id, format: format
 
     # TODO: this is not quite right...
     Record.error_message = ''
 
     # return existing record if the record is still 'fresh'
+    # otherwise, proceed with (re)creating
     redirect "/records/#{bib_id}/show?format=#{format}" if record.fresh?
 
-    # TODO: pass in initialized record
-    case format
-      when 'structural'
-        create_record(bib_id, 'structural', params)
-      when 'marc21'
-        create_record(bib_id, 'marc21')
-      when 'dla'
-        create_record(bib_id, 'dla', params)
-      when 'openn'
-        create_record(bib_id, 'openn', params)
-      when 'iiif_presentation'
-        create_record(bib_id, 'iiif_presentation', params)
-      when 'structural_ark'
-        create_record(bib_id, 'structural_ark', params)
-      when 'combined_ark'
-        create_record(bib_id, 'combined_ark', params)
-      else
-        return "Invalid format \"#{format}\" specified"
-    end
-
+    # ensure we're working with a valid format
     Record.error_message = "Invalid specified format #{format}" unless AVAILABLE_FORMATS.include?(format)
 
+    # populate record details
+    create_record(record, params)
+
+    # error message could be set above or by create_record
     unless Record.error_message.empty?
       error = "#{''.html_safe+Record.error_message}"
       logger.warn(error)
