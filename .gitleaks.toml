@@ -40,7 +40,7 @@ regex = '''xox[baprs]-.*'''
 description = "Strip API Key"
 regex = '''(?i)(sk|pk)_(test|live)_[0-9a-zA-Z]{10,32}'''
 
-[whitelist]
+[allowlist]
 commits = []
 files = [
   '\.gitleaks\.toml',
