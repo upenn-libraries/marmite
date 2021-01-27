@@ -41,11 +41,11 @@ def retrieve_pages(bib_id)
   return pages
 end
 
-def create_record(record, options = {})
+def create_record(original_record, options = {})
   skip_update = false
-  bib_id = record.bib_id
+  bib_id = original_record.bib_id
   validated_bib_id = validate_bib_id(bib_id)
-  format = record.format
+  format = original_record.format
   case format
     when 'marc21'
       bibs_url = 'https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs'
@@ -261,7 +261,7 @@ def create_record(record, options = {})
       )
 
       structures = []
-      
+
       if image_ids.is_a? Array
 
         image_ids.each_with_index do |iiif, i|
@@ -378,10 +378,10 @@ def create_record(record, options = {})
   end
 
   unless skip_update
-    record.format = format
-    record.blob = Base64.encode64(Zlib::Deflate.new(nil, -Zlib::MAX_WBITS).deflate(blob, Zlib::FINISH))
-    record.touch unless record.new_record?
-    record.save!
+    original_record.format = format
+    original_record.blob = Base64.encode64(Zlib::Deflate.new(nil, -Zlib::MAX_WBITS).deflate(blob, Zlib::FINISH))
+    original_record.touch unless original_record.new_record?
+    original_record.save!
   end
 end
 
