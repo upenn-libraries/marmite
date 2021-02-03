@@ -23,6 +23,58 @@ RSpec.describe 'Application' do
       it "add expected blob xml" do
         expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
       end
+
+      context 'when marc has 650 field' do
+        let(:alma_marc_xml) do
+          <<~MARC
+          <bibs total_record_count="1">
+            <bib>
+              <record>
+                <datafield ind1=" " ind2="0" tag="650">
+                  <subfield code="a">PRO Illumination of books and manuscripts, Carolingian</subfield>
+                  <subfield code="v">Specimens.</subfield>
+                </datafield>
+                <datafield ind1=" " ind2="0" tag="650">
+                  <subfield code="a">PRO Logic</subfield>
+                  <subfield code="v">Early works to 1800.</subfield>
+                </datafield>
+              </record>
+            </bib>
+          </bibs>
+          MARC
+        end
+
+        let(:expected_xml) do
+          <<~OUT
+            <?xml version="1.0"?>
+            <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+              <marc:record>
+                <marc:datafield ind1=" " ind2=" " tag="561">
+              <marc:subfield code="a">Illumination of books and manuscripts, Carolingian</marc:subfield>
+            </marc:datafield>
+                <marc:datafield ind1=" " ind2=" " tag="561">
+              <marc:subfield code="a">Logic</marc:subfield>
+            </marc:datafield>
+                <marc:datafield ind1=" " ind2="0" tag="650">
+              <marc:subfield code="v">Specimens.</marc:subfield>
+            </marc:datafield>
+                <marc:datafield ind1=" " ind2="0" tag="650">
+              <marc:subfield code="v">Early works to 1800.</marc:subfield>
+            </marc:datafield>
+                <marc:datafield ind1=" " ind2=" " tag="999">
+              <marc:subfield code="z">PRO Illumination of books and manuscripts, Carolingian</marc:subfield>
+              <marc:subfield code="z">PRO Logic</marc:subfield>
+            </marc:datafield>
+                <marc:holdings/>
+              </marc:record>
+            </marc:records>
+          OUT
+        end
+
+        it "correctly transforms the field to 561" do
+          expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
+        end
+      end
     end
   end
 end
