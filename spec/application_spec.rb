@@ -21,6 +21,7 @@ RSpec.describe 'Application' do
       end
 
       it "add expected blob xml" do
+        # binding.pry
         expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
       end
 
@@ -161,7 +162,72 @@ RSpec.describe 'Application' do
       end
 
       context 'when marc has more than one holdings information' do
-        it 'they are both correctly mapped'
+        let(:alma_marc_xml) do
+          <<~MARC
+            <bibs total_record_count="1">
+              <bib>
+                <record>
+                   <datafield ind1=" " ind2=" " tag="AVA">
+                      <subfield code="0">9951865503503681</subfield>
+                      <subfield code="8">22335156650003681</subfield>
+                      <subfield code="a">01UPENN_INST</subfield>
+                      <subfield code="b">KislakCntr</subfield>
+                      <subfield code="c">Manuscripts</subfield>
+                      <subfield code="d">LJS 101</subfield>
+                      <subfield code="e">available</subfield>
+                      <subfield code="f">1</subfield>
+                      <subfield code="g">0</subfield>
+                      <subfield code="j">scmss</subfield>
+                      <subfield code="k">8</subfield>
+                      <subfield code="p">1</subfield>
+                      <subfield code="q">Kislak Center for Special Collections, Rare Books and Manuscripts</subfield>
+                   </datafield>
+                   <datafield ind1=" " ind2=" " tag="AVA">
+                      <subfield code="0">9951865503503682</subfield>
+                      <subfield code="8">22335156650003682</subfield>
+                      <subfield code="a">01UPENN_INST</subfield>
+                      <subfield code="b">KislakCntr</subfield>
+                      <subfield code="c">Manuscripts</subfield>
+                      <subfield code="d">LJS 202</subfield>
+                      <subfield code="e">available</subfield>
+                      <subfield code="f">1</subfield>
+                      <subfield code="g">0</subfield>
+                      <subfield code="j">scmss</subfield>
+                      <subfield code="k">8</subfield>
+                      <subfield code="p">1</subfield>
+                      <subfield code="q">Kislak Center for Special Collections, Rare Books and Manuscripts</subfield>
+                    </datafield>
+                </record>
+              </bib>
+            </bibs>
+          MARC
+        end
+        let(:expected_xml) do
+          <<~OUT
+            <?xml version="1.0"?>
+            <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+              <marc:record>
+                <marc:holdings>
+                  <marc:holding>
+                    <marc:holding_id>22335156650003681</marc:holding_id>
+                    <marc:call_number>LJS 101</marc:call_number>
+                    <marc:library>KislakCntr</marc:library>
+                    <marc:location>scmss</marc:location>
+                  </marc:holding>
+                  <marc:holding>
+                    <marc:holding_id>22335156650003682</marc:holding_id>
+                    <marc:call_number>LJS 202</marc:call_number>
+                    <marc:library>KislakCntr</marc:library>
+                    <marc:location>scmss</marc:location>
+                  </marc:holding>
+                </marc:holdings>
+              </marc:record>
+            </marc:records>
+          OUT
+        end
+        it 'they are both correctly mapped' do
+          expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
+        end
       end
 
       context 'when marc has 710 field, subfield 5' do
