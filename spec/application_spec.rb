@@ -231,7 +231,42 @@ RSpec.describe 'Application' do
       end
 
       context 'when marc has 710 field, subfield 5' do
-        it 'maps subfield a to field 773 subfield t'
+        let(:alma_marc_xml) do
+          <<~MARC
+            <bibs total_record_count="1">
+              <bib>
+                <record>
+                  <datafield ind1="2" ind2=" " tag="710">
+                    <subfield code="a">Saint-Benoît-sur-Loire (Abbey),</subfield>
+                    <subfield code="e">former owner.</subfield>
+                    <subfield code="5">TEST</subfield>
+                  </datafield> 
+                </record>
+              </bib>
+            </bibs>
+          MARC
+        end
+        let(:expected_xml) do
+          <<~OUT
+            <?xml version="1.0"?>
+            <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+              <marc:record>
+                <marc:datafield ind1="2" ind2=" " tag="710">
+              <marc:subfield code="a">Saint-Benoi&#x302;t-sur-Loire (Abbey),</marc:subfield>
+              <marc:subfield code="e">former owner.</marc:subfield>
+              <marc:subfield code="5">TEST</marc:subfield>
+            </marc:datafield>
+                <marc:datafield ind1="0" ind2="0" tag="773">
+              <marc:subfield code="t">Saint-Benoi&#x302;t-sur-Loire (Abbey),</marc:subfield>
+            </marc:datafield>
+                <marc:holdings/>
+              </marc:record>
+            </marc:records>
+          OUT
+        end
+        it 'maps subfield a to field 773 subfield t' do
+          expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
+        end
       end
     end
   end
