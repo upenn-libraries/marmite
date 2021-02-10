@@ -3,8 +3,8 @@ RSpec.describe 'Application' do
     context 'marc21' do
       let(:bib_id) { '9951865503503681' }
       let(:record) { Record.new(bib_id: bib_id, format: 'marc21') }
-      let(:alma_marc_xml) { File.read(File.join('spec', 'fixtures', 'marc', "#{bib_id}.xml")) }
-      let(:expected_xml) { File.read(File.join('spec', 'fixtures', 'blob', 'marc21', "#{bib_id}.xml")) }
+      let(:alma_marc_xml) { File.read(File.join('spec', 'fixtures', 'pre_transformation', 'marc', "#{bib_id}.xml")) }
+      let(:expected_xml) { File.read(File.join('spec', 'fixtures', 'post_transformation', 'marc21', "#{bib_id}.xml")) }
 
       before do
         # Set Alma API key. `create_record` looks for api key in environment variable.
@@ -20,8 +20,11 @@ RSpec.describe 'Application' do
         create_record(record) # calls the method to add blob to Record object
       end
 
+      after do
+        ENV['ALMA_KEY'] = ''
+      end
+
       it "add expected blob xml" do
-        # binding.pry
         expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
       end
 
@@ -240,7 +243,7 @@ RSpec.describe 'Application' do
                     <subfield code="a">Saint-Benoît-sur-Loire (Abbey),</subfield>
                     <subfield code="e">former owner.</subfield>
                     <subfield code="5">TEST</subfield>
-                  </datafield> 
+                  </datafield>
                 </record>
               </bib>
             </bibs>
@@ -269,5 +272,36 @@ RSpec.describe 'Application' do
         end
       end
     end
+
+    context 'structural' do
+      let(:bib_id) { '5968339' }
+      let(:record) { Record.new(bib_id: bib_id, format: 'structural') }
+      let(:structural_xml) { File.read(File.join('spec', 'fixtures', 'pre_transformation', 'structural', "#{bib_id}.xml")) }
+      let(:expected_xml) { File.read(File.join('spec', 'fixtures', 'post_transformation', 'structural', "#{bib_id}.xml")) }
+
+      before do
+        # Mock the response from the service hosted on mgibney's dev machine.
+        stub_request(
+            :get, "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
+        ).to_return(body: structural_xml, headers: {'Content-Type' => 'text/xml; charset=UTF-8'})
+
+        create_record(record) # calls the method to add blob to Record object
+      end
+
+
+      it 'adds expected blob xml to record' do
+        expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
+      end
+
+      context 'when bib is greater than 7 numbers and structural is not found'
+
+      context 'when structural contains toc data'
+    end
+
+    context 'openn' do
+      it 'add expected blob xml to record containing both structural and marc data'
+    end
+
+    context 'iiif_presentation'
   end
 end

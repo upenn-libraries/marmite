@@ -182,7 +182,7 @@ def create_record(original_record, options = {})
         }
       end
       blob = structural.to_xml
-    when 'dla'
+    when 'dla' # Doesn't seem to be used.
       # corresponding marc record is needed for dla
       marc_record = Record.find_or_initialize_by bib_id: validated_bib_id, format: 'marc21'
       create_record(marc_record) unless marc_record.fresh?
@@ -353,7 +353,7 @@ def create_record(original_record, options = {})
       manifest.structures = structures
 
       blob = manifest.to_json
-    when 'structural_ark'
+    when 'structural_ark' # Retire this format
       skip_update = true
       targetpath = Pathname.new(ENV['TASK_BASE_PATH'] + "/" + bib_id + ".xlsx")
       parse_errors = IndexMetadata.index_structural(targetpath.to_path, format)
@@ -363,7 +363,7 @@ def create_record(original_record, options = {})
         content_type('application/json')
         return JSON(parse_errors)
       end
-    when 'combined_ark'
+    when 'combined_ark' # Retire this format
       skip_update = true
       targetpath = Pathname.new(ENV['TASK_BASE_PATH'] + "/" + bib_id + ".xlsx")
       parse_errors = IndexMetadata.index_combined(targetpath.to_path, format)
@@ -401,6 +401,7 @@ def process_pages(pages, xml, bib_id, image_id_prefix = '')
       end
     end
 
+    # FIXME: Might be better to calculate this based on visible page.
     side = sequence.to_i.odd? ? 'recto' : 'verso'
 
     filename = "#{image_id_prefix.downcase}#{filename}" unless image_id_prefix.nil?
@@ -433,6 +434,7 @@ def determine_side(side_value, sequence)
   return sequence.to_i.odd? ? 'recto' : 'verso'
 end
 
+# Not used.
 def dla_structural_metadata(bib_id, sceti_prefix)
   bib_id = validate_bib_id(bib_id)
   structural_endpoint = "http://dla.library.upenn.edu/dla/#{sceti_prefix.downcase}/pageturn.xml?id=#{sceti_prefix.upcase}_#{bib_id}"
