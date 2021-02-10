@@ -1,0 +1,105 @@
+<integ:root xmlns:integ="http://integrator" self="true">
+  <pagelevel id="BIB_ID-4952127">
+    <page id="SEQUENCE-1">
+      <sequence>1</sequence>
+      <callnumber>4952127</callnumber>
+      <so_id>18418</so_id>
+      <p_id>530627</p_id>
+      <col_id>40</col_id>
+      <ui_id>0</ui_id>
+      <zoomlevels>4</zoomlevels>
+      <defaultzoomlevel>4</defaultzoomlevel>
+      <responsible_id>0</responsible_id>
+      <isblank>N</isblank>
+      <ismissing>N</ismissing>
+      <isscanned>N</isscanned>
+      <extension>sid</extension>
+      <filename>ljs59_wk1_front0001</filename>
+      <visiblepage>Front cover</visiblepage>
+    </page>
+    <page id="SEQUENCE-2">
+      <sequence>2</sequence>
+      <callnumber>4952127</callnumber>
+      <so_id>18418</so_id>
+      <p_id>530628</p_id>
+      <col_id>40</col_id>
+      <ui_id>0</ui_id>
+      <zoomlevels>4</zoomlevels>
+      <defaultzoomlevel>4</defaultzoomlevel>
+      <responsible_id>0</responsible_id>
+      <isblank>N</isblank>
+      <ismissing>N</ismissing>
+      <isscanned>N</isscanned>
+      <extension>sid</extension>
+      <filename>ljs59_wk1_front0002</filename>
+      <visiblepage>Inside front cover</visiblepage>
+    </page>
+    <page id="SEQUENCE-3">
+      <sequence>3</sequence>
+      <callnumber>4952127</callnumber>
+      <so_id>18418</so_id>
+      <p_id>530629</p_id>
+      <col_id>40</col_id>
+      <ui_id>0</ui_id>
+      <zoomlevels>4</zoomlevels>
+      <defaultzoomlevel>4</defaultzoomlevel>
+      <responsible_id>0</responsible_id>
+      <isblank>N</isblank>
+      <ismissing>N</ismissing>
+      <isscanned>N</isscanned>
+      <extension>sid</extension>
+      <filename>ljs59_wk1_front0003</filename>
+      <visiblepage>[Flyleaf 1 recto]</visiblepage>
+      <tocs id="SEQUENCE-3">
+        <toc id="TOC_SEQUENCE-1">
+          <toc_sequence>1</toc_sequence>
+          <title>ILL: Monogram, Flyleaf 1 recto</title>
+        </toc>
+      </tocs>
+    </page>
+    <page id="SEQUENCE-4">
+      <sequence>4</sequence>
+      <callnumber>4952127</callnumber>
+      <so_id>18418</so_id>
+      <p_id>530630</p_id>
+      <col_id>40</col_id>
+      <ui_id>0</ui_id>
+      <zoomlevels>4</zoomlevels>
+      <defaultzoomlevel>4</defaultzoomlevel>
+      <responsible_id>0</responsible_id>
+      <isblank>N</isblank>
+      <ismissing>N</ismissing>
+      <isscanned>N</isscanned>
+      <extension>sid</extension>
+      <filename>ljs59_wk1_front0004</filename>
+      <visiblepage>[Flyleaf 1 verso]</visiblepage>
+    </page>
+    <page id="SEQUENCE-5">
+      <sequence>5</sequence>
+      <callnumber>4952127</callnumber>
+      <so_id>18418</so_id>
+      <p_id>530631</p_id>
+      <col_id>40</col_id>
+      <ui_id>0</ui_id>
+      <zoomlevels>4</zoomlevels>
+      <defaultzoomlevel>4</defaultzoomlevel>
+      <responsible_id>0</responsible_id>
+      <isblank>N</isblank>
+      <ismissing>N</ismissing>
+      <isscanned>N</isscanned>
+      <extension>sid</extension>
+      <filename>ljs59_wk1_body0001</filename>
+      <visiblepage>1r</visiblepage>
+      <tocs id="SEQUENCE-5">
+        <toc id="TOC_SEQUENCE-1">
+          <toc_sequence>1</toc_sequence>
+          <title>ILL: Miniature, Saint Paul presenting Paolo Nani to Virgin and Child, f. 1r</title>
+        </toc>
+        <toc id="TOC_SEQUENCE-2">
+          <toc_sequence>2</toc_sequence>
+          <title>ILL: Illuminated border, Winged lion of St. Mark and coat of arms, f. 1r</title>
+        </toc>
+      </tocs>
+    </page>
+  </pagelevel>
+</integ:root>
