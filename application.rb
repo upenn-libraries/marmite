@@ -171,7 +171,7 @@ def create_record(original_record, options = {})
 
       end
       blob = builder.to_xml
-    when 'structural'
+  when 'structural'
       pages = retrieve_pages(bib_id)
       structural = Nokogiri::XML::Builder.new do |xml|
         xml.record {

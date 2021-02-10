@@ -274,28 +274,49 @@ RSpec.describe 'Application' do
     end
 
     context 'structural' do
-      let(:bib_id) { '5968339' }
-      let(:record) { Record.new(bib_id: bib_id, format: 'structural') }
-      let(:structural_xml) { File.read(File.join('spec', 'fixtures', 'pre_transformation', 'structural', "#{bib_id}.xml")) }
-      let(:expected_xml) { File.read(File.join('spec', 'fixtures', 'post_transformation', 'structural', "#{bib_id}.xml")) }
+      context 'when bib is 7 numbers' do
+        let(:bib_id) { '5968339' }
+        let(:record) { Record.new(bib_id: bib_id, format: 'structural') }
+        let(:structural_xml) { File.read(File.join('spec', 'fixtures', 'pre_transformation', 'structural', "#{bib_id}.xml")) }
+        let(:expected_xml) { File.read(File.join('spec', 'fixtures', 'post_transformation', 'structural', "#{bib_id}.xml")) }
 
-      before do
-        # Mock the response from the service hosted on mgibney's dev machine.
-        stub_request(
-            :get, "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
-        ).to_return(body: structural_xml, headers: {'Content-Type' => 'text/xml; charset=UTF-8'})
+        before do
+          # Mock the response from the service hosted on mgibney's dev machine.
+          stub_request(
+              :get, "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
+          ).to_return(body: structural_xml, headers: {'Content-Type' => 'text/xml; charset=UTF-8'})
 
-        create_record(record) # calls the method to add blob to Record object
+          create_record(record) # calls the method to add blob to Record object
+        end
+        it 'adds expected blob xml to record' do
+          expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
+        end
       end
 
+      context 'when bib is greater than 7 numbers and structural is not found' do
+        before do
+          stub_request(
+              :get, "http://mgibney-dev.library.upenn.int:8084/lookup/#{long_bib_id}.xml"
+          ).to_return(body: '<?xml version="1.0" encoding="UTF-8"?><integ:root xmlns:integ="http://integrator"/>', headers: {'Content-Type' => 'text/xml; charset=UTF-8'})
+          stub_request(
+              :get, "http://mgibney-dev.library.upenn.int:8084/lookup/#{short_bib_id}.xml"
+          ).to_return(body: structural_xml, headers: {'Content-Type' => 'text/xml; charset=UTF-8'})
 
-      it 'adds expected blob xml to record' do
-        expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
+          create_record(record)
+        end
+        let(:short_bib_id) { '5968339' }
+        let(:long_bib_id) { "99#{short_bib_id}3503681" }
+        let(:record) { Record.new(bib_id: long_bib_id, format: 'structural') }
+        let(:structural_xml) { File.read(File.join('spec', 'fixtures', 'pre_transformation', 'structural', "#{short_bib_id}.xml")) }
+        let(:expected_xml) { File.read(File.join('spec', 'fixtures', 'post_transformation', 'structural', "#{long_bib_id}.xml")) }
+        it 'adds expected blob xml to record' do
+          expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
+        end
       end
 
-      context 'when bib is greater than 7 numbers and structural is not found'
+      context 'when structural contains toc data' do
 
-      context 'when structural contains toc data'
+      end
     end
 
     context 'openn' do
