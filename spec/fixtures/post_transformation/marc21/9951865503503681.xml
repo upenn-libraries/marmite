@@ -6,237 +6,237 @@
     <marc:controlfield tag="005">20210126152927.0</marc:controlfield>
     <marc:controlfield tag="008">111107s0850 pauap 000 0 lat d</marc:controlfield>
     <marc:datafield ind1=" " ind2=" " tag="035">
-  <marc:subfield code="a">(OCoLC)759863694</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">(OCoLC)759863694</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="035">
-  <marc:subfield code="a">(OCoLC)ocn759863694</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">(OCoLC)ocn759863694</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="035">
-  <marc:subfield code="a">(PU)5186550-penndb-Voyager</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">(PU)5186550-penndb-Voyager</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="040">
-  <marc:subfield code="a">PU</marc:subfield>
-  <marc:subfield code="e">amremm</marc:subfield>
-  <marc:subfield code="c">PAULM</marc:subfield>
-  <marc:subfield code="d">PAULM</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">PU</marc:subfield>
+      <marc:subfield code="e">amremm</marc:subfield>
+      <marc:subfield code="c">PAULM</marc:subfield>
+      <marc:subfield code="d">PAULM</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="1" ind2=" " tag="041">
-  <marc:subfield code="a">lat</marc:subfield>
-  <marc:subfield code="h">grc</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">lat</marc:subfield>
+      <marc:subfield code="h">grc</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="049">
-  <marc:subfield code="a">PAUM</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">PAUM</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="079">
-  <marc:subfield code="a">ocn122492338</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">ocn122492338</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2="9" tag="099">
-  <marc:subfield code="a">LJS 101</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">LJS 101</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="0" ind2=" " tag="100">
-  <marc:subfield code="a">Boethius,</marc:subfield>
-  <marc:subfield code="d">-524.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Boethius,</marc:subfield>
+      <marc:subfield code="d">-524.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="1" ind2="0" tag="245">
-  <marc:subfield code="a">Periermenias Aristotelis ... [etc.]</marc:subfield>
-  <marc:subfield code="h">[manuscript].</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Periermenias Aristotelis ... [etc.]</marc:subfield>
+      <marc:subfield code="h">[manuscript].</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="260">
-  <marc:subfield code="a">[France,</marc:subfield>
-  <marc:subfield code="c">ca. 850]</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">[France,</marc:subfield>
+      <marc:subfield code="c">ca. 850]</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="300">
-  <marc:subfield code="a">64 leaves :</marc:subfield>
-  <marc:subfield code="b">parchment ;</marc:subfield>
-  <marc:subfield code="c">204-206 x 172-174 (136-148 x 100-128) mm. bound to 219 x 190 mm.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">64 leaves :</marc:subfield>
+      <marc:subfield code="b">parchment ;</marc:subfield>
+      <marc:subfield code="c">204-206 x 172-174 (136-148 x 100-128) mm. bound to 219 x 190 mm.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="500">
-  <marc:subfield code="a">Script: Written in a 9th-century Caroline minuscule, with replacement leaves in 11th-century Caroline minuscule at beginning (f. 1-4) and end (f. 45-64), with headings in rustic Latin capitals.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Script: Written in a 9th-century Caroline minuscule, with replacement leaves in 11th-century Caroline minuscule at beginning (f. 1-4) and end (f. 45-64), with headings in rustic Latin capitals.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="500">
-  <marc:subfield code="a">Origin: Written in north central France, possibly at the abbey in Saint-Benoi&#x302;t-sur-Loire, also known as the Abbaye de Fleury.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Origin: Written in north central France, possibly at the abbey in Saint-Benoi&#x302;t-sur-Loire, also known as the Abbaye de Fleury.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="500">
-  <marc:subfield code="a">Decoration: 5 9th-century diagrams, 3 in the ink of the text (f. 37v, 54v) and 2 with colored inks added in the 11th century (f. 36r, 36v); 11th-century full-page decorated initial with Celtic knotwork and lions' heads (f. 1v); 2 11th-century 3-line initials in red and blue (f. 2r, 60v); 11th-century red and blue ink added to 9th-century 3-line initial (f. 5r); 1- and 2-line initials, mostly in the ink of the text (but alternating with red, f. 30-34); 2 3-line and many 2-line 11th-century calligraphic initials in ink of the text with simple ornamentation (f. 44-64).</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Decoration: 5 9th-century diagrams, 3 in the ink of the text (f. 37v, 54v) and 2 with colored inks added in the 11th century (f. 36r, 36v); 11th-century full-page decorated initial with Celtic knotwork and lions' heads (f. 1v); 2 11th-century 3-line initials in red and blue (f. 2r, 60v); 11th-century red and blue ink added to 9th-century 3-line initial (f. 5r); 1- and 2-line initials, mostly in the ink of the text (but alternating with red, f. 30-34); 2 3-line and many 2-line 11th-century calligraphic initials in ink of the text with simple ornamentation (f. 44-64).</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="500">
-  <marc:subfield code="a">Layout: Written in 20 (f. 5-36), 23 (f. 1-4, 45-64), and 27 (f. 37-44) long lines, with the first line above the top line; ruled in drypoint, with a narrow vertical column at each side of the text block into which initials extend in part or in whole; prickings visible on most leaves.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Layout: Written in 20 (f. 5-36), 23 (f. 1-4, 45-64), and 27 (f. 37-44) long lines, with the first line above the top line; ruled in drypoint, with a narrow vertical column at each side of the text block into which initials extend in part or in whole; prickings visible on most leaves.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="500">
-  <marc:subfield code="a">Collation: Parchment, i (19th-century paper) + i (19th-century parchment) + 64 + i (19th-century parchment) + i (19th-century paper); 1&#x2074; 2&#x2074;(+4) 3-8&#x2078; 9&#x2074;; 1-64, 19th-century foliation in ink, upper right recto.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Collation: Parchment, i (19th-century paper) + i (19th-century parchment) + 64 + i (19th-century parchment) + i (19th-century paper); 1&#x2074; 2&#x2074;(+4) 3-8&#x2078; 9&#x2074;; 1-64, 19th-century foliation in ink, upper right recto.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="500">
-  <marc:subfield code="a">Binding: 19th-century English diced russia leather (lower flyleaf has J. Whatman 1832 watermark), bound for Sir Thomas Phillips.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Binding: 19th-century English diced russia leather (lower flyleaf has J. Whatman 1832 watermark), bound for Sir Thomas Phillips.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="500">
-  <marc:subfield code="a">Title for manuscript from caption title for predominant work (f. 1v).</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Title for manuscript from caption title for predominant work (f. 1v).</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="500">
-  <marc:subfield code="a">Ms. codex.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Ms. codex.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="0" ind2=" " tag="505">
-  <marc:subfield code="a">3. f.53v-59v: Periermeniae / Apulei.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">3. f.53v-59v: Periermeniae / Apulei.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="0" ind2=" " tag="505">
-  <marc:subfield code="a">1. f.1r: [Conclusion of a grammatical work, 7-line verse by Eugene II of Toledo, Isidore's definition of rhetoric].</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">1. f.1r: [Conclusion of a grammatical work, 7-line verse by Eugene II of Toledo, Isidore's definition of rhetoric].</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="0" ind2=" " tag="505">
-  <marc:subfield code="a">2. f.1v-53r, 61r-62v: Periermenias Aristotelis / a Boetio translatas.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">2. f.1v-53r, 61r-62v: Periermenias Aristotelis / a Boetio translatas.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="0" ind2=" " tag="505">
-  <marc:subfield code="a">4. f.60r: Versus de singulis mensibus / [Decimus Magnus Ausonius].</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">4. f.60r: Versus de singulis mensibus / [Decimus Magnus Ausonius].</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="0" ind2=" " tag="505">
-  <marc:subfield code="a">5. f.60v, 63r: [Sample letter of monk to abbot].</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">5. f.60v, 63r: [Sample letter of monk to abbot].</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="0" ind2=" " tag="505">
-  <marc:subfield code="a">6. f.63r-64r: [Miscellaenous verses, definitions, and biblical commentary].</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">6. f.63r-64r: [Miscellaenous verses, definitions, and biblical commentary].</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="4" ind2=" " tag="510">
-  <marc:subfield code="a">Described in Transformation of knowledge: early manuscripts from the collection of Lawrence J. Schoenberg (London: Paul Holberton, 2006),</marc:subfield>
-  <marc:subfield code="c">p. 12-13 (LJS 101).</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Described in Transformation of knowledge: early manuscripts from the collection of Lawrence J. Schoenberg (London: Paul Holberton, 2006),</marc:subfield>
+      <marc:subfield code="c">p. 12-13 (LJS 101).</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="4" ind2=" " tag="510">
-  <marc:subfield code="a">Listed in Aristotelis Latinus: codices: supplementa altera (Bruges: Descl&#xE9;e, De Brouwer, 1961) as Phillipps 2179 in the holdings of booksellers L.K. and P.R. Robinson,</marc:subfield>
-  <marc:subfield code="c">p. 73-74 (Codex 266).</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Listed in Aristotelis Latinus: codices: supplementa altera (Bruges: Descl&#xE9;e, De Brouwer, 1961) as Phillipps 2179 in the holdings of booksellers L.K. and P.R. Robinson,</marc:subfield>
+      <marc:subfield code="c">p. 73-74 (Codex 266).</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="520">
-  <marc:subfield code="a">9th-century copy of Boethius's Latin translation of Aristotle's De interpretatione, referred to in the manuscript as Periermenias, with the shorter of two commentaries that Boethius wrote on that work. Replacement leaves added in the 11th century to the beginning (f. 1-4) and end (f. 45-64) of the manuscript, in addition to providing the beginning and end of the Boethius (which is probably lacking 2 gatherings between extant gatherings 6 and 7), include the Periermeniae attributed to Apuleius in the medieval period, a poem by Decimus Magnus Ausonius on the seven days of Creation, a sample letter of a monk to an abbot with interlinear and marginal glosses, and other miscellaneous verses, definitions, and excerpts. Dot Porter, University of Pennsylvania, has determined that two groups of leaves are misbound; leaves 5-12 (the original order appears to have been 5, 9, 10, 6, 7, 11, 12, 8) and leaves 53-64 (the original order of the leaves appears to have been 61, 62, 53-60, 63, 64).</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">9th-century copy of Boethius's Latin translation of Aristotle's De interpretatione, referred to in the manuscript as Periermenias, with the shorter of two commentaries that Boethius wrote on that work. Replacement leaves added in the 11th century to the beginning (f. 1-4) and end (f. 45-64) of the manuscript, in addition to providing the beginning and end of the Boethius (which is probably lacking 2 gatherings between extant gatherings 6 and 7), include the Periermeniae attributed to Apuleius in the medieval period, a poem by Decimus Magnus Ausonius on the seven days of Creation, a sample letter of a monk to an abbot with interlinear and marginal glosses, and other miscellaneous verses, definitions, and excerpts. Dot Porter, University of Pennsylvania, has determined that two groups of leaves are misbound; leaves 5-12 (the original order appears to have been 5, 9, 10, 6, 7, 11, 12, 8) and leaves 53-64 (the original order of the leaves appears to have been 61, 62, 53-60, 63, 64).</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="524">
-  <marc:subfield code="a">UPenn LJS 101</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">UPenn LJS 101</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="546">
-  <marc:subfield code="a">Latin.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Latin.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="1" ind2=" " tag="561">
-  <marc:subfield code="a">Sold at auction at Sotheby's as part of the Beck Collection, 16 June 1997, lot 3, to Lawrence J. Schoenberg.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Sold at auction at Sotheby's as part of the Beck Collection, 16 June 1997, lot 3, to Lawrence J. Schoenberg.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="1" ind2=" " tag="561">
-  <marc:subfield code="a">Sold by bookseller James Taylor (London) to Sir Thomas Phillipps, ca. 1826.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Sold by bookseller James Taylor (London) to Sir Thomas Phillipps, ca. 1826.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="1" ind2=" " tag="561">
-  <marc:subfield code="a">Formerly owned by Sir Thomas Phillipps, ms. 2179 (stamped crest inside upper cover; inscription with alternate number 717, f. 1r; label on spine).</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Formerly owned by Sir Thomas Phillipps, ms. 2179 (stamped crest inside upper cover; inscription with alternate number 717, f. 1r; label on spine).</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="1" ind2=" " tag="561">
-  <marc:subfield code="a">Sold as part of the residue of the Phillips collection first to William H. Robinson Ltd., 1945, and again to H. P. Kraus, Mar. 1978.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Sold as part of the residue of the Phillips collection first to William H. Robinson Ltd., 1945, and again to H. P. Kraus, Mar. 1978.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="1" ind2=" " tag="561">
-  <marc:subfield code="a">Sold by H. P. Kraus to Helmut Beck (Stuttgart), ms. 3 (embossed label, inside upper cover).</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Sold by H. P. Kraus to Helmut Beck (Stuttgart), ms. 3 (embossed label, inside upper cover).</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="1" ind2=" " tag="561">
-  <marc:subfield code="a">Gift of Barbara Brizdle Schoenberg in honor of Amy Gutmann, President, University of Pennsylvania, 2014.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Gift of Barbara Brizdle Schoenberg in honor of Amy Gutmann, President, University of Pennsylvania, 2014.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="590">
-  <marc:subfield code="a">Lawrence J. Schoenberg &amp; Barbara Brizdle Manuscript Initiative.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Lawrence J. Schoenberg &amp; Barbara Brizdle Manuscript Initiative.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="0" ind2="0" tag="600">
-  <marc:subfield code="a">Aristotle</marc:subfield>
-  <marc:subfield code="x">Criticism and interpretation</marc:subfield>
-  <marc:subfield code="v">Early works to 1800.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Aristotle</marc:subfield>
+      <marc:subfield code="x">Criticism and interpretation</marc:subfield>
+      <marc:subfield code="v">Early works to 1800.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="0" ind2="0" tag="600">
-  <marc:subfield code="a">Aristotle.</marc:subfield>
-  <marc:subfield code="t">De interpretatione.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Aristotle.</marc:subfield>
+      <marc:subfield code="t">De interpretatione.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2="0" tag="650">
-  <marc:subfield code="a">Illumination of books and manuscripts, Carolingian</marc:subfield>
-  <marc:subfield code="v">Specimens.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Illumination of books and manuscripts, Carolingian</marc:subfield>
+      <marc:subfield code="v">Specimens.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2="0" tag="650">
-  <marc:subfield code="a">Logic</marc:subfield>
-  <marc:subfield code="v">Early works to 1800.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Logic</marc:subfield>
+      <marc:subfield code="v">Early works to 1800.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2="7" tag="655">
-  <marc:subfield code="a">Poems.</marc:subfield>
-  <marc:subfield code="2">aat</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Poems.</marc:subfield>
+      <marc:subfield code="2">aat</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2="7" tag="655">
-  <marc:subfield code="a">Translations (documents)</marc:subfield>
-  <marc:subfield code="2">aat</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Translations (documents)</marc:subfield>
+      <marc:subfield code="2">aat</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2="7" tag="655">
-  <marc:subfield code="a">Treatises.</marc:subfield>
-  <marc:subfield code="2">aat</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Treatises.</marc:subfield>
+      <marc:subfield code="2">aat</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2="0" tag="655">
-  <marc:subfield code="a">Manuscripts, Latin</marc:subfield>
-  <marc:subfield code="y">9th century.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Manuscripts, Latin</marc:subfield>
+      <marc:subfield code="y">9th century.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2="0" tag="655">
-  <marc:subfield code="a">Manuscripts, Medieval.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Manuscripts, Medieval.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2="0" tag="655">
-  <marc:subfield code="a">Manuscripts, Latin</marc:subfield>
-  <marc:subfield code="y">11th century.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Manuscripts, Latin</marc:subfield>
+      <marc:subfield code="y">11th century.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2="7" tag="655">
-  <marc:subfield code="a">Codices.</marc:subfield>
-  <marc:subfield code="2">aat</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Codices.</marc:subfield>
+      <marc:subfield code="2">aat</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2="7" tag="655">
-  <marc:subfield code="a">Commentaries.</marc:subfield>
-  <marc:subfield code="2">aat</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Commentaries.</marc:subfield>
+      <marc:subfield code="2">aat</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2="7" tag="655">
-  <marc:subfield code="a">Diagrams.</marc:subfield>
-  <marc:subfield code="2">aat</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Diagrams.</marc:subfield>
+      <marc:subfield code="2">aat</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2="7" tag="655">
-  <marc:subfield code="a">Illuminations (visual works)</marc:subfield>
-  <marc:subfield code="2">aat</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Illuminations (visual works)</marc:subfield>
+      <marc:subfield code="2">aat</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="1" ind2="2" tag="700">
-  <marc:subfield code="a">Ausonius, Decimus Magnus.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Ausonius, Decimus Magnus.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="1" ind2=" " tag="700">
-  <marc:subfield code="a">Phillipps, Thomas,</marc:subfield>
-  <marc:subfield code="c">Sir,</marc:subfield>
-  <marc:subfield code="d">1792-1872,</marc:subfield>
-  <marc:subfield code="e">former owner.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Phillipps, Thomas,</marc:subfield>
+      <marc:subfield code="c">Sir,</marc:subfield>
+      <marc:subfield code="d">1792-1872,</marc:subfield>
+      <marc:subfield code="e">former owner.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="1" ind2=" " tag="700">
-  <marc:subfield code="a">Beck, Helmut,</marc:subfield>
-  <marc:subfield code="d">1919-2001,</marc:subfield>
-  <marc:subfield code="e">former owner.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Beck, Helmut,</marc:subfield>
+      <marc:subfield code="d">1919-2001,</marc:subfield>
+      <marc:subfield code="e">former owner.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="0" ind2="2" tag="700">
-  <marc:subfield code="a">Apuleius.</marc:subfield>
-  <marc:subfield code="t">Peri herme&#x304;neias.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Apuleius.</marc:subfield>
+      <marc:subfield code="t">Peri herme&#x304;neias.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="2" ind2=" " tag="710">
-  <marc:subfield code="a">Saint-Benoi&#x302;t-sur-Loire (Abbey),</marc:subfield>
-  <marc:subfield code="e">former owner.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">Saint-Benoi&#x302;t-sur-Loire (Abbey),</marc:subfield>
+      <marc:subfield code="e">former owner.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="0" ind2=" " tag="740">
-  <marc:subfield code="a">De interpretatione.</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">De interpretatione.</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="852">
-  <marc:subfield code="b">Kislak Center for Special Collections, Rare Books and Manuscripts</marc:subfield>
-  <marc:subfield code="a">University of Pennsylvania</marc:subfield>
-  <marc:subfield code="e">3420 Walnut Street, Philadelphia, Pennsylvania 19104-6206.</marc:subfield>
-  <marc:subfield code="j">LJS 101</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="b">Kislak Center for Special Collections, Rare Books and Manuscripts</marc:subfield>
+      <marc:subfield code="a">University of Pennsylvania</marc:subfield>
+      <marc:subfield code="e">3420 Walnut Street, Philadelphia, Pennsylvania 19104-6206.</marc:subfield>
+      <marc:subfield code="j">LJS 101</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="4" ind2="1" tag="856">
-  <marc:subfield code="z">Facsimile</marc:subfield>
-  <marc:subfield code="u">http://hdl.library.upenn.edu/1017/d/medren/5186550</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="z">Facsimile</marc:subfield>
+      <marc:subfield code="u">http://hdl.library.upenn.edu/1017/d/medren/5186550</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="4" ind2="1" tag="856">
-  <marc:subfield code="z">Video orientation</marc:subfield>
-  <marc:subfield code="u">http://hdl.library.upenn.edu/1017.12/1333431</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="z">Video orientation</marc:subfield>
+      <marc:subfield code="u">http://hdl.library.upenn.edu/1017.12/1333431</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1="4" ind2="2" tag="856">
-  <marc:subfield code="3">The Lawrence J. Schoenberg and Barbara Brizdle Manuscript Initiative Fund Home Page</marc:subfield>
-  <marc:subfield code="u">http://hdl.library.upenn.edu/1017.12/366278</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="3">The Lawrence J. Schoenberg and Barbara Brizdle Manuscript Initiative Fund Home Page</marc:subfield>
+      <marc:subfield code="u">http://hdl.library.upenn.edu/1017.12/366278</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="994">
-  <marc:subfield code="a">C0</marc:subfield>
-  <marc:subfield code="b">PAULM</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">C0</marc:subfield>
+      <marc:subfield code="b">PAULM</marc:subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="999">
-  <marc:subfield code="a">DLA</marc:subfield>
-  <marc:subfield code="b">20111222</marc:subfield>
-</marc:datafield>
+      <marc:subfield code="a">DLA</marc:subfield>
+      <marc:subfield code="b">20111222</marc:subfield>
+    </marc:datafield>
     <marc:holdings>
       <marc:holding>
         <marc:holding_id>22335156650003681</marc:holding_id>

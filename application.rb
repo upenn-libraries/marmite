@@ -229,7 +229,7 @@ def create_record(original_record, options = {})
   when 'iiif_presentation'
       image_ids_endpoint = "#{ENV['IMAGE_ID_ENDPOINT_PREFIX']}/#{bib_id}/#{ENV['IMAGE_ID_ENDPOINT_SUFFIX']}"
 
-      logger.info("ATTEMPTING TO PARSE #{image_ids_endpoint}")
+      # logger.info("ATTEMPTING TO PARSE #{image_ids_endpoint}")
 
       response = JSON.parse(open(image_ids_endpoint).read)
 
@@ -276,7 +276,7 @@ def create_record(original_record, options = {})
 
           p = Net::HTTP.get(URI.parse(iiif_server + iiif_string))
 
-          logger.info("ARRAY -- ITERATING THROUGH #{iiif_server + iiif_string}")
+          # logger.info("ARRAY -- ITERATING THROUGH #{iiif_server + iiif_string}")
 
           canvas_json = JSON.parse(p)
 
@@ -310,7 +310,7 @@ def create_record(original_record, options = {})
 
           p = Net::HTTP.get(URI.parse(iiif_string))
 
-          logger.info("HASH -- ITERATING THROUGH #{iiif_string}")
+          # logger.info("HASH -- ITERATING THROUGH #{iiif_string}")
 
           canvas_json = JSON.parse(p)
 

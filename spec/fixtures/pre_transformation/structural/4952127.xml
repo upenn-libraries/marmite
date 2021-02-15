@@ -50,12 +50,7 @@
       <extension>sid</extension>
       <filename>ljs59_wk1_front0003</filename>
       <visiblepage>[Flyleaf 1 recto]</visiblepage>
-      <tocs id="SEQUENCE-3">
-        <toc id="TOC_SEQUENCE-1">
-          <toc_sequence>1</toc_sequence>
-          <title>ILL: Monogram, Flyleaf 1 recto</title>
-        </toc>
-      </tocs>
+      <tocs id="SEQUENCE-3"><toc id="TOC_SEQUENCE-1"><toc_sequence>1</toc_sequence><title>ILL: Monogram, Flyleaf 1 recto</title></toc></tocs>
     </page>
     <page id="SEQUENCE-4">
       <sequence>4</sequence>
@@ -90,16 +85,7 @@
       <extension>sid</extension>
       <filename>ljs59_wk1_body0001</filename>
       <visiblepage>1r</visiblepage>
-      <tocs id="SEQUENCE-5">
-        <toc id="TOC_SEQUENCE-1">
-          <toc_sequence>1</toc_sequence>
-          <title>ILL: Miniature, Saint Paul presenting Paolo Nani to Virgin and Child, f. 1r</title>
-        </toc>
-        <toc id="TOC_SEQUENCE-2">
-          <toc_sequence>2</toc_sequence>
-          <title>ILL: Illuminated border, Winged lion of St. Mark and coat of arms, f. 1r</title>
-        </toc>
-      </tocs>
+      <tocs id="SEQUENCE-5"><toc id="TOC_SEQUENCE-1"><toc_sequence>1</toc_sequence><title>ILL: Miniature, Saint Paul presenting Paolo Nani to Virgin and Child, f. 1r</title></toc><toc id="TOC_SEQUENCE-2"><toc_sequence>2</toc_sequence><title>ILL: Illuminated border, Winged lion of St. Mark and coat of arms, f. 1r</title></toc></tocs>
     </page>
   </pagelevel>
 </integ:root>
