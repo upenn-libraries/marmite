@@ -88,13 +88,6 @@ GET `/api/v2/records/:bib_id/:format`
         - `404` if bibid is not valid
         -  `500` if error creating metadata
 
-
-   TODO (as part of refactor):
-    - add pagination to `records` endpoint, or remove it all together, or make it only available in development
-    - token authentication (header)
-    - do we still need image_id_prefixes?
-    - valid formats: openn, marc21, structural, iiif_presentation
-
 ## Production setup
 
 * Clone the repository.
