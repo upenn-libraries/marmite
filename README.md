@@ -56,6 +56,38 @@ rspec
 rake marmite:stop
 ```
 
+## New API Spec
+Namespace API requests: api/v2
+
+GET `/api/v2/records/:bib_id/:format`
+  - This request creates a record for the bib_id and format combination, if its not already present. If a record is already present, it does not update it unless this is requested via the update parameter.  
+  - Note: `structural` never needs to be refreshed, refresh params can be ignored
+  - Request
+    - parameters (within request)
+      - `bib_id`: a records bibid, either the long or short format
+      - `format`: xml metadata formats
+        - valid formats: openn, marc21, structural, iiif_presentation
+    - query params
+      - `update`
+       - `always`: explicitly refresh record always, refreshes the record (aka. recreates the record, when appropriate) 
+       - `never`: explicitly don't refresh the record
+       - `{number}`: conditionally refresh the record, refreshes record when the last modification is older than the number of hours given
+  - Response
+    - Successful response 
+      - body: xml for everything but, iiif_presentation, which is json
+      - headers
+        - last modified
+        - created at
+      - status
+          - `200` if record was not recreated
+          - `201` if record is created or updated
+    - Error response:
+      - body: `{ errors: [{ "message": "" }, { "message": "" }]}`
+      - format: json
+      - status
+        - `404` if bibid is not valid
+        -  `500` if error creating metadata
+
 ## Production setup
 
 * Clone the repository.
