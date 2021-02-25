@@ -41,11 +41,11 @@ def retrieve_pages(bib_id)
   return pages
 end
 
-def create_record(record, options = {})
+def create_record(original_record, options = {})
   skip_update = false
-  bib_id = record.bib_id
+  bib_id = original_record.bib_id
   validated_bib_id = validate_bib_id(bib_id)
-  format = record.format
+  format = original_record.format
   case format
     when 'marc21'
       bibs_url = 'https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs'
@@ -171,7 +171,7 @@ def create_record(record, options = {})
 
       end
       blob = builder.to_xml
-    when 'structural'
+  when 'structural'
       pages = retrieve_pages(bib_id)
       structural = Nokogiri::XML::Builder.new do |xml|
         xml.record {
@@ -182,7 +182,7 @@ def create_record(record, options = {})
         }
       end
       blob = structural.to_xml
-    when 'dla'
+    when 'dla' # Doesn't seem to be used.
       # corresponding marc record is needed for dla
       marc_record = Record.find_or_initialize_by bib_id: validated_bib_id, format: 'marc21'
       create_record(marc_record) unless marc_record.fresh?
@@ -229,7 +229,7 @@ def create_record(record, options = {})
   when 'iiif_presentation'
       image_ids_endpoint = "#{ENV['IMAGE_ID_ENDPOINT_PREFIX']}/#{bib_id}/#{ENV['IMAGE_ID_ENDPOINT_SUFFIX']}"
 
-      logger.info("ATTEMPTING TO PARSE #{image_ids_endpoint}")
+      # logger.info("ATTEMPTING TO PARSE #{image_ids_endpoint}")
 
       response = JSON.parse(open(image_ids_endpoint).read)
 
@@ -261,7 +261,7 @@ def create_record(record, options = {})
       )
 
       structures = []
-      
+
       if image_ids.is_a? Array
 
         image_ids.each_with_index do |iiif, i|
@@ -276,7 +276,7 @@ def create_record(record, options = {})
 
           p = Net::HTTP.get(URI.parse(iiif_server + iiif_string))
 
-          logger.info("ARRAY -- ITERATING THROUGH #{iiif_server + iiif_string}")
+          # logger.info("ARRAY -- ITERATING THROUGH #{iiif_server + iiif_string}")
 
           canvas_json = JSON.parse(p)
 
@@ -310,7 +310,7 @@ def create_record(record, options = {})
 
           p = Net::HTTP.get(URI.parse(iiif_string))
 
-          logger.info("HASH -- ITERATING THROUGH #{iiif_string}")
+          # logger.info("HASH -- ITERATING THROUGH #{iiif_string}")
 
           canvas_json = JSON.parse(p)
 
@@ -353,7 +353,7 @@ def create_record(record, options = {})
       manifest.structures = structures
 
       blob = manifest.to_json
-    when 'structural_ark'
+    when 'structural_ark' # Retire this format
       skip_update = true
       targetpath = Pathname.new(ENV['TASK_BASE_PATH'] + "/" + bib_id + ".xlsx")
       parse_errors = IndexMetadata.index_structural(targetpath.to_path, format)
@@ -363,7 +363,7 @@ def create_record(record, options = {})
         content_type('application/json')
         return JSON(parse_errors)
       end
-    when 'combined_ark'
+    when 'combined_ark' # Retire this format
       skip_update = true
       targetpath = Pathname.new(ENV['TASK_BASE_PATH'] + "/" + bib_id + ".xlsx")
       parse_errors = IndexMetadata.index_combined(targetpath.to_path, format)
@@ -378,10 +378,10 @@ def create_record(record, options = {})
   end
 
   unless skip_update
-    record.format = format
-    record.blob = Base64.encode64(Zlib::Deflate.new(nil, -Zlib::MAX_WBITS).deflate(blob, Zlib::FINISH))
-    record.touch unless record.new_record?
-    record.save!
+    original_record.format = format
+    original_record.blob = Base64.encode64(Zlib::Deflate.new(nil, -Zlib::MAX_WBITS).deflate(blob, Zlib::FINISH))
+    original_record.touch unless original_record.new_record?
+    original_record.save!
   end
 end
 
@@ -401,6 +401,7 @@ def process_pages(pages, xml, bib_id, image_id_prefix = '')
       end
     end
 
+    # FIXME: Might be better to calculate this based on visible page.
     side = sequence.to_i.odd? ? 'recto' : 'verso'
 
     filename = "#{image_id_prefix.downcase}#{filename}" unless image_id_prefix.nil?
@@ -433,6 +434,7 @@ def determine_side(side_value, sequence)
   return sequence.to_i.odd? ? 'recto' : 'verso'
 end
 
+# Not used.
 def dla_structural_metadata(bib_id, sceti_prefix)
   bib_id = validate_bib_id(bib_id)
   structural_endpoint = "http://dla.library.upenn.edu/dla/#{sceti_prefix.downcase}/pageturn.xml?id=#{sceti_prefix.upcase}_#{bib_id}"

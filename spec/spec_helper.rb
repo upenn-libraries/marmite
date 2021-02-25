@@ -2,6 +2,8 @@
 
 require 'rack/test'
 require 'rspec'
+require 'webmock/rspec'
+require 'equivalent-xml/rspec_matchers'
 
 ENV['RACK_ENV'] = 'test'
 

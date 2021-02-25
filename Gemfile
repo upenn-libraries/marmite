@@ -26,6 +26,8 @@ group :development do
 end
 
 group :test do
+  gem 'equivalent-xml'
   gem 'rack-test'
   gem 'rspec'
+  gem 'webmock'
 end

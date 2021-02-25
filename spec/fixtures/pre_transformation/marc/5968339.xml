@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bibs total_record_count="1">
+  <bib>
+    <mms_id>9959683393503681</mms_id>
+    <record_format>marc21</record_format>
+    <linked_record_id/>
+    <title>Evangelista Torricelli letter to Marin Marsenne,</title>
+    <author>Torricelli, Evangelista,</author>
+    <network_numbers>
+      <network_number>(PU)5968339-penndb-Voyager</network_number>
+      <network_number>(OCoLC)850937672</network_number>
+      <network_number>(OCoLC)ocn850937672</network_number>
+    </network_numbers>
+    <date_of_publication>1645</date_of_publication>
+    <holdings link="https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs/9959683393503681/holdings"/>
+    <created_by>import</created_by>
+    <created_date>2017-06-06Z</created_date>
+    <last_modified_by>System</last_modified_by>
+    <last_modified_date>2020-07-05Z</last_modified_date>
+    <suppress_from_publishing>false</suppress_from_publishing>
+    <suppress_from_external_search>false</suppress_from_external_search>
+    <sync_with_oclc>BIBS</sync_with_oclc>
+    <sync_with_libraries_australia>NONE</sync_with_libraries_australia>
+    <originating_system>ILS</originating_system>
+    <originating_system_id>5968339-penndb</originating_system_id>
+    <cataloging_level desc="Default Level">00</cataloging_level>
+    <record>
+      <leader>02808ctm a2200493Ia 4500</leader>
+      <controlfield tag="001">9959683393503681</controlfield>
+      <controlfield tag="005">20191003131923.0</controlfield>
+      <controlfield tag="008">130626s1645    pau           000 i lat d</controlfield>
+      <datafield ind1=" " ind2=" " tag="035">
+        <subfield code="a">(OCoLC)ocn850937672</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="035">
+        <subfield code="a">(OCoLC)850937672</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="035">
+        <subfield code="a">(PU)5968339-penndb-Voyager</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="040">
+        <subfield code="a">PAULM</subfield>
+        <subfield code="b">eng</subfield>
+        <subfield code="c">PAULM</subfield>
+        <subfield code="e">dacs</subfield>
+        <subfield code="d">PAULM</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="049">
+        <subfield code="a">PAUM</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="079">
+        <subfield code="a">ocn850933023</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="9" tag="099">
+        <subfield code="a">LJS 201</subfield>
+      </datafield>
+      <datafield ind1="1" ind2=" " tag="100">
+        <subfield code="a">Torricelli, Evangelista,</subfield>
+        <subfield code="d">1608-1647.</subfield>
+      </datafield>
+      <datafield ind1="1" ind2="0" tag="245">
+        <subfield code="a">Evangelista Torricelli letter to Marin Marsenne,</subfield>
+        <subfield code="f">1645.</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="300">
+        <subfield code="a">1 leaf :</subfield>
+        <subfield code="b">paper ;</subfield>
+        <subfield code="c">275 x 201 mm.</subfield>
+      </datafield>
+      <datafield ind1="0" ind2=" " tag="545">
+        <subfield code="a">Mathematician and philosopher in the court of Ferdinando II, Grand Duke of Tuscany.</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="520">
+        <subfield code="a">Letter in Torricelli's cursive hand to Father Marin Mersenne, praising a lens owned by Ferdinando II, promising to send a lens he himself made, and discussing spherical geometry.  Written from Florence, dated 9 January 1645, on a single paper leaf with a watermark of a bishop's miter.  Tipped into a modern morocco binding with gilt title and erroneous date of 1649.</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="546">
+        <subfield code="a">In Latin.</subfield>
+      </datafield>
+      <datafield ind1="1" ind2=" " tag="561">
+        <subfield code="a">Formerly owned by Sir Thomas Phillipps; sold as part of the residue of the Phillipps collection first to William H. Robinson Ltd., 1945, and again to H.P. Kraus, March 1978.</subfield>
+      </datafield>
+      <datafield ind1="1" ind2=" " tag="561">
+        <subfield code="a">Appears in H. P. Kraus's cat. 155 (1980), no. 89, and cat. 186 (1991), no. 156.</subfield>
+      </datafield>
+      <datafield ind1="1" ind2=" " tag="561">
+        <subfield code="a">Formerly owned by John D. Stanitz (Cleveland, Ohio), Ms. 32.</subfield>
+      </datafield>
+      <datafield ind1="1" ind2=" " tag="561">
+        <subfield code="a">Acquired by Lawrence J. Schoenberg with other Stanitz manuscripts, Sept. 1997.</subfield>
+      </datafield>
+      <datafield ind1="1" ind2=" " tag="561">
+        <subfield code="a">Deposit by Lawrence J. Schoenberg and Barbara Brizdle, 2013.</subfield>
+      </datafield>
+      <datafield ind1="4" ind2=" " tag="510">
+        <subfield code="a">Described in Transformation of knowledge:  early manuscripts from the collection of Lawrence J. Schoenberg (London: Paul Holberton, 2006),</subfield>
+        <subfield code="c">p. 116 (LJS 201).</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="524">
+        <subfield code="a">LJS 201</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="590">
+        <subfield code="a">Lawrence J. Schoenberg &amp; Barbara Brizdle Manuscript Initiative.</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="0" tag="650">
+        <subfield code="a">Geometry</subfield>
+        <subfield code="v">Early works to 1800.</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="0" tag="650">
+        <subfield code="a">Mathematics</subfield>
+        <subfield code="v">Early works to 1800.</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="0" tag="650">
+        <subfield code="a">Optics</subfield>
+        <subfield code="v">Early works to 1800.</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="0" tag="651">
+        <subfield code="a">Florence (Italy)</subfield>
+        <subfield code="x">History</subfield>
+        <subfield code="y">1421-1737.</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="0" tag="655">
+        <subfield code="a">Manuscripts, Latin</subfield>
+        <subfield code="y">17th century.</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="0" tag="655">
+        <subfield code="a">Manuscripts, European.</subfield>
+      </datafield>
+      <datafield ind1="1" ind2=" " tag="700">
+        <subfield code="a">Mersenne, Marin,</subfield>
+        <subfield code="d">1588-1648,</subfield>
+        <subfield code="e">recipient.</subfield>
+      </datafield>
+      <datafield ind1="1" ind2=" " tag="700">
+        <subfield code="a">Phillipps, Thomas,</subfield>
+        <subfield code="c">Sir,</subfield>
+        <subfield code="d">1792-1872,</subfield>
+        <subfield code="e">former owner.</subfield>
+      </datafield>
+      <datafield ind1="1" ind2=" " tag="700">
+        <subfield code="a">Stanitz, John D.,</subfield>
+        <subfield code="e">former owner.</subfield>
+      </datafield>
+      <datafield ind1="4" ind2="1" tag="856">
+        <subfield code="z">Facsimile</subfield>
+        <subfield code="u">http://hdl.library.upenn.edu/1017/d/medren/5968339</subfield>
+      </datafield>
+      <datafield ind1="4" ind2="2" tag="856">
+        <subfield code="3">The Lawrence J. Schoenberg and Barbara Brizdle Manuscript Initiative Fund Home Page</subfield>
+        <subfield code="u">http://hdl.library.upenn.edu/1017.12/366278</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="852">
+        <subfield code="b">Kislak Center for Special Collections, Rare Books and Manuscripts</subfield>
+        <subfield code="a">University of Pennsylvania</subfield>
+        <subfield code="e">3420 Walnut Street, Philadelphia, Pennsylvania 19104-6206.</subfield>
+        <subfield code="j">LJS 201</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="994">
+        <subfield code="a">C0</subfield>
+        <subfield code="b">PAULM</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="996">
+        <subfield code="a">unbound</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="999">
+        <subfield code="a">DLA</subfield>
+        <subfield code="b">20140129</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="INT">
+        <subfield code="a">P</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="INST">
+        <subfield code="a">01UPENN_INST</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="AVA">
+        <subfield code="0">9959683393503681</subfield>
+        <subfield code="8">22325864490003681</subfield>
+        <subfield code="a">01UPENN_INST</subfield>
+        <subfield code="b">KislakCntr</subfield>
+        <subfield code="c">Manuscripts</subfield>
+        <subfield code="d">Oversize LJS 201</subfield>
+        <subfield code="e">available</subfield>
+        <subfield code="f">1</subfield>
+        <subfield code="g">0</subfield>
+        <subfield code="j">scmss</subfield>
+        <subfield code="k">8</subfield>
+        <subfield code="p">1</subfield>
+        <subfield code="q">Kislak Center for Special Collections, Rare Books and Manuscripts</subfield>
+      </datafield>
+    </record>
+  </bib>
+</bibs>
