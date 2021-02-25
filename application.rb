@@ -489,6 +489,14 @@ class Application < Sinatra::Base
     end
   end
 
+  # Begin API v2 enpoints
+  get '/api/v2/record/:bib_id/openn' do; end
+  get '/api/v2/record/:bib_id/marc21' do; end
+  get '/api/v2/record/:bib_id/structural' do; end # never "refresh"
+  get '/api/v2/record/:bib_id/iiif_presentation' do; end
+  # End API v2 endpoints
+
+  # Begin API v1 endpoints
   get '/records/:bib_id/create/?' do |bib_id|
     format = params[:format] || 'marc21'
 
@@ -539,6 +547,7 @@ class Application < Sinatra::Base
     content_type(FORMAT_OVERRIDES[format] || 'text/xml')
     return inflate(blob.first)
   end
+  # End API v1 endpoints
 
   %w[/? /records/?].each do |path|
     get path do
