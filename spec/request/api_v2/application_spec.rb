@@ -1,10 +1,19 @@
 RSpec.describe 'Marmite V2 API', type: :request do
+  include AlmaApiMocks
+
   describe 'GET /api/v2/record/:bib_id/marc' do
+    before do
+      stub_alma_api_request bib_id, alma_marc_xml, alma_api_key
+    end
     context 'for a new record'do
       # TODO: stub alma api request
-      let(:bib_id) { '1234' }
+      let(:bib_id) { '9951865503503681' }
+      let(:alma_api_key) { '' }
+      let(:alma_marc_xml) do
+        File.read(File.join('spec', 'fixtures', 'pre_transformation', 'marc', "#{bib_id}.xml"))
+      end
       it 'returns a successful response with MARC XML' do
-        get "/api/v2/record/#{bib_id}/marc"
+        get "/api/v2/record/#{bib_id}/marc21"
         expect(last_response.code).to eq '201'
         # TODO: expect(last_response).to be_marc_xml
       end

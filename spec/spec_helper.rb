@@ -9,6 +9,7 @@ ENV['RACK_ENV'] = 'test'
 
 require File.expand_path '../../application.rb', __FILE__
 require File.expand_path '../fixtures/record_fixtures', __FILE__
+require File.expand_path '../support/alma_api_mock', __FILE__
 
 module RSpecMixin
   include Rack::Test::Methods
@@ -20,6 +21,7 @@ end
 RSpec.configure do |c|
   c.include RSpecMixin
   c.include RecordFixtures
+  c.include AlmaApiMocks
 
   c.before(:each) do
     Record.destroy_all
