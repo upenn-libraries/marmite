@@ -4,6 +4,7 @@
 class AlmaApi
   class RequestFailedError < StandardError; end
 
+  BIBS_URL = 'https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs'
   DEFAULT_HEADERS = {
     apikey: ENV['API_KEY']
   }.freeze
@@ -12,9 +13,9 @@ class AlmaApi
   # @option [TrueClass, FalseClass] availability
   # @return [String] bib information as XML
   def self.bib(bib_id, availability: true)
-    params = availability ? { expand: 'p_avail' } : {}
+    params = availability ? { expand: 'p_avail', mms_id: bib_id } : {}
     request =
-      Typhoeus::Request.new bib_url(bib_id),
+      Typhoeus::Request.new BIBS_URL,
                             method: :get,
                             params: params,
                             headers: DEFAULT_HEADERS
@@ -22,10 +23,5 @@ class AlmaApi
     raise RequestFailedError, "Request failed: #{response.body}" unless response.success?
 
     response.body
-  end
-
-  # @param [String] bib_id aka alma mms_id
-  def self.bib_url(bib_id)
-    "https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs/#{bib_id}"
   end
 end

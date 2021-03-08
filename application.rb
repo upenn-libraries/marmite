@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 
-require './lib/marmite'
+require './lib/marmite/factories/record_factory'
+require './lib/marmite/models/record'
+require './lib/marmite/services/blob_handler'
 
 require 'sinatra'
 require 'active_support/core_ext/string/output_safety'
@@ -472,6 +474,7 @@ def legacy_bib_id(bib_id)
 end
 
 class Application < Sinatra::Base
+
   set :assets, Sprockets::Environment.new(root)
 
   AVAILABLE_FORMATS = %w[marc21 structural structural_ark combined_ark dla openn iiif_presentation]
@@ -505,15 +508,15 @@ class Application < Sinatra::Base
 
   # pull XML from Alma, do some processing, and save a Record with the XML
   # as a blob. return the XML.
-  get '/api/v2/record/:bib_id/marc21' do
+  get '/api/v2/record/:bib_id/marc21' do |bib_id|
     record = Record.find_by bib_id: bib_id, format: 'marc21'
-
-    unless record
-      # create record
-      record = RecordFactory.create_marc21_record bib_id
-    end
-
-    inflate(record.blob)
+    status = if record
+               200
+             else
+               record = RecordFactory.create_marc21_record bib_id
+               201
+             end
+    [status, inflate(record.blob)]
   end
 
   get '/api/v2/record/:bib_id/openn' do; end
