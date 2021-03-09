@@ -7,12 +7,10 @@ RSpec.describe 'Marmite V2 API', type: :request do
   describe 'GET /api/v2/record/:bib_id/marc' do
     before do
       stub_alma_api_bib_request(bib_id,
-                                marc21_pre_transform(bib_id),
-                                alma_api_key)
+                                marc21_pre_transform(bib_id))
     end
-    context 'for a new record'do
+    context 'for a new record' do
       let(:bib_id) { '9951865503503681' }
-      let(:alma_api_key) { '' }
 
       it 'returns a successful response with MARC XML' do
         get "/api/v2/record/#{bib_id}/marc21"
@@ -20,10 +18,13 @@ RSpec.describe 'Marmite V2 API', type: :request do
         expect(last_response.body).to be_equivalent_to marc21_post_transform(bib_id)
       end
       context 'if bib_id is not found in Alma' do
+        before { stub_alma_api_bib_not_found }
         it 'returns 404 and an error response' do
-          get '/api/v2/record/0000/marc'
-          expect(last_response.status).to eq '404'
-          # TODO: expect(last_response).to be_a_json_error_object
+          get '/api/v2/record/0000/marc21'
+          expect(last_response.status).to eq 404
+          parsed_response = JSON.parse(last_response.body)
+          expect(parsed_response).to have_key 'errors'
+          expect(parsed_response[:errors]).to include bib_id
         end
       end
       context 'with some error in marc processing' do

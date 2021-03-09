@@ -513,10 +513,22 @@ class Application < Sinatra::Base
     status = if record
                200
              else
-               record = RecordFactory.create_marc21_record bib_id
-               201
+               begin
+                 record = RecordFactory.create_marc21_record bib_id
+                 201
+               rescue StandardError => e
+                 error = { errors: [e.message] }
+                 404
+               end
              end
-    [status, inflate(record.blob)]
+
+    body = if record.present?
+             inflate record.blob
+           else
+             error.to_json
+           end
+
+    [status, body]
   end
 
   get '/api/v2/record/:bib_id/openn' do; end

@@ -4,6 +4,8 @@
 class AlmaApi
   class RequestFailedError < StandardError; end
 
+  class BibNotFound < StandardError; end
+
   BIBS_URL = 'https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs'
   DEFAULT_HEADERS = {
     apikey: ENV['API_KEY']
@@ -21,6 +23,8 @@ class AlmaApi
                             headers: DEFAULT_HEADERS
     response = request.run
     raise RequestFailedError, "Request failed: #{response.body}" unless response.success?
+
+    raise BibNotFound, "Bib not found in Alma for #{bib_id}" if response.body =~ /total_record_count="0"/
 
     response.body
   end
