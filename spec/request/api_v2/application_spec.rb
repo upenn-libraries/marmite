@@ -2,16 +2,16 @@
 
 RSpec.describe 'Marmite V2 API', type: :request do
   include AlmaApiMocks
+  include RecordFixtures
   include FixtureHelpers
 
   describe 'GET /api/v2/record/:bib_id/marc' do
-    before do
-      stub_alma_api_bib_request(bib_id,
-                                marc21_pre_transform(bib_id))
-    end
+    let(:bib_id) { '9951865503503681' }
     context 'for a new record' do
-      let(:bib_id) { '9951865503503681' }
-
+      before do
+        stub_alma_api_bib_request(bib_id,
+                                  marc21_pre_transform(bib_id))
+      end
       it 'returns a successful response with MARC XML' do
         get "/api/v2/record/#{bib_id}/marc21"
         expect(last_response.status).to eq 201
@@ -37,13 +37,11 @@ RSpec.describe 'Marmite V2 API', type: :request do
       end
     end
     context 'for an existing record' do
-      let(:bib) do
-        # TODO: Record.new(format: :marc) or some fixture
-      end
+      let(:bib) { marc21_record(bib_id) }
       it 'returns a successful response with MARC XML' do
-        get "/api/v2/record/#{bib.bib_id}/marc"
-        expect(last_response.status).to eq '200'
-        # TODO: expect(last_response).to be_marc_xml
+        get "/api/v2/record/#{bib.bib_id}/marc21"
+        expect(last_response.status).to eq 200
+        expect(last_response.body).to be_equivalent_to marc21_post_transform(bib_id)
       end
       context 'with update params' do
         it 'refreshes the record if update = always and returns a 201' do
