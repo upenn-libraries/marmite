@@ -2,26 +2,22 @@
 
 RSpec.describe 'Marmite V2 API', type: :request do
   include AlmaApiMocks
+  include FixtureHelpers
 
   describe 'GET /api/v2/record/:bib_id/marc' do
     before do
-      stub_alma_api_bib_request bib_id, alma_marc_xml, alma_api_key
+      stub_alma_api_bib_request(bib_id,
+                                marc21_pre_transform(bib_id),
+                                alma_api_key)
     end
     context 'for a new record'do
       let(:bib_id) { '9951865503503681' }
       let(:alma_api_key) { '' }
 
-      let(:alma_marc_xml) do
-        File.read(File.join('spec', 'fixtures', 'pre_transformation', 'marc', "#{bib_id}.xml"))
-      end
-      let(:transformed_xml) do
-        File.read(File.join('spec', 'fixtures', 'post_transformation', 'marc21', "#{bib_id}.xml"))
-      end
-
       it 'returns a successful response with MARC XML' do
         get "/api/v2/record/#{bib_id}/marc21"
         expect(last_response.status).to eq 201
-        expect(last_response.body).to be_equivalent_to transformed_xml
+        expect(last_response.body).to be_equivalent_to marc21_post_transform(bib_id)
       end
       context 'if bib_id is not found in Alma' do
         it 'returns 404 and an error response' do

@@ -1,5 +1,6 @@
 RSpec.describe 'Application' do
   include AlmaApiMocks
+  include FixtureHelpers
 
   let(:alma_api_key) { 'not_a_valid_key' }
 
@@ -25,8 +26,8 @@ RSpec.describe 'Application' do
       end
 
       context 'when entire marc record is provided' do
-        let(:alma_marc_xml) { File.read(File.join('spec', 'fixtures', 'pre_transformation', 'marc', "#{bib_id}.xml")) }
-        let(:expected_xml) { File.read(File.join('spec', 'fixtures', 'post_transformation', 'marc21', "#{bib_id}.xml")) }
+        let(:alma_marc_xml) { marc21_pre_transform(bib_id) }
+        let(:expected_xml) { marc21_post_transform(bib_id) }
 
         it "add expected blob xml" do
         end

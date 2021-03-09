@@ -76,7 +76,7 @@ RSpec.describe 'Marmite', type: :request do
         get "/records/#{record.bib_id}/create", format: :iiif_presentation
         expect(last_response).to be_ok
         expect(last_response.body).to include(
-            BlobHandler.uncompress(record.blob)
+          BlobHandler.uncompress(record.blob)
         )
       end
     end
