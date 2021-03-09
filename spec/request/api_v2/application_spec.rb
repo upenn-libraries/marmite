@@ -24,7 +24,7 @@ RSpec.describe 'Marmite V2 API', type: :request do
           expect(last_response.status).to eq 404
           parsed_response = JSON.parse(last_response.body)
           expect(parsed_response).to have_key 'errors'
-          expect(parsed_response[:errors]).to include bib_id
+          expect(parsed_response['errors'].first).to include '0000'
         end
       end
       context 'with some error in marc processing' do
