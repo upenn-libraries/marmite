@@ -23,15 +23,16 @@ RSpec.describe 'Marmite V2 API', type: :request do
           get '/api/v2/record/0000/marc21'
           expect(last_response.status).to eq 404
           parsed_response = JSON.parse(last_response.body)
-          expect(parsed_response).to have_key 'errors'
           expect(parsed_response['errors'].first).to include '0000'
         end
       end
       context 'with some error in marc processing' do
+        before { stub_alma_api_invalid_xml }
         it 'returns a 500 and an error response' do
-          get '/api/v2/record/0001/marc'
-          expect(last_response.status).to eq '500'
-          # TODO: expect(last_response).to be_a_json_error_object
+          get '/api/v2/record/0001/marc21'
+          expect(last_response.status).to eq 500
+          expect(JSON.parse(last_response.body)['errors'].first)
+            .to include 'MARC transformation error'
         end
       end
     end

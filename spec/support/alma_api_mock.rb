@@ -29,4 +29,16 @@ module AlmaApiMocks
     )
   end
 
+  def stub_alma_api_invalid_xml
+    stub_request(
+      :get,
+      'https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs?expand=p_avail&mms_id=0001'
+    ).with(headers: { 'Apikey' => '',
+                      'Expect' => '',
+                      'User-Agent' => 'Typhoeus - https://github.com/typhoeus/typhoeus'
+    }).to_return(status: 200,
+                 body: 'this is not valid XML'
+    )
+  end
+
 end

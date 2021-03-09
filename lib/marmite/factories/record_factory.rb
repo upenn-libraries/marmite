@@ -14,8 +14,6 @@ class RecordFactory
     transformed_xml = alma_bib.transform
     Record.create! blob: Record.compress(transformed_xml),
                    format: 'marc21'
-  rescue AlmaApi::RequestFailedError => e
-    e.message
   end
 
   def self.create_iiif_manifest_record; end

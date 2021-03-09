@@ -3,6 +3,8 @@
 # represent an Alma MRC XML record, and output a transformed version
 # for saving as a Record blob
 class AlmaBib
+  class MarcTransformationError < StandardError; end
+
   # @param [String] bib_xml
   def initialize(bib_xml)
     @xml = bib_xml
@@ -10,6 +12,8 @@ class AlmaBib
       config.options = Nokogiri::XML::ParseOptions::NOBLANKS
     end
     @record = @xml_reader.xpath '//bibs/bib/record'
+  rescue StandardError => e
+    raise MarcTransformationError, "MARC transformation error: #{e.message}"
   end
 
   # crazy XML parsing and restructuring
@@ -128,5 +132,7 @@ class AlmaBib
 
     end
     builder.to_xml
+  rescue StandardError => e
+    raise MarcTransformationError, "MARC transformation error: #{e.message}"
   end
 end

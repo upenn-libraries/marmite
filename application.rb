@@ -2,6 +2,7 @@
 
 require './lib/marmite/factories/record_factory'
 require './lib/marmite/models/record'
+require './lib/marmite/models/alma_bib'
 require './lib/marmite/services/blob_handler'
 
 require 'sinatra'
@@ -516,6 +517,9 @@ class Application < Sinatra::Base
                begin
                  record = RecordFactory.create_marc21_record bib_id
                  201
+               rescue AlmaBib::MarcTransformationError => e
+                 error = { errors: [e.message] }
+                 500
                rescue StandardError => e
                  error = { errors: [e.message] }
                  404
