@@ -505,13 +505,31 @@ class Application < Sinatra::Base
     end
   end
 
+  # NOTE: doesn't check format
+  # @param [String] update_param
+  # @return [TrueClass, FalseClass]
+  def update_record?(update_param, record)
+    return true unless record
+
+    case update_param
+    when 'always' then true
+    when 'never' then false
+    when /\d+/
+      range = record.updated_at..(record.updated_at + update_param.to_i.hours)
+      range.cover? Time.now
+    else
+      false # don't update if no param is set
+    end
+  end
+
   # Begin API v2 endpoints
 
   # pull XML from Alma, do some processing, and save a Record with the XML
   # as a blob. return the XML.
   get '/api/v2/record/:bib_id/marc21' do |bib_id|
     record = Record.find_by bib_id: bib_id, format: 'marc21'
-    status = if record
+    update = update_record? params[:update], record
+    status = if record && !update
                200
              else
                begin

@@ -45,25 +45,29 @@ RSpec.describe 'Marmite V2 API', type: :request do
       end
       context 'with update params' do
         it 'refreshes the record if update = always and returns a 201' do
-          get "/api/v2/record/#{bib.bib_id}/marc", update: 'always'
-          expect(last_response.status).to eq '201'
+          stub_alma_api_bib_request(bib_id,
+                                    marc21_pre_transform(bib_id))
+          get "/api/v2/record/#{bib.bib_id}/marc21", update: 'always'
+          expect(last_response.status).to eq 201
           # TODO: expect(last_response).to have_some_updated_data
         end
         it 'does not refresh the record if update = never and returns a 200' do
-          get "/api/v2/record/#{bib.bib_id}/marc", update: 'never'
-          expect(last_response.status).to eq '200'
+          get "/api/v2/record/#{bib.bib_id}/marc21", update: 'never'
+          expect(last_response.status).to eq 200
           # TODO: expect(last_response).to not_have_changed
         end
         it 'refreshes the record if it was created outside of the number of
             hours (ago) specified by the update param' do
-          get "/api/v2/record/#{bib.bib_id}/marc", update: '24'
-          expect(last_response.status).to eq '201'
+          stub_alma_api_bib_request(bib_id,
+                                    marc21_pre_transform(bib_id))
+          get "/api/v2/record/#{bib.bib_id}/marc21", update: '24'
+          expect(last_response.status).to eq 201
           # TODO: expect(last_response).to have_some_updated_data
         end
         it 'does not refresh the record if it was created inside of the number of
             hours (ago) specified by the update param' do
-          get "/api/v2/record/#{bib.bib_id}/marc", update: '12'
-          expect(last_response.status).to eq '200'
+          get "/api/v2/record/#{bib.bib_id}/marc21", update: '12'
+          expect(last_response.status).to eq 200
           # TODO: expect(last_response).to not_have_changed
         end
       end
