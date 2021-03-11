@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 
-require './lib/marmite'
+require './lib/marmite/factories/record_factory'
+require './lib/marmite/models/record'
+require './lib/marmite/models/alma_bib'
+require './lib/marmite/services/blob_handler'
 
 require 'sinatra'
 require 'active_support/core_ext/string/output_safety'
@@ -69,11 +72,15 @@ def create_record(original_record, options = {})
         config.options = Nokogiri::XML::ParseOptions::NOBLANKS
       end
 
+      # get record node from xml
       record = reader.xpath('//bibs/bib/record')
 
+      # init holdings hash
       holdings = {}
+      # init unsanitized values array? what for?
       unsanitized_values = []
 
+      # build holdings hash by iterating through 'special' AVA Alma MARC fields
       for i in 0..(record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="8"]').children.length-1)
         holdings_hash = {}
         holdings_hash[:holding_id] = record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="8"]').children[i].text unless record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="8"]').children[i].nil?
@@ -83,6 +90,7 @@ def create_record(original_record, options = {})
         holdings[i] = holdings_hash
       end
 
+      # not sure what's going on here, but adding new XML to reader>record from MARC 650 (provenance?)
       for i in 0..(record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children.length-1)
         if record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.start_with?('PRO ')
           unsanitized_values << record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text
@@ -104,6 +112,7 @@ def create_record(original_record, options = {})
         end
       end
 
+      # add 999z to XML reader>record
       unless unsanitized_values.empty?
         Nokogiri::XML::Builder.with(reader.at('record')) do |xml|
           xml.datafield('ind1' => ' ', 'ind2' => ' ', 'tag' => '999') {
@@ -114,6 +123,8 @@ def create_record(original_record, options = {})
         end
       end
 
+      # remove some nodes from the xml based on xpath expressions
+      # would be helpful to wrap these in descriptive methods
       record.search('//record/datafield[@tag="650"]/subfield[@code="a"][starts-with(text(), "CHR ")]').remove
       record.search('//record/datafield[@tag="650"]/subfield[@code="a"][starts-with(text(), "PRO ")]').remove
       record.search('//record/datafield[@tag="650"][not(node())]').remove
@@ -121,8 +132,10 @@ def create_record(original_record, options = {})
       record.search('//record/datafield[@tag="INST"]').remove
       record.search('//record/datafield[@tag="AVA"]').remove
 
+      # initialize collection names array
       collection_names = []
 
+      # get collection names from 710
       record.xpath('//record/datafield[@tag="710"]').each do |xml_snippet|
         if xml_snippet.children.search('subfield[@code="5"]').any?
           xml_snippet.children.search('subfield[@code="a"]').children.each do |c_name|
@@ -131,6 +144,7 @@ def create_record(original_record, options = {})
         end
       end
 
+      # add back collection names to 773.....
       if collection_names.any?
         collection_names.each do |cn|
           Nokogiri::XML::Builder.with(reader.at('record')) do |xml|
@@ -141,9 +155,10 @@ def create_record(original_record, options = {})
         end
       end
 
-      leader  = record.xpath('//record/leader')
-      control  = record.xpath('//record/controlfield')
-      unsorted  = record.xpath('//datafield')
+      # ??????????????????????????????
+      leader = record.xpath('//record/leader')
+      control = record.xpath('//record/controlfield')
+      unsorted = record.xpath('//datafield')
 
       sorted = unsorted.sort_by{ |n| n.attribute('tag').value }
 
@@ -460,6 +475,7 @@ def legacy_bib_id(bib_id)
 end
 
 class Application < Sinatra::Base
+
   set :assets, Sprockets::Environment.new(root)
 
   AVAILABLE_FORMATS = %w[marc21 structural structural_ark combined_ark dla openn iiif_presentation]
@@ -489,6 +505,42 @@ class Application < Sinatra::Base
     end
   end
 
+  # Begin API v2 endpoints
+
+  # pull XML from Alma, do some processing, and save a Record with the XML
+  # as a blob. return the XML.
+  get '/api/v2/record/:bib_id/marc21' do |bib_id|
+    record = Record.find_by bib_id: bib_id, format: 'marc21'
+    status = if record
+               200
+             else
+               begin
+                 record = RecordFactory.create_marc21_record bib_id
+                 201
+               rescue AlmaBib::MarcTransformationError => e
+                 error = { errors: [e.message] }
+                 500
+               rescue StandardError => e
+                 error = { errors: [e.message] }
+                 404
+               end
+             end
+
+    body = if record.present?
+             inflate record.blob
+           else
+             error.to_json
+           end
+
+    [status, body]
+  end
+
+  get '/api/v2/record/:bib_id/openn' do; end
+  get '/api/v2/record/:bib_id/structural' do; end # never "refresh"
+  get '/api/v2/record/:bib_id/iiif_presentation' do; end
+  # End API v2 endpoints
+
+  # Begin API v1 endpoints
   get '/records/:bib_id/create/?' do |bib_id|
     format = params[:format] || 'marc21'
 
@@ -539,6 +591,7 @@ class Application < Sinatra::Base
     content_type(FORMAT_OVERRIDES[format] || 'text/xml')
     return inflate(blob.first)
   end
+  # End API v1 endpoints
 
   %w[/? /records/?].each do |path|
     get path do

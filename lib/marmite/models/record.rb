@@ -14,6 +14,15 @@ class Record < ActiveRecord::Base
     @error_message = value
   end
 
+  # @param [String] uncompressed_blob
+  # @return [String] Base64 encoded string for persisting
+  def self.compress(uncompressed_blob)
+    Base64.encode64(
+      Zlib::Deflate.new(nil, -Zlib::MAX_WBITS)
+                   .deflate(uncompressed_blob, Zlib::FINISH)
+    )
+  end
+
   # A record is fresh if it is:
   # - NOT one of the FORMATS_TO_ALWAYS_RECREATE
   # AND

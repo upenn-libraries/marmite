@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # adapted from http://recipes.sinatrarb.com/p/testing/rspec
 
 require 'rack/test'
@@ -7,8 +9,10 @@ require 'equivalent-xml/rspec_matchers'
 
 ENV['RACK_ENV'] = 'test'
 
-require File.expand_path '../../application.rb', __FILE__
-require File.expand_path '../fixtures/record_fixtures', __FILE__
+require File.expand_path '../application.rb', __dir__
+require File.expand_path 'fixtures/record_fixtures', __dir__
+require File.expand_path 'support/alma_api_mock', __dir__
+require File.expand_path 'support/fixture_helpers', __dir__
 
 module RSpecMixin
   include Rack::Test::Methods
@@ -20,6 +24,7 @@ end
 RSpec.configure do |c|
   c.include RSpecMixin
   c.include RecordFixtures
+  c.include AlmaApiMocks
 
   c.before(:each) do
     Record.destroy_all

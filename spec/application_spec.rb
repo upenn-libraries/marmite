@@ -1,4 +1,7 @@
 RSpec.describe 'Application' do
+  include AlmaApiMocks
+  include FixtureHelpers
+
   let(:alma_api_key) { 'not_a_valid_key' }
 
   before do
@@ -17,17 +20,14 @@ RSpec.describe 'Application' do
 
       before do
         # Mock the Alma API response
-        stub_request(
-            :get,
-            "https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs/?mms_id=#{bib_id}&expand=p_avail&apikey=#{alma_api_key}"
-        ).to_return(body: alma_marc_xml, headers: {'Content-Type' => 'application/xml;charset=UTF-8'})
+        stub_alma_api_request bib_id, alma_marc_xml, alma_api_key
 
         create_record(record) # calls the method to add blob to Record object
       end
 
       context 'when entire marc record is provided' do
-        let(:alma_marc_xml) { File.read(File.join('spec', 'fixtures', 'pre_transformation', 'marc', "#{bib_id}.xml")) }
-        let(:expected_xml) { File.read(File.join('spec', 'fixtures', 'post_transformation', 'marc21', "#{bib_id}.xml")) }
+        let(:alma_marc_xml) { marc21_pre_transform(bib_id) }
+        let(:expected_xml) { marc21_post_transform(bib_id) }
 
         it "add expected blob xml" do
         end
