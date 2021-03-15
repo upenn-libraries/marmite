@@ -37,10 +37,11 @@ build_image:
 rspec_test:
   stage: test
   services:
-    - mysql:5.7.31
+    - mysql:5.7
   extends:
     - .rspec
   variables:
+    MYSQL_ALLOW_EMPTY_PASSWORD: yes
     RSPEC_TEST_DOCKER_ENV_VARS: "--env-file .env"
     RSPEC_TEST_PRE_SCRIPT: "bundle exec rake db:migrate"
   before_script:
