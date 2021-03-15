@@ -33,7 +33,6 @@ build_image:
   tags:
     - build
 
-
 rspec_test:
   stage: test
   services:
@@ -43,7 +42,7 @@ rspec_test:
   variables:
     MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     RSPEC_TEST_DOCKER_ENV_VARS: "--env-file .env"
-    RSPEC_TEST_PRE_SCRIPT: "bundle exec rake db:migrate"
+    RSPEC_TEST_PRE_SCRIPT: "RAILS_ENV=test bundle exec rake db:migrate"
   before_script:
     - cp ${CI_PROJECT_DIR}/.env.example ${CI_PROJECT_DIR}/.env
   tags:
