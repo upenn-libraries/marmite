@@ -41,7 +41,7 @@ rspec_test:
     - .rspec
   variables:
     MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-    RSPEC_TEST_DOCKER_ENV_VARS: "-e RAILS_ENV=test --env-file .env"
+    RSPEC_TEST_DOCKER_ENV_VARS: "-e RACK_ENV=test --env-file .env"
     RSPEC_TEST_PRE_SCRIPT: "bundle exec rake db:migrate"
   before_script:
     - cp ${CI_PROJECT_DIR}/.env.example ${CI_PROJECT_DIR}/.env
