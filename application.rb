@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 
-require './lib/marmite/factories/record_factory'
 require './lib/marmite/models/record'
 require './lib/marmite/models/alma_bib'
 require './lib/marmite/services/blob_handler'
@@ -509,14 +508,14 @@ class Application < Sinatra::Base
   # @param [String] update_param
   # @return [TrueClass, FalseClass]
   def update_record?(update_param, record)
-    return true unless record
+    return true if record.new_record?
 
     case update_param
     when 'always' then true
     when 'never' then false
     when /\d+/
       range = record.updated_at..(record.updated_at + update_param.to_i.hours)
-      range.cover? Time.now
+      !range.cover?(Time.now)
     else
       false # don't update if no param is set
     end
@@ -527,27 +526,30 @@ class Application < Sinatra::Base
   # pull XML from Alma, do some processing, and save a Record with the XML
   # as a blob. return the XML.
   get '/api/v2/record/:bib_id/marc21' do |bib_id|
-    record = Record.find_by bib_id: bib_id, format: 'marc21'
+    record = Record.find_or_initialize_by bib_id: bib_id,
+                                          format: 'marc21'
     update = update_record? params[:update], record
-    status = if record && !update
+    status = if record.persisted? && !update
                200
              else
                begin
-                 record = RecordFactory.create_marc21_record bib_id
+                 record.update_blob
                  201
                rescue AlmaBib::MarcTransformationError => e
                  error = { errors: [e.message] }
                  500
-               rescue StandardError => e
+               rescue StandardError => e # BibNotFound
                  error = { errors: [e.message] }
                  404
                end
              end
 
-    body = if record.present?
-             inflate record.blob
-           else
+    body = if error
+             content_type 'application/json'
              error.to_json
+           else
+             content_type 'text/xml'
+             record.uncompressed_blob
            end
 
     [status, body]
@@ -555,6 +557,8 @@ class Application < Sinatra::Base
 
   get '/api/v2/record/:bib_id/openn' do; end
   get '/api/v2/record/:bib_id/structural' do; end # never "refresh"
+
+
   get '/api/v2/record/:bib_id/iiif_presentation' do; end
   # End API v2 endpoints
 

@@ -8,6 +8,7 @@ class BlobHandler
                      .deflate(string, Zlib::FINISH)
     )
   end
+
   # @param [String] blob for decompressing
   # @return [String] metadata string
   def self.uncompress(blob)

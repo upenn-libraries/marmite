@@ -1,4 +1,7 @@
 require 'sinatra/activerecord'
+require_relative '../services/alma_api'
+require_relative '../services/blob_handler'
+require_relative './alma_bib'
 
 class Record < ActiveRecord::Base
 
@@ -15,12 +18,18 @@ class Record < ActiveRecord::Base
   end
 
   # @param [String] uncompressed_blob
-  # @return [String] Base64 encoded string for persisting
-  def self.compress(uncompressed_blob)
-    Base64.encode64(
-      Zlib::Deflate.new(nil, -Zlib::MAX_WBITS)
-                   .deflate(uncompressed_blob, Zlib::FINISH)
-    )
+  def uncompressed_blob=(uncompressed_blob)
+    self.blob = BlobHandler.compress uncompressed_blob
+  end
+
+  # @return [String] uncompressed blob
+  def uncompressed_blob
+    BlobHandler.uncompress self[:blob]
+  end
+
+  def update_blob
+    self.uncompressed_blob = send("create_#{self[:format]}_record")
+    save
   end
 
   # A record is fresh if it is:
@@ -37,4 +46,19 @@ class Record < ActiveRecord::Base
     yesterday = current_time - 1.day
     (yesterday..current_time).cover?(Time.at(updated_at).gmtime)
   end
+
+  private
+
+  def create_marc21_record
+    bib_xml = AlmaApi.bib bib_id
+    alma_bib = AlmaBib.new bib_xml
+    alma_bib.transform
+  end
+
+  def create_openn_record; end
+
+
+
+  def create_iiif_manifest_record; end
+
 end
