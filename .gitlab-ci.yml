@@ -41,7 +41,7 @@ rspec_test:
   extends:
     - .rspec
   variables:
-    MYSQL_ALLOW_EMPTY_PASSWORD: yes
+    MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     RSPEC_TEST_DOCKER_ENV_VARS: "--env-file .env"
     RSPEC_TEST_PRE_SCRIPT: "bundle exec rake db:migrate"
   before_script:
