@@ -507,7 +507,7 @@ class Application < Sinatra::Base
   # NOTE: doesn't check format
   # @param [String] update_param
   # @return [TrueClass, FalseClass]
-  def update_record?(update_param, record)
+  def update_blob?(update_param, record)
     return true if record.new_record?
 
     case update_param
@@ -521,6 +521,12 @@ class Application < Sinatra::Base
     end
   end
 
+  # @param [Array] errors
+  # @return [Hash{Symbol->Unknown}]
+  def error_response(errors)
+    { errors: Array.wrap(errors) }
+  end
+
   # Begin API v2 endpoints
 
   # pull XML from Alma, do some processing, and save a Record with the XML
@@ -528,18 +534,20 @@ class Application < Sinatra::Base
   get '/api/v2/record/:bib_id/marc21' do |bib_id|
     record = Record.find_or_initialize_by bib_id: bib_id,
                                           format: 'marc21'
-    update = update_record? params[:update], record
-    status = if record.persisted? && !update
+    update_blob = update_blob? params[:update], record
+    status = if record.persisted? && !update_blob
+               # record exists and shouldn't be updated
                200
              else
                begin
+                 # record is new or should be updated
                  record.update_blob
                  201
                rescue AlmaBib::MarcTransformationError => e
-                 error = { errors: [e.message] }
+                 error = error_response e.message
                  500
-               rescue StandardError => e # BibNotFound
-                 error = { errors: [e.message] }
+               rescue AlmaApi::BibNotFound => e
+                 error = error_response e.message
                  404
                end
              end

@@ -27,8 +27,9 @@ class Record < ActiveRecord::Base
     BlobHandler.uncompress self[:blob]
   end
 
+  # @return [TrueClass, FalseClass]
   def update_blob
-    self.uncompressed_blob = send("create_#{self[:format]}_record")
+    self.uncompressed_blob = send("update_#{self[:format]}_blob")
     save
   end
 
@@ -49,16 +50,16 @@ class Record < ActiveRecord::Base
 
   private
 
-  def create_marc21_record
+  def update_marc21_blob
     bib_xml = AlmaApi.bib bib_id
     alma_bib = AlmaBib.new bib_xml
     alma_bib.transform
   end
 
-  def create_openn_record; end
+  def update_openn_blob; end
 
+  def update_structural_blob; end
 
-
-  def create_iiif_manifest_record; end
+  def update_iiif_presentation_blob; end
 
 end
