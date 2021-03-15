@@ -48,26 +48,28 @@ RSpec.describe 'Marmite V2 API', type: :request do
       context 'with update params' do
         it 'refreshes the record if update = always and returns a 201' do
           stub_alma_api_bib_request(bib_id,
-                                    marc21_pre_transform(bib_id))
+                                    marc21_pre_transform_updated(bib_id))
           get "/api/v2/record/#{bib.bib_id}/marc21", update: 'always'
           expect(last_response.status).to eq 201
-          # expect(last_response.body).to
-          # TODO: expect(last_response).to have_some_updated_data
+          expect(last_response.body).to include "Plato's The Republic"
+          expect(last_response.body).not_to include "Aristotle's De interpretatione"
         end
         it 'does not refresh the record if update = never and returns a 200' do
           get "/api/v2/record/#{bib.bib_id}/marc21", update: 'never'
           expect(last_response.status).to eq 200
-          # TODO: expect(last_response).to not_have_changed
+          expect(last_response.body).not_to include "Plato's The Republic"
+          expect(last_response.body).to include "Aristotle's De interpretatione"
         end
         it 'refreshes the record if it was created outside of the number of
             hours (ago) specified by the update param' do
           stub_alma_api_bib_request(bib_id,
-                                    marc21_pre_transform(bib_id))
-          bib.updated_at = Time.now - 24.hours # make bib seem older
+                                    marc21_pre_transform_updated(bib_id))
+          bib.updated_at = Time.now - 48.hours # make bib seem older
           bib.save
           get "/api/v2/record/#{bib.bib_id}/marc21", update: '24'
           expect(last_response.status).to eq 201
-          # TODO: expect(last_response).to have_some_updated_data
+          expect(last_response.body).to include "Plato's The Republic"
+          expect(last_response.body).not_to include "Aristotle's De interpretatione"
         end
         it 'does not refresh the record if it was created inside of the number of
             hours (ago) specified by the update param' do
@@ -75,7 +77,8 @@ RSpec.describe 'Marmite V2 API', type: :request do
                                     marc21_pre_transform(bib_id))
           get "/api/v2/record/#{bib.bib_id}/marc21", update: '12'
           expect(last_response.status).to eq 200
-          # TODO: expect(last_response).to not_have_changed
+          expect(last_response.body).not_to include "Plato's The Republic"
+          expect(last_response.body).to include "Aristotle's De interpretatione"
         end
       end
     end
