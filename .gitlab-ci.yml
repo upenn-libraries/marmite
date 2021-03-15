@@ -8,6 +8,9 @@ include:
   - project: "devops/gitlab/ci-templates/docker"
     ref: "master"
     file: ".remove_docker_image.yml"
+  - project: "devops/gitlab/ci-templates/ruby"
+    ref: "master"
+    file: ".rspec.yml"
   - project: "devops/gitlab/ci-templates/sast"
     ref: "master"
     file: ".shiftleft_container_scanning.yml"
@@ -18,6 +21,7 @@ include:
 
 stages:
   - .pre
+  - test
   - sast
   - push
   - .post
@@ -28,6 +32,23 @@ build_image:
     - .build_docker_image
   tags:
     - build
+
+
+rspec_test:
+  stage: test
+  services:
+    - mysql:5.7.31
+  extends:
+    - .rspec
+  variables:
+    RSPEC_TEST_DOCKER_ENV_VARS: "--env-file .env"
+    RSPEC_TEST_PRE_SCRIPT: "bundle exec rake db:migrate"
+  before_script:
+    - cp ${CI_PROJECT_DIR}/.env.example ${CI_PROJECT_DIR}/.env
+  tags:
+    - build
+  allow_failure: true
+
 
 shiftleft_container_scanning:
   stage: sast
