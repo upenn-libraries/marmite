@@ -45,7 +45,7 @@ rspec_test:
     RSPEC_TEST_PRE_SCRIPT: "bundle exec rake db:migrate"
   before_script:
     - cp ${CI_PROJECT_DIR}/.env.example ${CI_PROJECT_DIR}/.env
-    - cp config/database.gitlab config/database.yml
+    - cp ${CI_PROJECT_DIR}/config/database.gitlab ${CI_PROJECT_DIR}/config/database.yml
   tags:
     - build
   allow_failure: true
