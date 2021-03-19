@@ -1,8 +1,17 @@
 require 'sinatra/activerecord'
+require_relative '../services/alma_api'
+require_relative '../services/blob_handler'
+require_relative './alma_bib'
 
 class Record < ActiveRecord::Base
 
   FORMATS_TO_ALWAYS_RECREATE = %w[structural_ark combined_ark iiif_presentation]
+
+  MARC_21 = 'marc21'.freeze
+  STRUCTURAL = 'structural'.freeze
+  OPENN = 'openn'.freeze
+  IIIF_PRESENTATION = 'iiif_presentation'.freeze
+  ALL_FORMATS = [MARC_21, STRUCTURAL, OPENN, IIIF_PRESENTATION].freeze
 
   @error_message = ''
 
@@ -15,12 +24,19 @@ class Record < ActiveRecord::Base
   end
 
   # @param [String] uncompressed_blob
-  # @return [String] Base64 encoded string for persisting
-  def self.compress(uncompressed_blob)
-    Base64.encode64(
-      Zlib::Deflate.new(nil, -Zlib::MAX_WBITS)
-                   .deflate(uncompressed_blob, Zlib::FINISH)
-    )
+  def uncompressed_blob=(uncompressed_blob)
+    self.blob = BlobHandler.compress uncompressed_blob
+  end
+
+  # @return [String] uncompressed blob
+  def uncompressed_blob
+    BlobHandler.uncompress self[:blob]
+  end
+
+  # @return [TrueClass, FalseClass]
+  def set_blob
+    self.uncompressed_blob = send("#{self[:format]}_blob")
+    save
   end
 
   # A record is fresh if it is:
@@ -37,4 +53,19 @@ class Record < ActiveRecord::Base
     yesterday = current_time - 1.day
     (yesterday..current_time).cover?(Time.at(updated_at).gmtime)
   end
+
+  private
+
+  def marc21_blob
+    bib_xml = AlmaApi.bib bib_id
+    alma_bib = AlmaBib.new bib_xml
+    alma_bib.transform
+  end
+
+  def openn_blob; end
+
+  def structural_blob; end
+
+  def iiif_presentation_blob; end
+
 end
