@@ -533,7 +533,7 @@ class Application < Sinatra::Base
   # as a blob. return the XML.
   get '/api/v2/record/:bib_id/marc21' do |bib_id|
     record = Record.find_or_initialize_by bib_id: bib_id,
-                                          format: 'marc21'
+                                          format: Record::MARC_21
     update_blob = update_blob? params[:update], record
     status = if record.persisted? && !update_blob
                # record exists and shouldn't be updated
@@ -541,7 +541,7 @@ class Application < Sinatra::Base
              else
                begin
                  # record is new or should be updated
-                 record.update_blob
+                 record.set_blob
                  201
                rescue AlmaBib::MarcTransformationError => e
                  error = error_response e.message

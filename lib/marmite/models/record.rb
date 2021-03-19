@@ -7,6 +7,12 @@ class Record < ActiveRecord::Base
 
   FORMATS_TO_ALWAYS_RECREATE = %w[structural_ark combined_ark iiif_presentation]
 
+  MARC_21 = 'marc21'.freeze
+  STRUCTURAL = 'structural'.freeze
+  OPENN = 'openn'.freeze
+  IIIF_PRESENTATION = 'iiif_presentation'.freeze
+  ALL_FORMATS = [MARC_21, STRUCTURAL, OPENN, IIIF_PRESENTATION].freeze
+
   @error_message = ''
 
   def self.error_message
@@ -28,8 +34,8 @@ class Record < ActiveRecord::Base
   end
 
   # @return [TrueClass, FalseClass]
-  def update_blob
-    self.uncompressed_blob = send("update_#{self[:format]}_blob")
+  def set_blob
+    self.uncompressed_blob = send("#{self[:format]}_blob")
     save
   end
 
@@ -50,16 +56,16 @@ class Record < ActiveRecord::Base
 
   private
 
-  def update_marc21_blob
+  def marc21_blob
     bib_xml = AlmaApi.bib bib_id
     alma_bib = AlmaBib.new bib_xml
     alma_bib.transform
   end
 
-  def update_openn_blob; end
+  def openn_blob; end
 
-  def update_structural_blob; end
+  def structural_blob; end
 
-  def update_iiif_presentation_blob; end
+  def iiif_presentation_blob; end
 
 end
