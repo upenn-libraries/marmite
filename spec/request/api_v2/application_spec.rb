@@ -73,8 +73,6 @@ RSpec.describe 'Marmite V2 API', type: :request do
         end
         it 'does not refresh the record if it was created inside of the number of
             hours (ago) specified by the update param' do
-          stub_alma_api_bib_request(bib_id,
-                                    marc21_pre_transform(bib_id))
           get "/api/v2/record/#{bib.bib_id}/marc21", update: '12'
           expect(last_response.status).to eq 200
           expect(last_response.body).not_to include "Plato's The Republic"
