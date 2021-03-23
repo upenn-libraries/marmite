@@ -26,6 +26,9 @@ stages:
   - push
   - .post
 
+services:
+  - mysql:5.7
+
 build_image:
   stage: .pre
   extends:
@@ -35,8 +38,6 @@ build_image:
 
 rspec_test:
   stage: test
-  services:
-    - mysql:5.7
   extends:
     - .rspec
   variables:
@@ -54,6 +55,19 @@ rspec_test:
   tags:
     - build
   allow_failure: true
+
+# rspec_test:
+#   stage: test
+#   services:
+#     - mysql:5.7
+#   variables:
+#     MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+#   before_script:
+#     - cp ${CI_PROJECT_DIR}/.env.example ${CI_PROJECT_DIR}/.env
+#     - cp config/database.gitlab config/database.yml
+#     - bundle exec rake db:migrate
+#   script:
+#     - bundle exec rake spec
 
 
 shiftleft_container_scanning:
