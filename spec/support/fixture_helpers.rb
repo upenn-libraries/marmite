@@ -1,4 +1,12 @@
 module FixtureHelpers
+  def fixture_path(*path)
+    File.join('spec', 'fixtures', *path)
+  end
+
+  def fixture_contents(*path)
+    File.read(fixture_path(path))
+  end
+
   def marc21_post_transform(bib_id)
     File.read(File.join('spec',
                         'fixtures',

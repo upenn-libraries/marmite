@@ -1,0 +1,67 @@
+{
+  "id": "81431-p3p880",
+  "title": "[Bifolium from Liber completus in iudiciis stellarum].",
+  "viewing_direction": "left-to-right",
+  "image_server": "https://example.com/iiif/2",
+  "sequence": [
+    {
+      "label": "Front Cover",
+      "file": "81431p3p880/ljs501_wk1_front0001.jpeg"
+    },
+    {
+      "label": "Inside front cover",
+      "file": "81431p3p880/ljs501_wk1_front0002.jpeg",
+      "table_of_contents": [{"text":  "Seller's description, Inside front cover"}]
+    },
+    {
+      "label": "[Flyleaf 1 recto]",
+      "file": "81431p3p880/ljs501_wk1_front0003.jpeg",
+      "table_of_contents": [{"text":  "Seller's note, Flyleaf 1 recto"}]
+    },
+    {
+      "label": "[Flyleaf 1 verso]",
+      "file": "81431p3p880/ljs501_wk1_front0004.jpeg"
+    },
+    {
+      "label": "1r",
+      "file": "81431p3p880/ljs501_wk1_body0001.jpeg",
+      "table_of_contents": [
+        {"text": "Historiated initial, Initial I, Woman and monk holding armillary sphere, f. 1r"},
+        {"text": "Puzzle initial, Initial C, f. 1r"}
+      ]
+    },
+    {
+      "label": "1v",
+      "file": "81431p3p880/ljs501_wk1_body0002.jpeg",
+      "table_of_contents": [{"text":  "Decorated initial, Initial C, f. 1v"}]
+    },
+    {
+      "label": "2r",
+      "file": "81431p3p880/ljs501_wk1_body0003.jpeg"
+    },
+    {
+      "label": "2v",
+      "file": "81431p3p880/ljs501_wk1_body0004.jpeg"
+    },
+    {
+      "label": "[Flyleaf 1 recto]",
+      "file": "81431p3p880/ljs501_wk1_back0001.jpeg"
+    },
+    {
+      "label": "[Flyleaf 1 verso]",
+      "file": "81431p3p880/ljs501_wk1_back0002.jpeg"
+    },
+    {
+      "label": "Inside back cover",
+      "file": "81431p3p880/ljs501_wk1_back0003.jpeg"
+    },
+    {
+      "label": "Back cover",
+      "file": "81431p3p880/ljs501_wk1_back0004.jpeg"
+    },
+    {
+      "label": "Spine",
+      "file": "81431p3p880/ljs501_wk1_back0005.jpeg"
+    }
+  ]
+}

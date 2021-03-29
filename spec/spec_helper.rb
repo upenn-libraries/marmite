@@ -6,6 +6,7 @@ require 'rack/test'
 require 'rspec'
 require 'webmock/rspec'
 require 'equivalent-xml/rspec_matchers'
+require "rspec/json_expectations"
 
 ENV['RACK_ENV'] = 'test'
 

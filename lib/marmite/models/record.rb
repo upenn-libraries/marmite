@@ -34,8 +34,8 @@ class Record < ActiveRecord::Base
   end
 
   # @return [TrueClass, FalseClass]
-  def set_blob
-    self.uncompressed_blob = send("#{self[:format]}_blob")
+  def set_blob(args = {})
+    self.uncompressed_blob = send("#{self[:format]}_blob", args)
     save
   end
 
@@ -56,16 +56,17 @@ class Record < ActiveRecord::Base
 
   private
 
-  def marc21_blob
+  def marc21_blob(_args)
     bib_xml = AlmaApi.bib bib_id
     alma_bib = AlmaBib.new bib_xml
     alma_bib.transform
   end
 
-  def openn_blob; end
+  def openn_blob(_args); end
 
-  def structural_blob; end
+  def structural_blob(_args); end
 
-  def iiif_presentation_blob; end
-
+  def iiif_presentation_blob(data)
+    IIIFPresentation.new(data).manifest
+  end
 end

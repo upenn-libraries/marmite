@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 
 ruby '2.4.5'
 
+gem 'addressable'
 gem 'activerecord'
 gem 'activesupport'
 gem 'htmlentities'
@@ -30,5 +31,6 @@ group :test do
   gem 'equivalent-xml'
   gem 'rack-test'
   gem 'rspec'
+  gem 'rspec-json_expectations'
   gem 'webmock'
 end
