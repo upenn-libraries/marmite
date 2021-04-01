@@ -56,7 +56,7 @@ rspec
 rake marmite:stop
 ```
 
-## New API Spec
+## API Version 2 Spec
 Namespace API requests: api/v2
 
 GET `/api/v2/records/:bib_id/:format`
@@ -87,6 +87,62 @@ GET `/api/v2/records/:bib_id/:format`
       - status
         - `404` if bibid is not valid
         -  `500` if error creating metadata
+  
+### Get IIIF Presentation Manifest
+Retrieves IIIF Presentation Manifest for given identifier.
+
+`GET /api/v2/records/:id/iiif_presentation`
+
+#### Parameters
+
+| Name | In | Description |
+| ---- | -- | ----------- |
+| id   | path | identifier for iiif manifest |
+
+#### Default Response
+`Status: 200 OK`
+
+```
+{ INSERT IIIF MANIFEST }
+```
+#### Resource Not Found
+`Status: 404 NOT FOUND`
+
+```json
+{
+  "errors": ["Record not found."]
+}
+```
+
+### Create IIIF Presentation Manifest
+Create IIIF Presentation v2 Manifest using the data given in the body of the request.
+
+`POST /api/v2/records/:id/iiif_presentation`
+
+#### Parameters
+| Name | In | Description |
+| ---- | -- | ----------- |
+| id   | path | identifier for iiif manifest |
+| body | | |
+
+#### Default Response
+`Status: 201 CREATED`
+
+`{ Insert IIIF Manifest here }`
+
+#### Validation Failed (Missing information in request body)
+`Status: 422 Unprocessable Entity`
+
+```json
+{
+  "errors": ["Unexpected error generating IIIF manifest."]
+}
+```
+
+
+
+
+### GET IIIF Presentation Manifest
 
 ## Production setup
 

@@ -3,6 +3,7 @@
 require './lib/marmite/models/record'
 require './lib/marmite/models/alma_bib'
 require './lib/marmite/services/blob_handler'
+require './lib/marmite/models/iiif_presentation'
 
 require 'sinatra'
 require 'active_support/core_ext/string/output_safety'
@@ -524,7 +525,7 @@ class Application < Sinatra::Base
   # @param [Array] errors
   # @return [Hash{Symbol->Unknown}]
   def error_response(errors)
-    { errors: Array.wrap(errors) }
+    { errors: Array.wrap(errors) }.to_json
   end
 
   # Begin API v2 endpoints
@@ -554,7 +555,7 @@ class Application < Sinatra::Base
 
     body = if error
              content_type 'application/json'
-             error.to_json
+             error
            else
              content_type 'text/xml'
              record.uncompressed_blob
@@ -566,8 +567,31 @@ class Application < Sinatra::Base
   get '/api/v2/record/:bib_id/openn' do; end
   get '/api/v2/record/:bib_id/structural' do; end # never "refresh"
 
+  # Pulls IIIF manifest from database and returns it.
+  get '/api/v2/record/:id/iiif_presentation' do |id|
+    content_type 'application/json'
 
-  get '/api/v2/record/:bib_id/iiif_presentation' do; end
+    if (record = Record.find_by(bib_id: id, format: Record::IIIF_PRESENTATION))
+      [200, record.uncompressed_blob]
+    else
+      [404, error_response("Record not found.")]
+    end
+  end
+
+  # Creates IIIF presentation manifest using the body of the post request.
+  post '/api/v2/record/:id/iiif_presentation' do |id|
+    data = JSON.parse(request.body.read)
+
+    record = Record.find_or_initialize_by(bib_id: id, format: Record::IIIF_PRESENTATION)
+    content_type 'application/json'
+
+    begin
+      record.set_blob(data)
+      [201, record.uncompressed_blob]
+    rescue
+      [500, error_response('Unexpected error generating IIIF manifest.')]
+    end
+  end
   # End API v2 endpoints
 
   # Begin API v1 endpoints
