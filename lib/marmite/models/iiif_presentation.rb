@@ -26,9 +26,9 @@ class IIIFPresentation
 
     manifest = IIIF::Presentation::Manifest.new(seed)
 
-    manifest["@id"] = uri(image_server, "#{id}/manifest")
-    manifest.attribution = "University of Pennsylvania Libraries"
-    manifest.viewing_hint =  'individuals'
+    manifest['@id'] = uri(image_server, "#{id}/manifest")
+    manifest.attribution = 'University of Pennsylvania Libraries'
+    manifest.viewing_hint = 'individuals'
     manifest.viewing_direction = viewing_direction
 
     sequence = IIIF::Presentation::Sequence.new(
@@ -47,9 +47,9 @@ class IIIFPresentation
       sequence.canvases << canvas(
         index: index,
         label: asset['label'],
-        height: info["height"],
-        width: info["width"],
-        profile: info["profile"][0],
+        height: info['height'],
+        width: info['width'],
+        profile: info['profile'][0],
         filepath: asset['file']
       )
 
@@ -69,62 +69,62 @@ class IIIFPresentation
 
   private
 
-    # Returns canvas with one annotated image. The canvas and image size are the same.
-    #
-    # @param index [Integer] canvas number, used to create identifiers
-    # @param width [Integer] image width
-    # @param height [Integer] image height
-    # @param profile [String] uri for IIIF image profile image server uses
-    # @param label [String] label for image
-    # @param filepath [String] filepath for image
-    def canvas(index:, width:, height:, profile:, label: nil, filepath:)
-      canvas = IIIF::Presentation::Canvas.new
-      canvas["@id"] = uri(image_server, "#{id}/canvas/p#{index}")
-      canvas.label  = label || "p. #{index}"
-      canvas.height = height
-      canvas.width  = width
+  # Returns canvas with one annotated image. The canvas and image size are the same.
+  #
+  # @param index [Integer] canvas number, used to create identifiers
+  # @param width [Integer] image width
+  # @param height [Integer] image height
+  # @param profile [String] uri for IIIF image profile image server uses
+  # @param label [String] label for image
+  # @param filepath [String] filepath for image
+  def canvas(index:, width:, height:, profile:, label: nil, filepath:)
+    canvas = IIIF::Presentation::Canvas.new
+    canvas['@id'] = uri(image_server, "#{id}/canvas/p#{index}")
+    canvas.label  = label || "p. #{index}"
+    canvas.height = height
+    canvas.width  = width
 
-      annotation = IIIF::Presentation::Annotation.new
+    annotation = IIIF::Presentation::Annotation.new
 
-      # By providing width, height and profile, we avoid the IIIF gem fetching the data again.
-      annotation.resource = IIIF::Presentation::ImageResource.create_image_api_image_resource(
-        service_id: uri(image_server, filepath), width: width, height: height, profile: profile,
-      )
-      annotation["on"] = canvas["@id"]
+    # By providing width, height and profile, we avoid the IIIF gem fetching the data again.
+    annotation.resource = IIIF::Presentation::ImageResource.create_image_api_image_resource(
+      service_id: uri(image_server, filepath), width: width, height: height, profile: profile,
+    )
+    annotation['on'] = canvas['@id']
 
-      canvas.images << annotation
-      canvas
-    end
+    canvas.images << annotation
+    canvas
+  end
 
-    # Returns range with sub ranges for each table of contents entry. For each table of contents entry will
-    # point to the entire canvas.
-    #
-    # Note: If at some point coordinates are provided for each table of contents entry we can point directly
-    # to the coordinates given.
-    #
-    # @param index [Integer] range number, used to create identifiers
-    # @param label [String]
-    # @param table_of_contents [Array<Hash>] list of table of contents entry
-    def range(index:, label:, table_of_contents:)
-      subranges = table_of_contents.map.with_index do |entry, subrange_index|
-        IIIF::Presentation::Range.new(
-          '@id' => uri(image_server, "#{id}/range/r#{index}-#{subrange_index + 1}"),
-          'label' => entry['text'],
-          'canvases' => [uri(image_server, "#{id}/canvas/p#{index}")]
-        )
-      end
-
+  # Returns range with sub ranges for each table of contents entry. For each table of contents entry will
+  # point to the entire canvas.
+  #
+  # Note: If at some point coordinates are provided for each table of contents entry we can point directly
+  # to the coordinates given.
+  #
+  # @param index [Integer] range number, used to create identifiers
+  # @param label [String]
+  # @param table_of_contents [Array<Hash>] list of table of contents entry
+  def range(index:, label:, table_of_contents:)
+    subranges = table_of_contents.map.with_index do |entry, subrange_index|
       IIIF::Presentation::Range.new(
-        '@id' => uri(image_server, "#{id}/range/r#{index}"),
-        'label' => label,
-        'ranges' => subranges
+        '@id' => uri(image_server, "#{id}/range/r#{index}-#{subrange_index + 1}"),
+        'label' => entry['text'],
+        'canvases' => [uri(image_server, "#{id}/canvas/p#{index}")]
       )
     end
 
-    def uri(server_url, path)
-      # Add trailing slash to url.
-      server_url = "#{server_url}/" unless server_url.ends_with?('/')
+    IIIF::Presentation::Range.new(
+      '@id' => uri(image_server, "#{id}/range/r#{index}"),
+      'label' => label,
+      'ranges' => subranges
+    )
+  end
 
-      Addressable::URI.join(server_url, path).to_s
-    end
+  def uri(server_url, path)
+    # Add trailing slash to url.
+    server_url = "#{server_url}/" unless server_url.ends_with?('/')
+
+    Addressable::URI.join(server_url, path).to_s
+  end
 end
