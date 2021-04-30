@@ -36,38 +36,41 @@ build_image:
   tags:
     - build
 
+# rspec_test:
+#   stage: test
+#   extends:
+#     - .rspec
+#   variables:
+#     MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+#     RSPEC_TEST_DOCKER_ENV_VARS: "-e RACK_ENV=test --env-file .env"
+#   before_script:
+#     - cp ${CI_PROJECT_DIR}/.env.example ${CI_PROJECT_DIR}/.env
+#   script:
+#     # Run container
+#     - docker run -d ${RSPEC_TEST_DOCKER_ENV_VARS} --name ${RSPEC_TEST_IMAGE_NAME} ${CI_IMAGE_NAME}
+#     - docker exec -t ${RSPEC_TEST_IMAGE_NAME} cp config/database.gitlab config/database.yml
+#     - docker exec -t ${RSPEC_TEST_IMAGE_NAME} bundle exec rake db:migrate
+#     # Run test
+#     - docker exec -t ${RSPEC_TEST_IMAGE_NAME} bundle exec rake spec
+#   tags:
+#     - build
+#   allow_failure: true
+
 rspec_test:
   stage: test
-  extends:
-    - .rspec
+  services:
+    - mysql:5.7
   variables:
     MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-    RSPEC_TEST_DOCKER_ENV_VARS: "-e RACK_ENV=test --env-file .env"
   before_script:
     - cp ${CI_PROJECT_DIR}/.env.example ${CI_PROJECT_DIR}/.env
+    - cp config/database.gitlab config/database.yml
+    - bundle exec rake db:migrate
   script:
-    # Run container
-    - docker run -d ${RSPEC_TEST_DOCKER_ENV_VARS} --name ${RSPEC_TEST_IMAGE_NAME} ${CI_IMAGE_NAME}
-    - docker exec -t ${RSPEC_TEST_IMAGE_NAME} cp config/database.gitlab config/database.yml
-    - docker exec -t ${RSPEC_TEST_IMAGE_NAME} bundle exec rake db:migrate
-    # Run test
-    - docker exec -t ${RSPEC_TEST_IMAGE_NAME} bundle exec rake spec
+    - bundle exec rake spec
   tags:
     - build
   allow_failure: true
-
-# rspec_test:
-#   stage: test
-#   services:
-#     - mysql:5.7
-#   variables:
-#     MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-#   before_script:
-#     - cp ${CI_PROJECT_DIR}/.env.example ${CI_PROJECT_DIR}/.env
-#     - cp config/database.gitlab config/database.yml
-#     - bundle exec rake db:migrate
-#   script:
-#     - bundle exec rake spec
 
 
 shiftleft_container_scanning:
