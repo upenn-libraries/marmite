@@ -60,7 +60,6 @@ rspec_test:
     - bundle exec rake db:migrate
   tags:
     - build
-  allow_failure: true
 
 shiftleft_container_scanning:
   stage: sast
