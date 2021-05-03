@@ -1,24 +1,27 @@
 include:
   - project: "devops/gitlab/ci-templates/docker"
     ref: "master"
-    file: ".build_docker_image.yml"
-  - project: "devops/gitlab/ci-templates/docker"
-    ref: "master"
-    file: ".push_docker_image.yml"
-  - project: "devops/gitlab/ci-templates/docker"
-    ref: "master"
-    file: ".remove_docker_image.yml"
+    file:
+      - ".build_docker_image.yml"
+      - ".push_docker_image.yml"
+      - ".remove_docker_image.yml"
+      - ".remove_docker_image_from_registry.yml"
+  - project: "devops/gitlab/ci-templates/ruby"
+    ref: "sans-dind"
+    file: ".rspec.yml"
   - project: "devops/gitlab/ci-templates/sast"
     ref: "master"
-    file: ".shiftleft_container_scanning.yml"
-  - project: "devops/gitlab/ci-templates/sast"
-    ref: "master"
-    file: ".trivy_container_scanning.yml"
+    file:
+      - ".shiftleft_container_scanning.yml"
+      - ".trivy_container_scanning.yml"
   - template: "Workflows/MergeRequest-Pipelines.gitlab-ci.yml"
 
 stages:
   - .pre
+  - push_tmp_image
+  - test
   - sast
+  - remove_tmp_image
   - push
   - .post
 
@@ -29,10 +32,42 @@ build_image:
   tags:
     - build
 
+push_tmp_image_to_registry:
+  stage: push_tmp_image
+  extends:
+    - .push_docker_image
+  needs:
+    - build_image
+  variables:
+    IMAGE_TAGS: ${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}
+  tags:
+    - build
+
+rspec_test:
+  stage: test
+  services:
+    - mysql:5.7
+  needs:
+    - push_tmp_image_to_registry
+  extends:
+    - .rspec
+  variables:
+    MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    MYSQL_DATABASE: "marmite_test"
+    RACK_ENV: "test"
+  before_script:
+    - cp ${CI_PROJECT_DIR}/config/database.gitlab ${CI_PROJECT_DIR}/config/database.yml
+    - bundle exec rake db:migrate
+  tags:
+    - build
+  allow_failure: true
+
 shiftleft_container_scanning:
   stage: sast
   extends:
     - .shiftleft_container_scanning
+  needs:
+    - push_tmp_image_to_registry
   tags:
     - build
   allow_failure: true
@@ -41,6 +76,25 @@ trivy_container_scanning:
   stage: sast
   extends:
     - .trivy_container_scanning
+  needs:
+    - push_tmp_image_to_registry
+  variables:
+    CI_IMAGE_NAME: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}
+  tags:
+    - build
+  allow_failure: true
+
+delete_tmp_image_from_registry:
+  stage: remove_tmp_image
+  extends:
+    - .remove_docker_image_from_registry
+  rules:
+    - when: always
+  needs:
+    - push_tmp_image_to_registry
+    - rspec_test
+    - shiftleft_container_scanning
+    - trivy_container_scanning
   tags:
     - build
   allow_failure: true
@@ -49,6 +103,11 @@ push_image_to_registry:
   stage: push
   extends:
     - .push_docker_image
+  needs:
+    - delete_tmp_image_from_registry
+    - shiftleft_container_scanning
+    - trivy_container_scanning
+    - rspec_test
   tags:
     - build
 
@@ -58,5 +117,8 @@ remove_image:
     - .remove_docker_image
   rules:
     - when: always
+  needs:
+    - build_image
+    - push_image_to_registry
   tags:
     - build
