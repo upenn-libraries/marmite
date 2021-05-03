@@ -123,7 +123,7 @@ class IIIFPresentation
 
   def uri(server_url, path)
     # Add trailing slash to url.
-    server_url = "#{server_url}/" unless server_url.ends_with?('/')
+    server_url = "#{server_url}/" unless server_url.end_with?('/')
 
     Addressable::URI.join(server_url, path).to_s
   end
