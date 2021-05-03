@@ -1,0 +1,70 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "https://example.com/iiif/2/81431-p36q1sp1f/manifest",
+  "@type": "sc:Manifest",
+  "label": "Trade card; Fleishman Bros.; undated",
+  "attribution": "University of Pennsylvania Libraries",
+  "viewingHint": "individuals",
+  "viewingDirection": "left-to-right",
+  "sequences": [
+    {
+      "@id": "https://example.com/iiif/2/81431-p36q1sp1f/sequence/normal",
+      "@type": "sc:Sequence",
+      "label": "Current order",
+      "canvases":[
+        {
+          "@id": "https://example.com/iiif/2/81431-p36q1sp1f/canvas/p1",
+          "@type": "sc:Canvas",
+          "height": 4596,
+          "width": 3500,
+          "label": "p. 1",
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://example.com/iiif/2/ark81431p36q1sp1f%2FSHA256E-s2814353--d37299675bac60d858f7face1c443226d88a26b998829c81e9a18b56d723cb44.tif.jpeg/full/!200,200/0/default.jpg",
+                "@type": "dctypes:Image",
+                "format": "image/jpeg",
+                "width": 3500,
+                "height": 4596,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://example.com/iiif/2/ark81431p36q1sp1f%2FSHA256E-s2814353--d37299675bac60d858f7face1c443226d88a26b998829c81e9a18b56d723cb44.tif.jpeg",
+                  "profile":"http://iiif.io/api/image/2/level2.json"
+                }
+              },
+              "on":"https://example.com/iiif/2/81431-p36q1sp1f/canvas/p1"
+            }
+          ]
+        },
+        {
+          "@id": "https://example.com/iiif/2/81431-p36q1sp1f/canvas/p2",
+          "@type": "sc:Canvas",
+          "height": 4596,
+          "width": 3500,
+          "label": "p. 2",
+          "images": [
+            {
+              "@type":"oa:Annotation",
+              "motivation":"sc:painting",
+              "resource": {
+                "@id": "https://example.com/iiif/2/ark81431p36q1sp1f%2FSHA256E-s2382314--75dca8eab1c0fc7b4a0b67dcc061ec3aa6cfb253e1e8588e384a724442541ebb.tif.jpeg/full/!200,200/0/default.jpg",
+                "@type": "dctypes:Image",
+                "format": "image/jpeg",
+                "width": 3500,
+                "height": 4596,
+                "service": {
+                  "@context":"http://iiif.io/api/image/2/context.json",
+                  "@id":"https://example.com/iiif/2/ark81431p36q1sp1f%2FSHA256E-s2382314--75dca8eab1c0fc7b4a0b67dcc061ec3aa6cfb253e1e8588e384a724442541ebb.tif.jpeg",
+                  "profile":"http://iiif.io/api/image/2/level2.json"
+                }
+              },
+              "on":"https://example.com/iiif/2/81431-p36q1sp1f/canvas/p2"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,426 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "https://example.com/iiif/2/81431-p3p880/manifest",
+  "@type": "sc:Manifest",
+  "label": "[Bifolium from Liber completus in iudiciis stellarum].",
+  "attribution": "University of Pennsylvania Libraries",
+  "viewingDirection": "left-to-right",
+  "viewingHint": "individuals",
+  "sequences": [
+    {
+      "@id": "https://example.com/iiif/2/81431-p3p880/sequence/normal",
+      "@type": "sc:Sequence",
+      "label": "Current order",
+      "canvases": [
+        {
+          "@id": "https://example.com/iiif/2/81431-p3p880/canvas/p1",
+          "@type": "sc:Canvas",
+          "height": 4596,
+          "width": 3500,
+          "label": "Front Cover",
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_front0001.jpeg/full/!200,200/0/default.jpg",
+                "@type": "dctypes:Image",
+                "format": "image/jpeg",
+                "width": 3500,
+                "height": 4596,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_front0001.jpeg",
+                  "profile": "http://iiif.io/api/image/2/level2.json"
+                }
+              },
+              "on": "https://example.com/iiif/2/81431-p3p880/canvas/p1"
+            }
+          ]
+        },
+        {
+          "@id": "https://example.com/iiif/2/81431-p3p880/canvas/p2",
+          "@type": "sc:Canvas",
+          "height": 4596,
+          "width": 3500,
+          "label": "Inside front cover",
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_front0002.jpeg/full/!200,200/0/default.jpg",
+                "@type": "dctypes:Image",
+                "format": "image/jpeg",
+                "width": 3500,
+                "height": 4596,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_front0002.jpeg",
+                  "profile": "http://iiif.io/api/image/2/level2.json"
+                }
+              },
+              "on": "https://example.com/iiif/2/81431-p3p880/canvas/p2"
+            }
+          ]
+        },
+        {
+          "@id": "https://example.com/iiif/2/81431-p3p880/canvas/p3",
+          "@type": "sc:Canvas",
+          "height": 4596,
+          "width": 3500,
+          "label": "[Flyleaf 1 recto]",
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_front0003.jpeg/full/!200,200/0/default.jpg",
+                "@type": "dctypes:Image",
+                "format": "image/jpeg",
+                "width": 3500,
+                "height": 4596,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_front0003.jpeg",
+                  "profile": "http://iiif.io/api/image/2/level2.json"
+                }
+              },
+              "on": "https://example.com/iiif/2/81431-p3p880/canvas/p3"
+            }
+          ]
+        },
+        {
+          "@id": "https://example.com/iiif/2/81431-p3p880/canvas/p4",
+          "@type": "sc:Canvas",
+          "height": 4596,
+          "width": 3500,
+          "label": "[Flyleaf 1 verso]",
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_front0004.jpeg/full/!200,200/0/default.jpg",
+                "@type": "dctypes:Image",
+                "format": "image/jpeg",
+                "width": 3500,
+                "height": 4596,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_front0004.jpeg",
+                  "profile": "http://iiif.io/api/image/2/level2.json"
+                }
+              },
+              "on": "https://example.com/iiif/2/81431-p3p880/canvas/p4"
+            }
+          ]
+        },
+        {
+          "@id": "https://example.com/iiif/2/81431-p3p880/canvas/p5",
+          "@type": "sc:Canvas",
+          "height": 4596,
+          "width": 3500,
+          "label": "1r",
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_body0001.jpeg/full/!200,200/0/default.jpg",
+                "@type": "dctypes:Image",
+                "format": "image/jpeg",
+                "width": 3500,
+                "height": 4596,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_body0001.jpeg",
+                  "profile": "http://iiif.io/api/image/2/level2.json"
+                }
+              },
+              "on": "https://example.com/iiif/2/81431-p3p880/canvas/p5"
+            }
+          ]
+        },
+        {
+          "@id": "https://example.com/iiif/2/81431-p3p880/canvas/p6",
+          "@type": "sc:Canvas",
+          "height": 4596,
+          "width": 3500,
+          "label": "1v",
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_body0002.jpeg/full/!200,200/0/default.jpg",
+                "@type": "dctypes:Image",
+                "format": "image/jpeg",
+                "width": 3500,
+                "height": 4596,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_body0002.jpeg",
+                  "profile": "http://iiif.io/api/image/2/level2.json"
+                }
+              },
+              "on": "https://example.com/iiif/2/81431-p3p880/canvas/p6"
+            }
+          ]
+        },
+        {
+          "@id": "https://example.com/iiif/2/81431-p3p880/canvas/p7",
+          "@type": "sc:Canvas",
+          "height": 4596,
+          "width": 3500,
+          "label": "2r",
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_body0003.jpeg/full/!200,200/0/default.jpg",
+                "@type": "dctypes:Image",
+                "format": "image/jpeg",
+                "width": 3500,
+                "height": 4596,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_body0003.jpeg",
+                  "profile": "http://iiif.io/api/image/2/level2.json"
+                }
+              },
+              "on": "https://example.com/iiif/2/81431-p3p880/canvas/p7"
+            }
+          ]
+        },
+        {
+          "@id": "https://example.com/iiif/2/81431-p3p880/canvas/p8",
+          "@type": "sc:Canvas",
+          "height": 4596,
+          "width": 3500,
+          "label": "2v",
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_body0004.jpeg/full/!200,200/0/default.jpg",
+                "@type": "dctypes:Image",
+                "format": "image/jpeg",
+                "width": 3500,
+                "height": 4596,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_body0004.jpeg",
+                  "profile": "http://iiif.io/api/image/2/level2.json"
+                }
+              },
+              "on": "https://example.com/iiif/2/81431-p3p880/canvas/p8"
+            }
+          ]
+        },
+        {
+          "@id": "https://example.com/iiif/2/81431-p3p880/canvas/p9",
+          "@type": "sc:Canvas",
+          "height": 4596,
+          "width": 3500,
+          "label": "[Flyleaf 1 recto]",
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_back0001.jpeg/full/!200,200/0/default.jpg",
+                "@type": "dctypes:Image",
+                "format": "image/jpeg",
+                "width": 3500,
+                "height": 4596,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_back0001.jpeg",
+                  "profile": "http://iiif.io/api/image/2/level2.json"
+                }
+              },
+              "on": "https://example.com/iiif/2/81431-p3p880/canvas/p9"
+            }
+          ]
+        },
+        {
+          "@id": "https://example.com/iiif/2/81431-p3p880/canvas/p10",
+          "@type": "sc:Canvas",
+          "height": 4596,
+          "width": 3500,
+          "label": "[Flyleaf 1 verso]",
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_back0002.jpeg/full/!200,200/0/default.jpg",
+                "@type": "dctypes:Image",
+                "format": "image/jpeg",
+                "width": 3500,
+                "height": 4596,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_back0002.jpeg",
+                  "profile": "http://iiif.io/api/image/2/level2.json"
+                }
+              },
+              "on": "https://example.com/iiif/2/81431-p3p880/canvas/p10"
+            }
+          ]
+        },
+        {
+          "@id": "https://example.com/iiif/2/81431-p3p880/canvas/p11",
+          "@type": "sc:Canvas",
+          "height": 4596,
+          "width": 3500,
+          "label": "Inside back cover",
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_back0003.jpeg/full/!200,200/0/default.jpg",
+                "@type": "dctypes:Image",
+                "format": "image/jpeg",
+                "width": 3500,
+                "height": 4596,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_back0003.jpeg",
+                  "profile": "http://iiif.io/api/image/2/level2.json"
+                }
+              },
+              "on": "https://example.com/iiif/2/81431-p3p880/canvas/p11"
+            }
+          ]
+        },
+        {
+          "@id": "https://example.com/iiif/2/81431-p3p880/canvas/p12",
+          "@type": "sc:Canvas",
+          "height": 4596,
+          "width": 3500,
+          "label": "Back cover",
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_back0004.jpeg/full/!200,200/0/default.jpg",
+                "@type": "dctypes:Image",
+                "format": "image/jpeg",
+                "width": 3500,
+                "height": 4596,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_back0004.jpeg",
+                  "profile": "http://iiif.io/api/image/2/level2.json"
+                }
+              },
+              "on": "https://example.com/iiif/2/81431-p3p880/canvas/p12"
+            }
+          ]
+        },
+        {
+          "@id": "https://example.com/iiif/2/81431-p3p880/canvas/p13",
+          "@type": "sc:Canvas",
+          "height": 4596,
+          "width": 3500,
+          "label": "Spine",
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_back0005.jpeg/full/!200,200/0/default.jpg",
+                "@type": "dctypes:Image",
+                "format": "image/jpeg",
+                "width": 3500,
+                "height": 4596,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://example.com/iiif/2/81431p3p880/ljs501_wk1_back0005.jpeg",
+                  "profile": "http://iiif.io/api/image/2/level2.json"
+                }
+              },
+              "on": "https://example.com/iiif/2/81431-p3p880/canvas/p13"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "structures": [
+    {
+      "@id": "https://example.com/iiif/2/81431-p3p880/range/r2",
+      "@type": "sc:Range",
+      "label": "Inside front cover",
+      "ranges": [
+        {
+          "@id": "https://example.com/iiif/2/81431-p3p880/range/r2-1",
+          "@type": "sc:Range",
+          "label": "Seller's description, Inside front cover",
+          "canvases": [
+            "https://example.com/iiif/2/81431-p3p880/canvas/p2"
+          ]
+        }
+      ]
+    },
+    {
+      "@id": "https://example.com/iiif/2/81431-p3p880/range/r3",
+      "@type": "sc:Range",
+      "label": "[Flyleaf 1 recto]",
+      "ranges": [
+        {
+          "@id": "https://example.com/iiif/2/81431-p3p880/range/r3-1",
+          "@type": "sc:Range",
+          "label": "Seller's note, Flyleaf 1 recto",
+          "canvases": [
+            "https://example.com/iiif/2/81431-p3p880/canvas/p3"
+          ]
+        }
+      ]
+    },
+    {
+      "@id": "https://example.com/iiif/2/81431-p3p880/range/r5",
+      "@type": "sc:Range",
+      "label": "1r",
+      "ranges": [
+        {
+          "@id": "https://example.com/iiif/2/81431-p3p880/range/r5-1",
+          "@type": "sc:Range",
+          "label": "Historiated initial, Initial I, Woman and monk holding armillary sphere, f. 1r",
+          "canvases": [
+            "https://example.com/iiif/2/81431-p3p880/canvas/p5"
+          ]
+        },
+        {
+          "@id": "https://example.com/iiif/2/81431-p3p880/range/r5-2",
+          "@type": "sc:Range",
+          "label": "Puzzle initial, Initial C, f. 1r",
+          "canvases": [
+            "https://example.com/iiif/2/81431-p3p880/canvas/p5"
+          ]
+        }
+      ]
+    },
+    {
+      "@id": "https://example.com/iiif/2/81431-p3p880/range/r6",
+      "@type": "sc:Range",
+      "label": "1v",
+      "ranges": [
+        {
+          "@id": "https://example.com/iiif/2/81431-p3p880/range/r6-1",
+          "@type": "sc:Range",
+          "label": "Decorated initial, Initial C, f. 1v",
+          "canvases": [
+            "https://example.com/iiif/2/81431-p3p880/canvas/p6"
+          ]
+        }
+      ]
+    }
+  ]
+}
