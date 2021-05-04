@@ -10,7 +10,7 @@ include:
     ref: "sans-dind"
     file: ".rspec.yml"
   - project: "devops/gitlab/ci-templates/sast"
-    ref: "gitleaks-check-within-shiftleft"
+    ref: "master"
     file:
       - ".shiftleft_container_scanning.yml"
       - ".trivy_container_scanning.yml"
@@ -63,9 +63,9 @@ rspec_test:
 
 shiftleft_container_scanning:
   stage: sast
-  variables:
-    SCAN_DEBUG_MODE: "true"
-    CREDSCAN_CONFIG: "${CI_PROJECT_DIR}/.gitleaks.toml"
+  # variables:
+  #   SCAN_DEBUG_MODE: "true"
+  #   CREDSCAN_CONFIG: "${CI_PROJECT_DIR}/.gitleaks.toml"
   extends:
     - .shiftleft_container_scanning
   needs:
