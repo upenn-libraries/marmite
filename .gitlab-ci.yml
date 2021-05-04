@@ -10,7 +10,7 @@ include:
     ref: "sans-dind"
     file: ".rspec.yml"
   - project: "devops/gitlab/ci-templates/sast"
-    ref: "master"
+    ref: "gitleaks-check-within-shiftleft"
     file:
       - ".shiftleft_container_scanning.yml"
       - ".trivy_container_scanning.yml"
