@@ -64,7 +64,7 @@ rspec_test:
 shiftleft_container_scanning:
   stage: sast
   variables:
-    SCAN_DEBUG_MODE: "true"
+    SCAN_DEBUG_MODE: "debug"
   #   CREDSCAN_CONFIG: "${CI_PROJECT_DIR}/.gitleaks.toml"
   extends:
     - .shiftleft_container_scanning
@@ -72,6 +72,7 @@ shiftleft_container_scanning:
     - push_tmp_image_to_registry
   tags:
     - build
+  allow_failure: true
 
 trivy_container_scanning:
   stage: sast
