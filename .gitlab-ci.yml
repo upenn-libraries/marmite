@@ -63,6 +63,9 @@ rspec_test:
 
 shiftleft_container_scanning:
   stage: sast
+  variables:
+    SCAN_DEBUG_MODE: "true"
+    CREDSCAN_CONFIG: "${CI_PROJECT_DIR}/.gitleaks.toml"
   extends:
     - .shiftleft_container_scanning
   needs:
