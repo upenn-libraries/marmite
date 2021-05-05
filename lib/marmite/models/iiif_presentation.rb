@@ -5,12 +5,13 @@ class IIIFPresentation
     end
   end
 
-  attr_reader :id, :title, :viewing_direction, :assets, :image_server
+  attr_reader :id, :title, :viewing_direction, :viewing_hint, :assets, :image_server
 
   def initialize(data)
     @id = data['id'] || data[:id]
     @title = data['title'] || data[:title]
     @viewing_direction = data['viewing_direction'] || data[:viewing_direction]
+    @viewing_hint = data['viewing_hint'] || data[:viewing_hint]
     @assets = data['sequence'] || data[:sequence] || []
     @image_server = data['image_server'] || data[:image_server]
 
@@ -28,7 +29,7 @@ class IIIFPresentation
 
     manifest['@id'] = uri(image_server, "#{id}/manifest")
     manifest.attribution = 'University of Pennsylvania Libraries'
-    manifest.viewing_hint = 'individuals'
+    manifest.viewing_hint = viewing_hint
     manifest.viewing_direction = viewing_direction
 
     sequence = IIIF::Presentation::Sequence.new(

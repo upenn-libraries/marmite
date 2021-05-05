@@ -2,6 +2,7 @@
   "id": "81431-p3p880",
   "title": "[Bifolium from Liber completus in iudiciis stellarum].",
   "viewing_direction": "left-to-right",
+  "viewing_hint": "paged",
   "image_server": "https://example.com/iiif/2",
   "sequence": [
     {
