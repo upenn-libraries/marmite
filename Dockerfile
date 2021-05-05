@@ -9,11 +9,11 @@ RUN apt-get update && apt-get install -qq -y --no-install-recommends \
 
 WORKDIR /usr/src/app
 
-COPY Gemfile Gemfile.lock /usr/src/app/
+COPY Gemfile Gemfile.lock ./
 
 RUN bundle install
 
-COPY . /usr/src/app
+COPY . .
 
 EXPOSE 9292
 
