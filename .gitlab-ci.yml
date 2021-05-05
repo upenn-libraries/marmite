@@ -69,7 +69,6 @@ shiftleft_container_scanning:
     - push_tmp_image_to_registry
   tags:
     - build
-  allow_failure: true
 
 trivy_container_scanning:
   stage: sast
