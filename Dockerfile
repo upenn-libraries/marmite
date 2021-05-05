@@ -2,8 +2,6 @@ FROM ruby:2.6.6
 
 ENV RACK_ENV production
 
-EXPOSE 9292
-
 RUN apt-get update && apt-get install -qq -y --no-install-recommends \
         build-essential \
         default-libmysqlclient-dev && \
@@ -18,5 +16,7 @@ COPY Gemfile Gemfile.lock /usr/src/app/
 RUN bundle install
 
 COPY . /usr/src/app
+
+EXPOSE 9292
 
 CMD ["bundle", "exec", "rackup"]
