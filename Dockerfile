@@ -5,8 +5,9 @@ ENV RACK_ENV production
 EXPOSE 9292
 
 RUN apt-get update && apt-get install -qq -y --no-install-recommends \
-         build-essential \
-         default-libmysqlclient-dev
+        build-essential \
+        default-libmysqlclient-dev && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /usr/src/app
 
@@ -17,7 +18,5 @@ COPY Gemfile Gemfile.lock /usr/src/app/
 RUN bundle install
 
 COPY . /usr/src/app
-
-RUN rm -rf /var/lib/apt/lists/*
 
 CMD ["bundle", "exec", "rackup"]
