@@ -7,8 +7,6 @@ RUN apt-get update && apt-get install -qq -y --no-install-recommends \
         default-libmysqlclient-dev && \
     rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /usr/src/app
-
 WORKDIR /usr/src/app
 
 COPY Gemfile Gemfile.lock /usr/src/app/
