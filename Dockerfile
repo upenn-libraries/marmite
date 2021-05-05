@@ -1,7 +1,4 @@
-
 FROM ruby:2.6.6
-
-MAINTAINER Kate Lynch <katherly@upenn.edu>
 
 ENV RACK_ENV production
 
