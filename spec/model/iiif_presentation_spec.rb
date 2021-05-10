@@ -57,7 +57,6 @@ RSpec.describe IIIFPresentation do
       end
     end
 
-
     context 'when body does not contain table of contents or labels for any assets' do
       let(:data) { JSON.parse(fixture_contents('pre_transformation', 'iiif_presentation', 'without_labels.json')) }
       let(:expected_manifest) { JSON.parse(fixture_contents('post_transformation', 'iiif_presentation', 'without_labels.json')) }
