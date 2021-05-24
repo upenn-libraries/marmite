@@ -123,7 +123,29 @@ Create IIIF Presentation v2 Manifest using the data given in the body of the req
 | Name | In | Description |
 | ---- | -- | ----------- |
 | id   | path | identifier for iiif manifest |
-| body | | |
+
+#### Body
+JSON containing information necessary information to create IIIF manifest.
+
+Example:
+```json
+{
+  "id": "12349-0394", # Should match the identifier in the path
+  "title": "An Amazing Item",
+  "viewing_direction": "left-to-right",
+  "viewing_hint": "individuals",
+  "image_server": "http:/iiif.library.upenn.edu/iiif/2", # URL to Image Server
+  "sequence": [
+    {
+      "label": "Page One",
+      "file": "path/to/file/on/image/server.jpeg",
+      "table_of_contents": [
+        { "text": "First Illuminated Image" }
+      ]
+    }
+  ]
+}
+```
 
 #### Default Response
 `Status: 201 CREATED`
@@ -138,11 +160,6 @@ Create IIIF Presentation v2 Manifest using the data given in the body of the req
   "errors": ["Unexpected error generating IIIF manifest."]
 }
 ```
-
-
-
-
-### GET IIIF Presentation Manifest
 
 ## Production setup
 
