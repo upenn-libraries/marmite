@@ -303,7 +303,7 @@ def create_record(original_record, options = {})
 
           annotation = IIIF::Presentation::Annotation.new
           base_uri = "#{iiif_server}#{iiif}"
-          base_uri.gsub!("/info.json", "") if base_uri.ends_with?("/info.json")
+          base_uri.gsub!("/info.json", "") if base_uri.end_with?("/info.json")
           params = {service_id: base_uri}
           annotation.resource = IIIF::Presentation::ImageResource.create_image_api_image_resource(params)
           annotation["on"] = (canvas["@id"])
@@ -317,7 +317,7 @@ def create_record(original_record, options = {})
 
         image_ids.each_with_index do |(iiif, i), index|
 
-          next unless iiif.ends_with?('.tif.jpeg')
+          next unless iiif.end_with?('.tif.jpeg')
 
           iiif_server = "#{ENV['IIIF_SERVER']}/iiif/2/"
 

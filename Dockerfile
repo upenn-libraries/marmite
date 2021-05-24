@@ -1,26 +1,20 @@
-
-FROM ruby:2.4.5
-
-MAINTAINER Kate Lynch <katherly@upenn.edu>
+FROM ruby:2.6.6
 
 ENV RACK_ENV production
 
-EXPOSE 9292
-
 RUN apt-get update && apt-get install -qq -y --no-install-recommends \
-         build-essential \
-         default-libmysqlclient-dev
-
-RUN mkdir -p /usr/src/app
+        build-essential \
+        default-libmysqlclient-dev && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/app
 
-COPY Gemfile Gemfile.lock /usr/src/app/
+COPY Gemfile Gemfile.lock ./
 
 RUN bundle install
 
-COPY . /usr/src/app
+COPY . .
 
-RUN rm -rf /var/lib/apt/lists/*
+EXPOSE 9292
 
 CMD ["bundle", "exec", "rackup"]
