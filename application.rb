@@ -368,26 +368,6 @@ def create_record(original_record, options = {})
       manifest.structures = structures
 
       blob = manifest.to_json
-    when 'structural_ark' # Retire this format
-      skip_update = true
-      targetpath = Pathname.new(ENV['TASK_BASE_PATH'] + "/" + bib_id + ".xlsx")
-      parse_errors = IndexMetadata.index_structural(targetpath.to_path, format)
-
-      if !parse_errors.empty?
-        status 500 unless parse_errors.empty?
-        content_type('application/json')
-        return JSON(parse_errors)
-      end
-    when 'combined_ark' # Retire this format
-      skip_update = true
-      targetpath = Pathname.new(ENV['TASK_BASE_PATH'] + "/" + bib_id + ".xlsx")
-      parse_errors = IndexMetadata.index_combined(targetpath.to_path, format)
-
-      if !parse_errors.empty?
-        status 500 unless parse_errors.empty?
-        content_type('application/json')
-        return JSON(parse_errors)
-      end
   else
     return
   end
@@ -478,7 +458,7 @@ class Application < Sinatra::Base
 
   set :assets, Sprockets::Environment.new(root)
 
-  AVAILABLE_FORMATS = %w[marc21 structural structural_ark combined_ark dla openn iiif_presentation]
+  AVAILABLE_FORMATS = %w[marc21 structural dla openn iiif_presentation]
   FORMAT_OVERRIDES = { 'iiif_presentation' => 'application/json' }
   IMAGE_ID_PREFIXES = %w[medren_ print_]
 
@@ -651,8 +631,6 @@ class Application < Sinatra::Base
     get path do
       @marc21_records = Record.where(:format => 'marc21')
       @structural_records = Record.where(:format => 'structural')
-      @structural_ark_records = Record.where(:format => 'structural_ark')
-      @combined_ark_records = Record.where(:format => 'combined_ark')
       @dla_records = Record.where(:format => 'dla')
       @openn_records = Record.where(:format => 'openn')
       @iiif_presentation_records = Record.where(:format => 'iiif_presentation')
@@ -679,5 +657,4 @@ class Application < Sinatra::Base
       erb :harvesting
     end
   end
-
 end

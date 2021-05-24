@@ -150,13 +150,11 @@ Create IIIF Presentation v2 Manifest using the data given in the body of the req
 
   Ensure that the image tag in the `docker-compose.yml` matches the version of the image from [Quay.io](https://quay.io/repository/upennlibraries/marmite?tag=latest&tab=tags) that you want to deploy.
 
-* Copy ```.env.example``` into a file alongside it called ```.env```.
+* Copy `.env.example` into a file alongside it called `.env`.
 
 * Populate the new file with the appropriate values, including a valid Alma API key.
 
-* Run ```NFS_ADDR=xyz.int NFS_DEVICE=":/abc/xyz" docker-compose up -d```
-
-  Where the `NFS_ADDR` and `NFS_DEVISE` values correspond to correct values for the NFS machine address and device path.
+* Run `docker-compose up -d`
 
 ## Deployment workflow
 

@@ -16,16 +16,8 @@ services:
       - '9292:9292'
     env_file:
       - '.env'
-    volumes:
-      - 'nfs:/var/nfs'
     links:
       - 'db'
 
 volumes:
   db:
-  nfs:
-    driver: local
-    driver_opts:
-      type: nfs
-      o: addr=${NFS_ADDR},rw
-      device: "${NFS_DEVICE}"
