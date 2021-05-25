@@ -9,28 +9,12 @@
     <span>http://HOST:PORT/records/BIB_ID/create?format=structural&amp;image_id_prefix=IMAGE_ID_PREFIX</span>
   </li>
   <li>
-    <strong>URL to harvest DLA-compliant XML:</strong>
-    <span>http://HOST:PORT/records/BIB_ID/create?format=dla</span>
-  </li>
-  <li>
     <strong>URL to harvest OPenn-compliant XML (second argument optional)</strong>
     <span>http://HOST:PORT/records/BIB_ID/create?format=openn&amp;image_id_prefix=IMAGE_ID_PREFIX</span>
   </li>
   <li>
     <strong>URL to construct/harvest IIIF presentation manifest for a Colenda repository</strong>
     <span>http://HOST:PORT/records/REPO_ID/create?format=iiif_presentation</span>
-  </li>
-</ul>
-
-<h2>Rake Tasks</h2>
-<ul>
-  <li>
-    <strong>Rake task to load structural data</strong>
-    <span>rake marmite:index_structural[xlsx_dir,format]; supported formats: structural_ark</span>
-  </li>
-  <li>
-    <strong>Rake task to load combined (bibliographic &amp; structural) data</strong>
-    <span>rake marmite:index_combined[xlsx_dir,format]; supported formats: combined_ark</span>
   </li>
 </ul>
 

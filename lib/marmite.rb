@@ -1,6 +1,3 @@
-require_relative 'marmite/parsers/combined_parser'
-require_relative 'marmite/parsers/structural_parser'
-require_relative 'marmite/services/index_metadata'
 require_relative 'marmite/services/blob_handler'
 require_relative 'marmite/models/record'
 require_relative 'marmite/models/iiif_presentation'
