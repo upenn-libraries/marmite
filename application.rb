@@ -453,7 +453,7 @@ class Application < Sinatra::Base
 
   # pull XML from Alma, do some processing, and save a Record with the XML
   # as a blob. return the XML.
-  get '/api/v2/record/:bib_id/marc21' do |bib_id|
+  get '/api/v2/records/:bib_id/marc21' do |bib_id|
     record = Record.find_or_initialize_by bib_id: bib_id,
                                           format: Record::MARC_21
     update_blob = update_blob? params[:update], record
@@ -485,11 +485,11 @@ class Application < Sinatra::Base
     [status, body]
   end
 
-  get '/api/v2/record/:bib_id/openn' do; end
-  get '/api/v2/record/:bib_id/structural' do; end # never "refresh"
+  get '/api/v2/records/:bib_id/openn' do; end
+  get '/api/v2/records/:bib_id/structural' do; end # never "refresh"
 
   # Pulls IIIF manifest from database and returns it.
-  get '/api/v2/record/:id/iiif_presentation' do |id|
+  get '/api/v2/records/:id/iiif_presentation' do |id|
     content_type 'application/json'
 
     if (record = Record.find_by(bib_id: id, format: Record::IIIF_PRESENTATION))
@@ -500,7 +500,7 @@ class Application < Sinatra::Base
   end
 
   # Creates IIIF presentation manifest using the body of the post request.
-  post '/api/v2/record/:id/iiif_presentation' do |id|
+  post '/api/v2/records/:id/iiif_presentation' do |id|
     data = JSON.parse(request.body.read)
 
     record = Record.find_or_initialize_by(bib_id: id, format: Record::IIIF_PRESENTATION)
