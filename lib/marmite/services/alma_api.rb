@@ -10,7 +10,7 @@ class AlmaApi
 
   BIBS_URL = 'https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs'
   DEFAULT_HEADERS = {
-    apikey: ENV['API_KEY']
+    apikey: ENV['ALMA_KEY']
   }.freeze
 
   # @param [String] bib_id in Alma format
