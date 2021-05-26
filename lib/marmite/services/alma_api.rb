@@ -9,9 +9,7 @@ class AlmaApi
   class BibNotFound < StandardError; end
 
   BIBS_URL = 'https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs'
-  DEFAULT_HEADERS = {
-    apikey: ENV['ALMA_KEY']
-  }.freeze
+  DEFAULT_HEADERS = { "Authorization": "apikey #{ENV['ALMA_KEY']}" }.freeze
 
   # @param [String] bib_id in Alma format
   # @option [TrueClass, FalseClass] availability
