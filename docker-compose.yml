@@ -11,7 +11,7 @@ services:
     restart: 'unless-stopped'
     depends_on:
       - 'db'
-    image: 'quay.io/upennlibraries/marmite:e94a364'
+    image: 'gitlab.library.upenn.edu/digital-repository/marmite:master'
     ports:
       - '9292:9292'
     env_file:
