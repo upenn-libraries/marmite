@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'typhoeus'
+
 # Wrap Marmite's Alma API requests
 class AlmaApi
   class RequestFailedError < StandardError; end
