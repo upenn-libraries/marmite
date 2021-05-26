@@ -221,8 +221,6 @@ def create_record(original_record, options = {})
   when 'iiif_presentation'
       image_ids_endpoint = "#{ENV['IMAGE_ID_ENDPOINT_PREFIX']}/#{bib_id}/#{ENV['IMAGE_ID_ENDPOINT_SUFFIX']}"
 
-      # logger.info("ATTEMPTING TO PARSE #{image_ids_endpoint}")
-
       response = JSON.parse(open(image_ids_endpoint).read)
 
       image_ids = response['image_ids']
@@ -268,8 +266,6 @@ def create_record(original_record, options = {})
 
           p = Net::HTTP.get(URI.parse(iiif_server + iiif_string))
 
-          # logger.info("ARRAY -- ITERATING THROUGH #{iiif_server + iiif_string}")
-
           canvas_json = JSON.parse(p)
 
           canvas = IIIF::Presentation::Canvas.new()
@@ -301,8 +297,6 @@ def create_record(original_record, options = {})
           iiif_string = iiif.start_with?(iiif_server) ? "#{iiif}/info.json" : iiif_server + "#{iiif}/info.json"
 
           p = Net::HTTP.get(URI.parse(iiif_string))
-
-          # logger.info("HASH -- ITERATING THROUGH #{iiif_string}")
 
           canvas_json = JSON.parse(p)
 
@@ -509,7 +503,9 @@ class Application < Sinatra::Base
     begin
       record.set_blob(data)
       [201, record.uncompressed_blob]
-    rescue
+    rescue => e
+      logger.error(e.message)
+      logger.error(e.backtrace.join("\n"))
       [500, error_response('Unexpected error generating IIIF manifest.')]
     end
   end
