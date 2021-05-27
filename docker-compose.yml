@@ -1,31 +1,28 @@
-version: '2'
+version: "3.2"
 
 services:
   db:
-    restart: 'unless-stopped'
-    image: 'mysql/mysql-server:5.7'
-    env_file: '.env'
+    image: "mysql/mysql-server:5.7"
+    env_file: ".env"
+    networks:
+      - marmite
+    restart: "unless-stopped"
     volumes:
-      - 'db:/var/lib/mysql'
+      - "db:/var/lib/mysql"
   sinatra:
-    restart: 'unless-stopped'
+    image: "gitlab.library.upenn.edu/digital-repository/marmite:master"
     depends_on:
-      - 'db'
-    image: 'quay.io/upennlibraries/marmite:e94a364'
-    ports:
-      - '9292:9292'
+      - "db"
     env_file:
-      - '.env'
-    volumes:
-      - 'nfs:/var/nfs'
-    links:
-      - 'db'
+      - ".env"
+    networks:
+      - marmite
+    ports:
+      - "9292:9292"
+    restart: "unless-stopped"
+
+networks:
+  marmite:
 
 volumes:
   db:
-  nfs:
-    driver: local
-    driver_opts:
-      type: nfs
-      o: addr=${NFS_ADDR},rw
-      device: "${NFS_DEVICE}"
