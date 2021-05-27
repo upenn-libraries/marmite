@@ -8,7 +8,7 @@ Marmite is an [ETL](https://www.webopedia.com/TERM/E/ETL.html) Sinatra applicati
 * [Functionalities](#functionalities)
 * [Development setup](#development-setup)
 * [Running the Test Suite](#running-the-test-suite)
-* [Production setup](#production-setup)
+* [Deployment](#deployment)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -17,7 +17,7 @@ Marmite is an [ETL](https://www.webopedia.com/TERM/E/ETL.html) Sinatra applicati
 
 * Ruby 2.6.x
 * MySQL
-* An Alma API key with read access to Bibs API sourced to the $ALMA_KEY environment variable.  Consult the [alias.example](alias.example) in this repository for an aliasing example.
+* An Alma API key with read access to Bibs API sourced to the $ALMA_KEY environment variable.  Consult the [env.example](env.example) in this repository for an example.
 * Docker for production and docker-compose version 2 or higher
 
 ## Functionalities
@@ -160,26 +160,30 @@ Example:
 }
 ```
 
-## Production setup
+## Deployment
 
-* Clone the repository.
+### Dev/test
 
-  Ensure that the image tag in the `docker-compose.yml` matches the version of the image from [Quay.io](https://quay.io/repository/upennlibraries/marmite?tag=latest&tab=tags) that you want to deploy.
+Development marmite runs on `colenda-dev`. To deploy a new marmite image:
 
-* Copy `.env.example` into a file alongside it called `.env`.
+TODO: what about updates to env variables?
 
-* Populate the new file with the appropriate values, including a valid Alma API key.
+```
+  ssh username@colenda-dev
+  sudo su
+  cd /root/deployments/marmite/
+  git pull (ensure you're pulling the desired branch)
+  docker-compose pull (pull/update images referenced in docker-compose file)
+  docker-compose up -d
+```
 
-* Run `docker-compose up -d`
+### Production
 
-## Deployment workflow
+Development marmite runs on `mdproc`. To deploy a new marmite image in production, use the instructions above.
 
-This illustration represents the current deployment workflow for marmite.
-
-![Marmite deployment workflow](marmite_deployment.png)
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at [https://github.com/upenn-libraries/marmite](https://github.com/upenn-libraries/marmite).
+Bug reports and pull requests are welcome on GitHub at [https://gitlab.library.upenn.edu/digital-repository/marmite/-/issues](https://gitlab.library.upenn.edu/digital-repository/marmite/-/issues).
 
 ## License
 
