@@ -162,11 +162,15 @@ Example:
 
 ## Deployment
 
+### Environment Variables
+
+Prior to building new images, ensure that an `.env` file is present in the `/root/deployments/marmite/` directory, and 
+ensure that it contains any new or modified environment variables. The variables defined in this file will be present 
+in the environment of the generated image.
+
 ### Dev/test
 
 Development marmite runs on `colenda-dev`. To deploy a new marmite image:
-
-TODO: what about updates to env variables?
 
 ```
   ssh username@colenda-dev
