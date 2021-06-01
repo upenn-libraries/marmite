@@ -1,3 +1,6 @@
+require 'addressable'
+require 'iiif/presentation'
+
 class IIIFPresentation
   class MissingArgument < ArgumentError
     def initialize(variable_name)
