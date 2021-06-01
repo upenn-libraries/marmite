@@ -5,7 +5,7 @@ require_relative './alma_bib'
 
 class Record < ActiveRecord::Base
 
-  FORMATS_TO_ALWAYS_RECREATE = %w[structural_ark combined_ark iiif_presentation]
+  FORMATS_TO_ALWAYS_RECREATE = %w[iiif_presentation]
 
   MARC_21 = 'marc21'.freeze
   STRUCTURAL = 'structural'.freeze

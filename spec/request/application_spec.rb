@@ -32,11 +32,11 @@ RSpec.describe 'Marmite', type: :request do
   context 'harvesting information display' do
     it 'shows harvesting endpoints info at /harvesting' do
       get '/harvesting'
-      expect(last_response.body).to include 'Harvesting', 'Rake Tasks'
+      expect(last_response.body).to include 'Harvesting'
     end
     it 'shows harvesting endpoints info at /records/harvesting' do
       get '/records/harvesting'
-      expect(last_response.body).to include 'Harvesting', 'Rake Tasks'
+      expect(last_response.body).to include 'Harvesting'
     end
   end
   context 'all record display' do

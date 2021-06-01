@@ -26,7 +26,6 @@ The application makes the following XML metadata formats available:
 
 * `marc21` - descriptive metadata transformed from Alma bib and holdings XML payloads, with minor term transformations and fixes for ease of machine processing
 * `structural` - structural metadata transformed from dla structural XML payloads, in [Bulwark](https://github.com/upenn-libraries/bulwark)-compliant format
-* `dla` - marc21 descriptive metadata and a DLA-compliant structural XML payload
 * `openn` - descriptive and structural metadata in a single payload, in the format used by the OPenn package generation tools
 * `iiif_presentation` - IIIF presentation 2.0 manifests
 
@@ -123,7 +122,29 @@ Create IIIF Presentation v2 Manifest using the data given in the body of the req
 | Name | In | Description |
 | ---- | -- | ----------- |
 | id   | path | identifier for iiif manifest |
-| body | | |
+
+#### Body
+JSON containing information necessary information to create IIIF manifest.
+
+Example:
+```json
+{
+  "id": "12349-0394", # Should match the identifier in the path
+  "title": "An Amazing Item",
+  "viewing_direction": "left-to-right",
+  "viewing_hint": "individuals",
+  "image_server": "http:/iiif.library.upenn.edu/iiif/2", # URL to Image Server
+  "sequence": [
+    {
+      "label": "Page One",
+      "file": "path/to/file/on/image/server.jpeg",
+      "table_of_contents": [
+        { "text": "First Illuminated Image" }
+      ]
+    }
+  ]
+}
+```
 
 #### Default Response
 `Status: 201 CREATED`
@@ -139,24 +160,17 @@ Create IIIF Presentation v2 Manifest using the data given in the body of the req
 }
 ```
 
-
-
-
-### GET IIIF Presentation Manifest
-
 ## Production setup
 
 * Clone the repository.
 
   Ensure that the image tag in the `docker-compose.yml` matches the version of the image from [Quay.io](https://quay.io/repository/upennlibraries/marmite?tag=latest&tab=tags) that you want to deploy.
 
-* Copy ```.env.example``` into a file alongside it called ```.env```.
+* Copy `.env.example` into a file alongside it called `.env`.
 
 * Populate the new file with the appropriate values, including a valid Alma API key.
 
-* Run ```NFS_ADDR=xyz.int NFS_DEVICE=":/abc/xyz" docker-compose up -d```
-
-  Where the `NFS_ADDR` and `NFS_DEVISE` values correspond to correct values for the NFS machine address and device path.
+* Run `docker-compose up -d`
 
 ## Deployment workflow
 

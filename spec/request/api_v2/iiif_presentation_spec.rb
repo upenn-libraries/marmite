@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe 'IIIF Presentation Requests', type: :request do
-  describe 'GET /api/v2/record/:id/iiif_presentation' do
+  describe 'GET /api/v2/records/:id/iiif_presentation' do
     context 'when record is not present' do
-      before { get '/api/v2/record/invalid/iiif_presentation' }
+      before { get '/api/v2/records/invalid/iiif_presentation' }
 
       it 'returns 404' do
         expect(last_response.status).to be 404
@@ -24,7 +24,7 @@ RSpec.describe 'IIIF Presentation Requests', type: :request do
         stub_request(:get, /#{Regexp.escape(data['image_server'])}/)
           .to_return(body: '{ "width": 3500, "height": 4596, "profile": ["http://iiif.io/api/image/2/level2.json"] }')
         Record.new(bib_id: id, format: Record::IIIF_PRESENTATION).set_blob(data)
-        get "/api/v2/record/#{id}/iiif_presentation"
+        get "/api/v2/records/#{id}/iiif_presentation"
       end
 
       it 'returns 200' do
@@ -37,7 +37,7 @@ RSpec.describe 'IIIF Presentation Requests', type: :request do
     end
   end
 
-  describe 'POST /api/v2/record/:id/iiif_presentation' do
+  describe 'POST /api/v2/records/:id/iiif_presentation' do
     context 'when creating record with complete post data' do
       let(:id) { '81431-p36q1sp1f' }
       let(:data) { JSON.parse(fixture_contents('pre_transformation', 'iiif_presentation', 'without_labels.json')) }
@@ -46,7 +46,7 @@ RSpec.describe 'IIIF Presentation Requests', type: :request do
       before do
         stub_request(:get, /#{Regexp.escape(data['image_server'])}/)
           .to_return(body: '{ "width": 3500, "height": 4596, "profile": ["http://iiif.io/api/image/2/level2.json"] }')
-        post "/api/v2/record/#{id}/iiif_presentation", data.to_json
+        post "/api/v2/records/#{id}/iiif_presentation", data.to_json
       end
 
       it 'creates record' do
@@ -64,7 +64,7 @@ RSpec.describe 'IIIF Presentation Requests', type: :request do
 
     context 'when creating record without partial post data' do
       let(:id) { '1234' }
-      before { post "/api/v2/record/#{id}/iiif_presentation", '{ "id": "#{id}" }' }
+      before { post "/api/v2/records/#{id}/iiif_presentation", '{ "id": "#{id}" }' }
 
       it 'does not create record' do
         expect(Record.find_by(bib_id: id, format: Record::IIIF_PRESENTATION)).to be_nil

@@ -197,29 +197,6 @@ def create_record(original_record, options = {})
         }
       end
       blob = structural.to_xml
-    when 'dla' # Doesn't seem to be used.
-      # corresponding marc record is needed for dla
-      marc_record = Record.find_or_initialize_by bib_id: validated_bib_id, format: 'marc21'
-      create_record(marc_record) unless marc_record.fresh?
-      marc21 = inflate(marc_record.blob)
-      descriptive = Nokogiri::XML(marc21).search('//marc:records/marc:record')
-      structural_endpoint = "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
-      data = Nokogiri::XML.parse(open(structural_endpoint))
-      pages = data.xpath('//pagelevel')
-
-      dla = Nokogiri::XML::Builder.new do |xml|
-        xml.record('xmlns:marc' => 'http://www.loc.gov/MARC21/slim', 'xmlns:xsi'=> 'http://www.w3.org/2001/XMLSchema-instance', 'xsi:schemaLocation' => 'http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd') {
-          xml.xml('name' => 'marcrecord') {
-            xml << descriptive.to_xml
-          }
-
-          xml.xml('name' => 'pages') {
-            xml << pages.to_xml
-          }
-
-        }
-      end
-      blob = dla.to_xml
     when 'openn'
       # corresponding marc record is needed for openn
       marc_record = Record.find_or_initialize_by bib_id: validated_bib_id, format: 'marc21'
@@ -243,8 +220,6 @@ def create_record(original_record, options = {})
       blob = openn.to_xml
   when 'iiif_presentation'
       image_ids_endpoint = "#{ENV['IMAGE_ID_ENDPOINT_PREFIX']}/#{bib_id}/#{ENV['IMAGE_ID_ENDPOINT_SUFFIX']}"
-
-      # logger.info("ATTEMPTING TO PARSE #{image_ids_endpoint}")
 
       response = JSON.parse(open(image_ids_endpoint).read)
 
@@ -291,8 +266,6 @@ def create_record(original_record, options = {})
 
           p = Net::HTTP.get(URI.parse(iiif_server + iiif_string))
 
-          # logger.info("ARRAY -- ITERATING THROUGH #{iiif_server + iiif_string}")
-
           canvas_json = JSON.parse(p)
 
           canvas = IIIF::Presentation::Canvas.new()
@@ -324,8 +297,6 @@ def create_record(original_record, options = {})
           iiif_string = iiif.start_with?(iiif_server) ? "#{iiif}/info.json" : iiif_server + "#{iiif}/info.json"
 
           p = Net::HTTP.get(URI.parse(iiif_string))
-
-          # logger.info("HASH -- ITERATING THROUGH #{iiif_string}")
 
           canvas_json = JSON.parse(p)
 
@@ -368,26 +339,6 @@ def create_record(original_record, options = {})
       manifest.structures = structures
 
       blob = manifest.to_json
-    when 'structural_ark' # Retire this format
-      skip_update = true
-      targetpath = Pathname.new(ENV['TASK_BASE_PATH'] + "/" + bib_id + ".xlsx")
-      parse_errors = IndexMetadata.index_structural(targetpath.to_path, format)
-
-      if !parse_errors.empty?
-        status 500 unless parse_errors.empty?
-        content_type('application/json')
-        return JSON(parse_errors)
-      end
-    when 'combined_ark' # Retire this format
-      skip_update = true
-      targetpath = Pathname.new(ENV['TASK_BASE_PATH'] + "/" + bib_id + ".xlsx")
-      parse_errors = IndexMetadata.index_combined(targetpath.to_path, format)
-
-      if !parse_errors.empty?
-        status 500 unless parse_errors.empty?
-        content_type('application/json')
-        return JSON(parse_errors)
-      end
   else
     return
   end
@@ -434,51 +385,15 @@ def process_pages(pages, xml, bib_id, image_id_prefix = '')
   end
 end
 
-###
-#
-# Deprecated method -- leaving in for potential re-use for visiblepage
-#
-###
-def determine_side(side_value, sequence)
-  side_hash = { 'r' => 'recto',
-                'v' => 'verso'
-  }
-
-  return side_hash[side_value[1]] unless (/\A[[:digit:]][[:alnum:]]*[rv]\Z/ =~ side_value).nil?
-
-  return sequence.to_i.odd? ? 'recto' : 'verso'
-end
-
-# Not used.
-def dla_structural_metadata(bib_id, sceti_prefix)
-  bib_id = validate_bib_id(bib_id)
-  structural_endpoint = "http://dla.library.upenn.edu/dla/#{sceti_prefix.downcase}/pageturn.xml?id=#{sceti_prefix.upcase}_#{bib_id}"
-  data = Nokogiri::XML.parse(open(structural_endpoint))
-  pages = data.xpath('//xml/page')
-  record = Nokogiri::XML::Builder.new do |xml|
-    xml.record {
-      xml.bib_id bib_id
-      xml.pages {
-        xml << pages.to_xml
-      }
-    }
-  end
-  return record.to_xml
-end
-
 def validate_bib_id(bib_id)
   return bib_id.length <= 7 ? "99#{bib_id}3503681" : bib_id
-end
-
-def legacy_bib_id(bib_id)
-  return bib_id[2..(bib_id.length-8)] if bib_id.start_with?('99') and bib_id.end_with?('3503681')
 end
 
 class Application < Sinatra::Base
 
   set :assets, Sprockets::Environment.new(root)
 
-  AVAILABLE_FORMATS = %w[marc21 structural structural_ark combined_ark dla openn iiif_presentation]
+  AVAILABLE_FORMATS = %w[marc21 structural openn iiif_presentation]
   FORMAT_OVERRIDES = { 'iiif_presentation' => 'application/json' }
   IMAGE_ID_PREFIXES = %w[medren_ print_]
 
@@ -532,7 +447,7 @@ class Application < Sinatra::Base
 
   # pull XML from Alma, do some processing, and save a Record with the XML
   # as a blob. return the XML.
-  get '/api/v2/record/:bib_id/marc21' do |bib_id|
+  get '/api/v2/records/:bib_id/marc21' do |bib_id|
     record = Record.find_or_initialize_by bib_id: bib_id,
                                           format: Record::MARC_21
     update_blob = update_blob? params[:update], record
@@ -564,11 +479,11 @@ class Application < Sinatra::Base
     [status, body]
   end
 
-  get '/api/v2/record/:bib_id/openn' do; end
-  get '/api/v2/record/:bib_id/structural' do; end # never "refresh"
+  get '/api/v2/records/:bib_id/openn' do; end
+  get '/api/v2/records/:bib_id/structural' do; end # never "refresh"
 
   # Pulls IIIF manifest from database and returns it.
-  get '/api/v2/record/:id/iiif_presentation' do |id|
+  get '/api/v2/records/:id/iiif_presentation' do |id|
     content_type 'application/json'
 
     if (record = Record.find_by(bib_id: id, format: Record::IIIF_PRESENTATION))
@@ -579,7 +494,7 @@ class Application < Sinatra::Base
   end
 
   # Creates IIIF presentation manifest using the body of the post request.
-  post '/api/v2/record/:id/iiif_presentation' do |id|
+  post '/api/v2/records/:id/iiif_presentation' do |id|
     data = JSON.parse(request.body.read)
 
     record = Record.find_or_initialize_by(bib_id: id, format: Record::IIIF_PRESENTATION)
@@ -588,7 +503,9 @@ class Application < Sinatra::Base
     begin
       record.set_blob(data)
       [201, record.uncompressed_blob]
-    rescue
+    rescue => e
+      logger.error(e.message)
+      logger.error(e.backtrace.join("\n"))
       [500, error_response('Unexpected error generating IIIF manifest.')]
     end
   end
@@ -651,9 +568,6 @@ class Application < Sinatra::Base
     get path do
       @marc21_records = Record.where(:format => 'marc21')
       @structural_records = Record.where(:format => 'structural')
-      @structural_ark_records = Record.where(:format => 'structural_ark')
-      @combined_ark_records = Record.where(:format => 'combined_ark')
-      @dla_records = Record.where(:format => 'dla')
       @openn_records = Record.where(:format => 'openn')
       @iiif_presentation_records = Record.where(:format => 'iiif_presentation')
       erb :index
@@ -679,5 +593,4 @@ class Application < Sinatra::Base
       erb :harvesting
     end
   end
-
 end

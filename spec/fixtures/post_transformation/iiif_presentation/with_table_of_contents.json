@@ -5,7 +5,7 @@
   "label": "[Bifolium from Liber completus in iudiciis stellarum].",
   "attribution": "University of Pennsylvania Libraries",
   "viewingDirection": "left-to-right",
-  "viewingHint": "individuals",
+  "viewingHint": "paged",
   "sequences": [
     {
       "@id": "https://example.com/iiif/2/81431-p3p880/sequence/normal",
