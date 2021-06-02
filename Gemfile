@@ -21,7 +21,7 @@ gem 'sprockets'
 gem 'sprockets-helpers'
 gem 'typhoeus'
 
-group :development do
+group :development, :test do
   gem 'pry'
   gem 'pry-byebug'
   gem 'tux'

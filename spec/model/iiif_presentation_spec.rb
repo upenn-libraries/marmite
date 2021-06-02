@@ -65,5 +65,14 @@ RSpec.describe IIIFPresentation do
         expect(described_class.new(data).manifest).to include_json(expected_manifest)
       end
     end
+
+    context 'when body contains additional downloads' do
+      let(:data) { JSON.parse(fixture_contents('pre_transformation', 'iiif_presentation', 'with_additional_downloads.json')) }
+      let(:expected_manifest) { JSON.parse(fixture_contents('post_transformation', 'iiif_presentation', 'with_additional_downloads.json')) }
+
+      it 'generates expected iiif presentation manifest' do
+        expect(described_class.new(data).manifest).to include_json(expected_manifest)
+      end
+    end
   end
 end
