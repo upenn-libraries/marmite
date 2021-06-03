@@ -56,7 +56,8 @@ class IIIFPresentation
         height: info['height'],
         width: info['width'],
         profile: info['profile'][0],
-        filepath: asset[:file]
+        filepath: asset[:file],
+        additional_downloads: asset[:additional_downloads]
       )
 
       # Adding table of contents, if label and table of contents entries are provided.
@@ -83,7 +84,8 @@ class IIIFPresentation
   # @param profile [String] uri for IIIF image profile image server uses
   # @param label [String] label for image
   # @param filepath [String] filepath for image
-  def canvas(index:, width:, height:, profile:, label: nil, filepath:)
+  # @param additional_downloads [Array<Hash>] information describing additional downloads
+  def canvas(index:, width:, height:, profile:, label: nil, filepath:, additional_downloads: nil)
     canvas = IIIF::Presentation::Canvas.new
     canvas['@id'] = uri(image_server, "#{id}/canvas/p#{index}")
     canvas.label  = label || "p. #{index}"
@@ -99,7 +101,20 @@ class IIIFPresentation
     annotation['on'] = canvas['@id']
 
     canvas.images << annotation
+
+    if additional_downloads
+      canvas['rendering'] = additional_downloads.map { |download_info| rendering(download_info) }
+    end
+
     canvas
+  end
+
+  def rendering(link:, label:, format:, size: nil)
+    {
+      "@id" => link,
+      "label" => size ? "#{label} - #{size.to_s(:human_size)}" : label,
+      "format" => format
+    }
   end
 
   # Returns range with sub ranges for each table of contents entry. For each table of contents entry will
