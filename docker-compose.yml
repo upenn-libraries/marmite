@@ -11,7 +11,7 @@ services:
     restart: 'unless-stopped'
     depends_on:
       - 'db'
-    image: 'gitlab.library.upenn.edu/digital-repository/marmite:master'
+    image: 'gitlab.library.upenn.edu/digital-repository/marmite:v1-4-0'
     ports:
       - '9292:9292'
     env_file:
