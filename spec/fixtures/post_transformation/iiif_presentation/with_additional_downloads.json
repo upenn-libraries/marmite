@@ -1,0 +1,84 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "https://example.com/iiif/2/81431-p36q1sp1f/manifest",
+  "@type": "sc:Manifest",
+  "label": "Trade card; Fleishman Bros.; undated",
+  "attribution": "University of Pennsylvania Libraries",
+  "viewingHint": "individuals",
+  "viewingDirection": "left-to-right",
+  "sequences": [
+    {
+      "@id": "https://example.com/iiif/2/81431-p36q1sp1f/sequence/normal",
+      "@type": "sc:Sequence",
+      "label": "Current order",
+      "canvases":[
+        {
+          "@id": "https://example.com/iiif/2/81431-p36q1sp1f/canvas/p1",
+          "@type": "sc:Canvas",
+          "height": 4596,
+          "width": 3500,
+          "label": "Front",
+          "rendering": [
+            {
+              "@id": "https://example.com/downloads/ark81431p36q1sp1f/originals/front.tif",
+              "label": "Original File - 12.1 KB",
+              "format": "image/tiff"
+            }
+          ],
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://example.com/iiif/2/ark81431p36q1sp1f/front.jpeg/full/!200,200/0/default.jpg",
+                "@type": "dctypes:Image",
+                "format": "image/jpeg",
+                "width": 3500,
+                "height": 4596,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://example.com/iiif/2/ark81431p36q1sp1f/front.jpeg",
+                  "profile":"http://iiif.io/api/image/2/level2.json"
+                }
+              },
+              "on":"https://example.com/iiif/2/81431-p36q1sp1f/canvas/p1"
+            }
+          ]
+        },
+        {
+          "@id": "https://example.com/iiif/2/81431-p36q1sp1f/canvas/p2",
+          "@type": "sc:Canvas",
+          "height": 4596,
+          "width": 3500,
+          "label": "Back",
+          "rendering": [
+            {
+              "@id": "https://example.com/downloads/ark81431p36q1sp1f/originals/back.tif",
+              "label": "Original File - 12.1 KB",
+              "format": "image/tiff"
+            }
+          ],
+          "images": [
+            {
+              "@type":"oa:Annotation",
+              "motivation":"sc:painting",
+              "resource": {
+                "@id": "https://example.com/iiif/2/ark81431p36q1sp1f/back.jpeg/full/!200,200/0/default.jpg",
+                "@type": "dctypes:Image",
+                "format": "image/jpeg",
+                "width": 3500,
+                "height": 4596,
+                "service": {
+                  "@context":"http://iiif.io/api/image/2/context.json",
+                  "@id":"https://example.com/iiif/2/ark81431p36q1sp1f/back.jpeg",
+                  "profile":"http://iiif.io/api/image/2/level2.json"
+                }
+              },
+              "on":"https://example.com/iiif/2/81431-p36q1sp1f/canvas/p2"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

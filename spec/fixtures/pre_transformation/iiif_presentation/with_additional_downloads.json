@@ -1,0 +1,33 @@
+{
+  "id": "81431-p36q1sp1f",
+  "title": "Trade card; Fleishman Bros.; undated",
+  "viewing_direction": "left-to-right",
+  "viewing_hint": "individuals",
+  "image_server": "https://example.com/iiif/2",
+  "sequence": [
+    {
+      "label": "Front",
+      "file": "ark81431p36q1sp1f/front.jpeg",
+      "additional_downloads": [
+        {
+          "label": "Original File",
+          "size": 12344,
+          "format": "image/tiff",
+          "link": "https://example.com/downloads/ark81431p36q1sp1f/originals/front.tif"
+        }
+      ]
+    },
+    {
+      "label": "Back",
+      "file": "ark81431p36q1sp1f/back.jpeg",
+      "additional_downloads": [
+        {
+          "label": "Original File",
+          "size": 12344,
+          "format": "image/tiff",
+          "link": "https://example.com/downloads/ark81431p36q1sp1f/originals/back.tif"
+        }
+      ]
+    }
+  ]
+}
