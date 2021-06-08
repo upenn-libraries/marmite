@@ -1,23 +1,28 @@
-version: '2'
+version: "3.2"
 
 services:
   db:
-    restart: 'unless-stopped'
-    image: 'mysql/mysql-server:5.7'
-    env_file: '.env'
+    image: "mysql/mysql-server:5.7"
+    env_file: ".env"
+    networks:
+      - marmite
+    restart: "unless-stopped"
     volumes:
-      - 'db:/var/lib/mysql'
+      - "db:/var/lib/mysql"
   sinatra:
-    restart: 'unless-stopped'
+    image: "gitlab.library.upenn.edu/digital-repository/marmite:v1-1-0"
     depends_on:
-      - 'db'
-    image: 'gitlab.library.upenn.edu/digital-repository/marmite:v1-1-0'
-    ports:
-      - '9292:9292'
+      - "db"
     env_file:
-      - '.env'
-    links:
-      - 'db'
+      - ".env"
+    networks:
+      - marmite
+    ports:
+      - "9292:9292"
+    restart: "unless-stopped"
+
+networks:
+  marmite:
 
 volumes:
   db:

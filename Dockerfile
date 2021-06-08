@@ -1,11 +1,8 @@
-FROM ruby:2.6.6
+FROM ruby:2.6.6-alpine
 
 ENV RACK_ENV production
 
-RUN apt-get update && apt-get install -qq -y --no-install-recommends \
-        build-essential \
-        default-libmysqlclient-dev && \
-    rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache build-base libcurl mariadb-dev
 
 WORKDIR /usr/src/app
 
