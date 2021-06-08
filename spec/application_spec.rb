@@ -133,7 +133,7 @@ RSpec.describe 'Application' do
         end
 
         it "correctly transforms the field to 651" do
-          expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
+          expect(BlobHandler.uncompress(record.blob)).to be_equivalent_to expected_xml
         end
       end
 
