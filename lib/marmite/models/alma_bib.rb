@@ -8,10 +8,11 @@ class AlmaBib
   # @param [String] bib_xml
   def initialize(bib_xml)
     @xml = bib_xml
-    @xml_reader = Nokogiri::XML(bib_xml) do |config|
+    @doc = Nokogiri::XML(bib_xml) do |config|
       config.options = Nokogiri::XML::ParseOptions::NOBLANKS
     end
-    @record = @xml_reader.xpath '//bibs/bib/record'
+    @doc.remove_namespaces!
+    @record = @doc.xpath '//bibs/bib/record'
   rescue StandardError => e
     raise MarcTransformationError, "MARC transformation error: #{e.message}"
   end
@@ -41,7 +42,7 @@ class AlmaBib
       if @record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.start_with?('PRO ')
         unsanitized_values << @record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text
         provenance = @record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.gsub(/^PRO /, '')
-        Nokogiri::XML::Builder.with(@xml_reader.at('record')) do |xml|
+        Nokogiri::XML::Builder.with(@doc.at('record')) do |xml|
           xml.datafield('ind1' => ' ', 'ind2' => ' ', 'tag' => '561') {
             xml.subfield(provenance, 'code' => 'a')
           }
@@ -50,7 +51,7 @@ class AlmaBib
       if @record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.start_with?('CHR ')
         unsanitized_values << @record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text
         date = @record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.gsub(/^CHR /, '')
-        Nokogiri::XML::Builder.with(@xml_reader.at('record')) do |xml|
+        Nokogiri::XML::Builder.with(@doc.at('record')) do |xml|
           xml.datafield('ind1' => ' ', 'ind2' => ' ', 'tag' => '651') {
             xml.subfield(date, 'code' => 'y')
           }
@@ -60,7 +61,7 @@ class AlmaBib
 
     # add 999z to XML reader>record
     unless unsanitized_values.empty?
-      Nokogiri::XML::Builder.with(@xml_reader.at('record')) do |xml|
+      Nokogiri::XML::Builder.with(@doc.at('record')) do |xml|
         xml.datafield('ind1' => ' ', 'ind2' => ' ', 'tag' => '999') {
           unsanitized_values.each do |value|
             xml.subfield(value, 'code' => 'z')
@@ -93,7 +94,7 @@ class AlmaBib
     # add back collection names to 773.....
     if collection_names.any?
       collection_names.each do |cn|
-        Nokogiri::XML::Builder.with(@xml_reader.at('record')) do |xml|
+        Nokogiri::XML::Builder.with(@doc.at('record')) do |xml|
           xml.datafield('ind1' => '0', 'ind2' => '0', 'tag' => '773') {
             xml.subfield(cn, 'code' => 't')
           }
