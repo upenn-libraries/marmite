@@ -10,7 +10,7 @@ services:
     volumes:
       - "db:/var/lib/mysql"
   sinatra:
-    image: "gitlab.library.upenn.edu/digital-repository/marmite:v1-1-0"
+    image: "gitlab.library.upenn.edu/digital-repository/marmite:v1-1-1"
     depends_on:
       - "db"
     env_file:
