@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+  <marc:record>
+    <marc:leader>01696cam|a2200361I||4500</marc:leader>
+    <marc:controlfield tag="001">9924634593503681</marc:controlfield>
+    <marc:controlfield tag="005">20180816213931.0</marc:controlfield>
+    <marc:controlfield tag="008">791206s1865||||enkefh|||||||f0 0|0|eng||</marc:controlfield>
+    <marc:datafield ind1=" " ind2=" " tag="010">
+      <marc:subfield code="a">17002892</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1=" " ind2=" " tag="035">
+      <marc:subfield code="a">(OCoLC)ocm05768513</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1=" " ind2=" " tag="035">
+      <marc:subfield code="a">0100000</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1=" " ind2=" " tag="035">
+      <marc:subfield code="a">(OCoLC)5768513</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1=" " ind2=" " tag="035">
+      <marc:subfield code="a">(PUVoyagerBIBID)2463459</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1=" " ind2=" " tag="035">
+      <marc:subfield code="a">2463459</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1=" " ind2=" " tag="035">
+      <marc:subfield code="a">(PU)2463459-penndb-Voyager</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1=" " ind2=" " tag="040">
+      <marc:subfield code="a">DLC</marc:subfield>
+      <marc:subfield code="c">NDD</marc:subfield>
+      <marc:subfield code="d">DRP</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1=" " ind2=" " tag="049">
+      <marc:subfield code="a">[RAR][FOL++]DRPA[V.1-2]</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1=" " ind2=" " tag="090">
+      <marc:subfield code="a">DS109</marc:subfield>
+      <marc:subfield code="b">.G74 1865</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1="1" ind2=" " tag="110">
+      <marc:subfield code="a">Great Britain.</marc:subfield>
+      <marc:subfield code="b">Ordnance Survey.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1="1" ind2="0" tag="245">
+      <marc:subfield code="a">Ordnance survey of Jerusalem /</marc:subfield>
+      <marc:subfield code="c">made with the sanction of the Right Hon. Earl de Grey and Ripon, Secretary of State for War, by Captain Charles W. Wilson, R. E., under the direction of Colonel Sir Henry James ... director of the Ordnance Survey. Pub.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1=" " ind2=" " tag="260">
+      <marc:subfield code="a">[London :</marc:subfield>
+      <marc:subfield code="b">H. M. Stationery Off., G. E. Eyre and W. Spottiswoode, printers],</marc:subfield>
+      <marc:subfield code="c">1865.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1=" " ind2=" " tag="300">
+      <marc:subfield code="a">2 v. :</marc:subfield>
+      <marc:subfield code="b">plates, mounted photos. (1 fold.) plans (1 double) facsims. and portfolio of 5 fold. plans. ;</marc:subfield>
+      <marc:subfield code="c">53 cm.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1=" " ind2=" " tag="500">
+      <marc:subfield code="a">Imperial coat of arms at head of title.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1=" " ind2=" " tag="500">
+      <marc:subfield code="a">Photographs mounted on title-pages.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1="0" ind2=" " tag="505">
+      <marc:subfield code="a">[Vol. I] Notes -- [vol. II] Photographs.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1=" " ind2=" " tag="599">
+      <marc:subfield code="a">g-Klein, Stephen.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1=" " ind2="0" tag="651">
+      <marc:subfield code="a">Jerusalem</marc:subfield>
+      <marc:subfield code="x">Surveys.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1=" " ind2="0" tag="651">
+      <marc:subfield code="a">Jerusalem</marc:subfield>
+      <marc:subfield code="x">Pictorial works.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1=" " ind2="0" tag="651">
+      <marc:subfield code="a">Jerusalem</marc:subfield>
+      <marc:subfield code="x">Antiquities.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1="1" ind2=" " tag="700">
+      <marc:subfield code="a">Wilson, Charles William,</marc:subfield>
+      <marc:subfield code="c">Sir,</marc:subfield>
+      <marc:subfield code="d">1836-1905.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1="1" ind2=" " tag="700">
+      <marc:subfield code="a">James, H.,</marc:subfield>
+      <marc:subfield code="d">1803-1877.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1=" " ind2=" " tag="949">
+      <marc:subfield code="a">DS109</marc:subfield>
+      <marc:subfield code="b">.G74 1865</marc:subfield>
+      <marc:subfield code="c">1</marc:subfield>
+      <marc:subfield code="f">AR1</marc:subfield>
+      <marc:subfield code="l">cjsrargiga</marc:subfield>
+      <marc:subfield code="v">V.1</marc:subfield>
+      <marc:subfield code="z">01000000069G</marc:subfield>
+      <marc:subfield code="1">L001001000</marc:subfield>
+      <marc:subfield code="2">1</marc:subfield>
+      <marc:subfield code="3">960723001</marc:subfield>
+      <marc:subfield code="4">L99N</marc:subfield>
+      <marc:subfield code="5">0100000</marc:subfield>
+      <marc:subfield code="6">960723</marc:subfield>
+      <marc:subfield code="7">ENG</marc:subfield>
+      <marc:subfield code="7">ari</marc:subfield>
+      <marc:subfield code="8">OCLC</marc:subfield>
+    </marc:datafield>
+    <marc:datafield ind1=" " ind2=" " tag="949">
+      <marc:subfield code="a">DS109</marc:subfield>
+      <marc:subfield code="b">.G74 1865</marc:subfield>
+      <marc:subfield code="c">1</marc:subfield>
+      <marc:subfield code="f">AR1</marc:subfield>
+      <marc:subfield code="l">cjsrargiga</marc:subfield>
+      <marc:subfield code="v">V.2</marc:subfield>
+      <marc:subfield code="z">01000000072A</marc:subfield>
+      <marc:subfield code="1">L001001000</marc:subfield>
+      <marc:subfield code="2">2</marc:subfield>
+      <marc:subfield code="3">960723001</marc:subfield>
+      <marc:subfield code="4">L99N</marc:subfield>
+      <marc:subfield code="5">0100000</marc:subfield>
+      <marc:subfield code="6">960723</marc:subfield>
+      <marc:subfield code="7">ENG</marc:subfield>
+      <marc:subfield code="7">ari</marc:subfield>
+      <marc:subfield code="8">OCLC</marc:subfield>
+    </marc:datafield>
+    <marc:holdings>
+      <marc:holding>
+        <marc:holding_id>22385758500003681</marc:holding_id>
+        <marc:call_number>DS109 .G74 1865</marc:call_number>
+        <marc:library>KatzLib</marc:library>
+        <marc:location>cjsrargiga</marc:location>
+      </marc:holding>
+    </marc:holdings>
+  </marc:record>
+</marc:records>
