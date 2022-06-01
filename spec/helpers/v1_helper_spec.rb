@@ -32,7 +32,9 @@ RSpec.describe V1Helper do
         let(:alma_marc_xml) { marc21_pre_transform(bib_id) }
         let(:expected_xml) { marc21_post_transform(bib_id) }
 
-        it "add expected blob xml"
+        it "add expected blob xml" do
+          expect(BlobHandler.uncompress(record.blob)).to be_equivalent_to expected_xml
+        end
       end
 
       context 'when marc has 650 field, subfield a that begins with PRO' do
@@ -82,7 +84,7 @@ RSpec.describe V1Helper do
         end
 
         it "correctly transforms the field to 561" do
-          expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
+          expect(BlobHandler.uncompress(record.blob)).to be_equivalent_to expected_xml
         end
       end
 
@@ -134,7 +136,7 @@ RSpec.describe V1Helper do
         end
 
         it "correctly transforms the field to 651" do
-          expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
+          expect(BlobHandler.uncompress(record.blob)).to be_equivalent_to expected_xml
         end
       end
 
@@ -166,7 +168,7 @@ RSpec.describe V1Helper do
           OUT
         end
         it 'they are removed' do
-          expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
+          expect(BlobHandler.uncompress(record.blob)).to be_equivalent_to expected_xml
         end
       end
 
@@ -237,7 +239,7 @@ RSpec.describe V1Helper do
         end
 
         it 'they are both correctly mapped' do
-          expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
+          expect(BlobHandler.uncompress(record.blob)).to be_equivalent_to expected_xml
         end
       end
 
@@ -278,7 +280,7 @@ RSpec.describe V1Helper do
         end
 
         it 'maps subfield a to field 773 subfield t' do
-          expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
+          expect(BlobHandler.uncompress(record.blob)).to be_equivalent_to expected_xml
         end
       end
     end
@@ -299,7 +301,7 @@ RSpec.describe V1Helper do
 
         it 'adds expected blob xml to record' do
           helper.create_record(record) # calls the method to add blob to Record object
-          expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
+          expect(BlobHandler.uncompress(record.blob)).to be_equivalent_to expected_xml
         end
       end
 
@@ -321,7 +323,7 @@ RSpec.describe V1Helper do
 
         it 'adds expected blob xml to record' do
           helper.create_record(record)
-          expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
+          expect(BlobHandler.uncompress(record.blob)).to be_equivalent_to expected_xml
         end
       end
 
@@ -339,7 +341,7 @@ RSpec.describe V1Helper do
 
         it 'adds expected bob xml to record' do
           helper.create_record(record)
-          expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
+          expect(BlobHandler.uncompress(record.blob)).to be_equivalent_to expected_xml
         end
       end
     end

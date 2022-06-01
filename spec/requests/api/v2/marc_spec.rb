@@ -43,7 +43,6 @@ RSpec.describe 'API V2 Marc Requests', type: :request do
 
     context 'for an existing record' do
       let(:bib) { create(:record, :marc21, bib_id: bib_id, blob: BlobHandler.compress(marc21_post_transform(bib_id))) }
-      # let(:bib) { marc21_record(bib_id) }
 
       it 'returns a successful response with MARC XML' do
         get "/api/v2/records/#{bib.bib_id}/marc21"
