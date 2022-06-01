@@ -1,6 +1,0 @@
-<h3><%= @list_type.capitalize %> Records (by bibID)</h3>
-<ul>
-  <% @list.each do |record| %>
-      <li><%= link_to("records/#{record.bib_id}/show?format=#{@list_type}", "#{record.bib_id}") %></li>
-  <% end %>
-</ul>

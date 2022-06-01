@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Marmite V2 API', type: :request do
-  include AlmaApiMocks
-  include RecordFixtures
-  include FixtureHelpers
-
+RSpec.describe 'API V2 Marc Requests', type: :request do
   describe 'GET /api/v2/records/:bib_id/marc' do
     let(:bib_id) { '9951865503503681' }
 
@@ -46,7 +42,8 @@ RSpec.describe 'Marmite V2 API', type: :request do
     end
 
     context 'for an existing record' do
-      let(:bib) { marc21_record(bib_id) }
+      let(:bib) { create(:record, :marc21, bib_id: bib_id, blob: BlobHandler.compress(marc21_post_transform(bib_id))) }
+      # let(:bib) { marc21_record(bib_id) }
 
       it 'returns a successful response with MARC XML' do
         get "/api/v2/records/#{bib.bib_id}/marc21"

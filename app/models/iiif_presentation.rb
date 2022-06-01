@@ -1,5 +1,6 @@
 require 'addressable'
 require 'iiif/presentation'
+require 'active_support/core_ext/numeric/conversions'
 
 class IIIFPresentation
   class MissingArgument < ArgumentError

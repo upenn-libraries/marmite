@@ -1,5 +1,4 @@
 module AlmaApiMocks
-
   def stub_alma_api_request(bib_id, alma_marc_xml, alma_api_key = '')
     stub_request(
       :get,

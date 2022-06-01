@@ -1,8 +1,3 @@
-require 'sprockets'
-require './application'
+require './app/controllers/application_controller'
 
-map '/assets' do
-  run Application.assets
-end
-
-run Application
+run ApplicationController

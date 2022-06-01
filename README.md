@@ -1,17 +1,17 @@
-# README for `marmite`
+# Marmite
 
 Marmite is an [ETL](https://www.webopedia.com/TERM/E/ETL.html) Sinatra application for creating and displaying harvestable metadata into various distillations for use by external services.
 
-## Table of contents
+## Table of Contents
 
 * [Requirements](#requirements)
 * [Functionalities](#functionalities)
-* [Development setup](#development-setup)
+* [Development Setup](#development-setup)
 * [Running the Test Suite](#running-the-test-suite)
+* [API Version 2](#api-version-2)
 * [Deployment](#deployment)
 * [Contributing](#contributing)
 * [License](#license)
-
 
 ## Requirements
 
@@ -39,13 +39,16 @@ The application makes the following XML metadata formats available:
 ### Start Development/Test Environment
 * Build development/test containers via Lando, run: `rake marmite:start`
 * Run `rackup` to start the application
-* Visit [http://localhost:9292/harvesting](http://localhost:9292/harvesting) to learn available commands and endpoints.
+* Visit [http://localhost:9292/](http://localhost:9292/harvesting) to learn available commands and endpoints.
 
 ### Stop Development/Test Environment
 To stop the Lando containers: `rake marmite:stop`
 
 ### Remove (Clean) Containers
 To remove Lando containers: `rake marmite:clean`
+
+### Run interactive console
+To start up a Rails-like console run: `bundle exec irb -r ./app/controllers/application_controller`
 
 ## Running the Test Suite
 To set up test environment and run through test suite, run:
@@ -55,7 +58,7 @@ rspec
 rake marmite:stop
 ```
 
-## API Version 2 Spec
+## API Version 2
 Namespace API requests: api/v2
 
 GET `/api/v2/records/:bib_id/:format`
@@ -170,7 +173,7 @@ in the environment of the generated image.
 
 ### Dev/test
 
-Development marmite runs on `colenda-dev`. To deploy a new marmite image:
+Development Marmite runs on `colenda-dev`. To deploy a new Marmite image:
 
 ```
   ssh username@colenda-dev
@@ -183,7 +186,7 @@ Development marmite runs on `colenda-dev`. To deploy a new marmite image:
 
 ### Production
 
-Development marmite runs on `mdproc`. To deploy a new marmite image in production, use the instructions above.
+Development Marmite runs on `mdproc`. To deploy a new Marmite image in production, use the instructions above.
 
 ## Contributing
 

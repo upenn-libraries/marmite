@@ -1,10 +1,10 @@
 require 'sinatra/activerecord'
+
 require_relative '../services/alma_api'
 require_relative '../services/blob_handler'
 require_relative './alma_bib'
 
 class Record < ActiveRecord::Base
-
   FORMATS_TO_ALWAYS_RECREATE = %w[iiif_presentation]
 
   MARC_21 = 'marc21'.freeze

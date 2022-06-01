@@ -1,7 +1,4 @@
-RSpec.describe 'Application' do
-  include AlmaApiMocks
-  include FixtureHelpers
-
+RSpec.describe V1Helper do
   let(:alma_api_key) { 'not_a_valid_key' }
 
   before do
@@ -13,6 +10,13 @@ RSpec.describe 'Application' do
     ENV['ALMA_KEY'] = ''
   end
 
+  let(:helper) do
+    klass = class TestHelper
+      include V1Helper
+    end
+    klass.new
+  end
+
   context 'create_record' do
     context 'marc21' do
       let(:record) { Record.new(bib_id: bib_id, format: 'marc21') }
@@ -21,16 +25,14 @@ RSpec.describe 'Application' do
       before do
         # Mock the Alma API response
         stub_alma_api_request bib_id, alma_marc_xml, alma_api_key
-
-        create_record(record) # calls the method to add blob to Record object
+        helper.create_record(record) # calls the method to add blob to Record object
       end
 
       context 'when entire marc record is provided' do
         let(:alma_marc_xml) { marc21_pre_transform(bib_id) }
         let(:expected_xml) { marc21_post_transform(bib_id) }
 
-        it "add expected blob xml" do
-        end
+        it "add expected blob xml"
       end
 
       context 'when marc has 650 field, subfield a that begins with PRO' do
@@ -52,7 +54,6 @@ RSpec.describe 'Application' do
             </bibs>
           MARC
         end
-
         let(:expected_xml) do
           <<~OUT
             <?xml version="1.0"?>
@@ -133,7 +134,7 @@ RSpec.describe 'Application' do
         end
 
         it "correctly transforms the field to 651" do
-          expect(BlobHandler.uncompress(record.blob)).to be_equivalent_to expected_xml
+          expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
         end
       end
 
@@ -210,6 +211,7 @@ RSpec.describe 'Application' do
             </bibs>
           MARC
         end
+
         let(:expected_xml) do
           <<~OUT
             <?xml version="1.0"?>
@@ -233,6 +235,7 @@ RSpec.describe 'Application' do
             </marc:records>
           OUT
         end
+
         it 'they are both correctly mapped' do
           expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
         end
@@ -254,6 +257,7 @@ RSpec.describe 'Application' do
             </bibs>
           MARC
         end
+
         let(:expected_xml) do
           <<~OUT
             <?xml version="1.0"?>
@@ -272,6 +276,7 @@ RSpec.describe 'Application' do
             </marc:records>
           OUT
         end
+
         it 'maps subfield a to field 773 subfield t' do
           expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
         end
@@ -288,12 +293,12 @@ RSpec.describe 'Application' do
         before do
           # Mock the response from the service hosted on mgibney's dev machine.
           stub_request(
-              :get, "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
+            :get, "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
           ).to_return(body: structural_xml, headers: {'Content-Type' => 'text/xml; charset=UTF-8'})
         end
 
         it 'adds expected blob xml to record' do
-          create_record(record) # calls the method to add blob to Record object
+          helper.create_record(record) # calls the method to add blob to Record object
           expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
         end
       end
@@ -301,10 +306,10 @@ RSpec.describe 'Application' do
       context 'when bib is greater than 7 numbers and structural is not found' do
         before do
           stub_request(
-              :get, "http://mgibney-dev.library.upenn.int:8084/lookup/#{long_bib_id}.xml"
+            :get, "http://mgibney-dev.library.upenn.int:8084/lookup/#{long_bib_id}.xml"
           ).to_return(body: '<?xml version="1.0" encoding="UTF-8"?><integ:root xmlns:integ="http://integrator"/>', headers: {'Content-Type' => 'text/xml; charset=UTF-8'})
           stub_request(
-              :get, "http://mgibney-dev.library.upenn.int:8084/lookup/#{short_bib_id}.xml"
+            :get, "http://mgibney-dev.library.upenn.int:8084/lookup/#{short_bib_id}.xml"
           ).to_return(body: structural_xml, headers: {'Content-Type' => 'text/xml; charset=UTF-8'})
         end
 
@@ -315,7 +320,7 @@ RSpec.describe 'Application' do
         let(:expected_xml) { File.read(File.join('spec', 'fixtures', 'post_transformation', 'structural', "#{long_bib_id}.xml")) }
 
         it 'adds expected blob xml to record' do
-          create_record(record)
+          helper.create_record(record)
           expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
         end
       end
@@ -328,12 +333,12 @@ RSpec.describe 'Application' do
 
         before do
           stub_request(
-              :get, "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
+            :get, "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
           ).to_return(body: structural_xml, headers: {'Content-Type' => 'text/xml; charset=UTF-8'})
         end
 
         it 'adds expected bob xml to record' do
-          create_record(record)
+          helper.create_record(record)
           expect(BlobHandler.uncompress(record.blob)).to eq expected_xml
         end
       end
@@ -350,18 +355,18 @@ RSpec.describe 'Application' do
       before do
         # Mock request to Alma API that returns MARC
         stub_request(
-            :get,
-            "https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs/?mms_id=#{long_bib_id}&expand=p_avail&apikey=#{alma_api_key}"
+          :get,
+          "https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs/?mms_id=#{long_bib_id}&expand=p_avail&apikey=#{alma_api_key}"
         ).to_return(body: alma_marc_xml, headers: {'Content-Type' => 'application/xml;charset=UTF-8'})
 
         # Mock the response from the service hosted on mgibney's dev machine that returns structural metadata
         stub_request(
-            :get, "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
+          :get, "http://mgibney-dev.library.upenn.int:8084/lookup/#{bib_id}.xml"
         ).to_return(body: structural_xml, headers: {'Content-Type' => 'text/xml; charset=UTF-8'})
       end
 
       it 'add expected blob xml to record containing both structural and marc data' do
-        create_record(record)
+        helper.create_record(record)
         expect(BlobHandler.uncompress(record.blob)).to be_equivalent_to(expected_xml)
       end
     end
@@ -398,7 +403,7 @@ RSpec.describe 'Application' do
       end
 
       it 'adds expected iiif presentation manifest to record' do
-        create_record(record)
+        helper.create_record(record)
         expect(JSON.parse(BlobHandler.uncompress(record.blob))).to eql(JSON.parse(expected_iiif_manifest))
       end
     end

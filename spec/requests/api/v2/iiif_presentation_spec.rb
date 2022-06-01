@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'IIIF Presentation Requests', type: :request do
+RSpec.describe 'API V2 IIIF Presentation Requests', type: :request do
   describe 'GET /api/v2/records/:id/iiif_presentation' do
     context 'when record is not present' do
       before { get '/api/v2/records/invalid/iiif_presentation' }
