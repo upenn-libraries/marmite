@@ -22,12 +22,13 @@ Marmite is an [ETL](https://www.webopedia.com/TERM/E/ETL.html) Sinatra applicati
 
 ## Functionalities
 
-The application makes the following XML metadata formats available:
+The application makes the following metadata formats available:
 
-* `marc21` - descriptive metadata transformed from Alma bib and holdings XML payloads, with minor term transformations and fixes for ease of machine processing
-* `structural` - structural metadata transformed from dla structural XML payloads, in [Bulwark](https://github.com/upenn-libraries/bulwark)-compliant format
-* `openn` - descriptive and structural metadata in a single payload, in the format used by the OPenn package generation tools
-* `iiif_presentation` - IIIF presentation 2.0 manifests
+| format | mime_type | description |
+| ------ |-----------| ----------- |
+| `marc21` | XML       | descriptive metadata transformed from Alma bib and holdings XML payloads, with minor term transformations and fixes for ease of machine processing |
+| `structural` | XML       | structural metadata transformed from dla structural XML payloads, in [Bulwark](https://github.com/upenn-libraries/bulwark)-compliant format |
+| `iiif_presentation` | JSON      | IIIF presentation 2.0 manifests |
 
 ## Development Setup
 ### Initial Setup
@@ -59,8 +60,9 @@ rake marmite:stop
 ```
 
 ## API Version 2
-Namespace API requests: api/v2
+RESTful API to query for all available metadata formats. This API should be preferred over the previous endpoints. All request to this API are namespaced under `api/v2`.
 
+### Marc21
 GET `/api/v2/records/:bib_id/:format`
   - This request creates a record for the bib_id and format combination, if its not already present. If a record is already present, it does not update it unless this is requested via the update parameter.  
   - Note: `structural` never needs to be refreshed, refresh params can be ignored
@@ -93,7 +95,9 @@ GET `/api/v2/records/:bib_id/:format`
 ### Get IIIF Presentation Manifest
 Retrieves IIIF Presentation Manifest for given identifier.
 
-`GET /api/v2/records/:id/iiif_presentation`
+```
+GET /api/v2/records/:id/iiif_presentation
+```
 
 #### Parameters
 
@@ -101,27 +105,31 @@ Retrieves IIIF Presentation Manifest for given identifier.
 | ---- | -- | ----------- |
 | id   | path | identifier for iiif manifest |
 
-#### Default Response
-`Status: 200 OK`
-
-```
-{ INSERT IIIF MANIFEST }
-```
-#### Resource Not Found
-`Status: 404 NOT FOUND`
-
-```json
-{
-  "errors": ["Record not found."]
-}
-```
+#### Responses
+* **Successful** 
+  * Status: `200 OK`
+  * Body:
+    ```
+    { INSERT IIIF MANIFEST }
+    ```
+* **Resource Not Found**
+  * Status: `404 NOT FOUND`
+  * Body: 
+    ```json
+    {
+      "errors": ["Record not found."]
+    }
+    ```
 
 ### Create IIIF Presentation Manifest
 Create IIIF Presentation v2 Manifest using the data given in the body of the request.
 
-`POST /api/v2/records/:id/iiif_presentation`
+```
+POST /api/v2/records/:id/iiif_presentation
+```
 
 #### Parameters
+
 | Name | In | Description |
 | ---- | -- | ----------- |
 | id   | path | identifier for iiif manifest |
@@ -149,19 +157,21 @@ Example:
 }
 ```
 
-#### Default Response
-`Status: 201 CREATED`
-
-`{ Insert IIIF Manifest here }`
-
-#### Validation Failed (Missing information in request body)
-`Status: 422 Unprocessable Entity`
-
-```json
-{
-  "errors": ["Unexpected error generating IIIF manifest."]
-}
-```
+#### Responses
+* Successful
+  * Status: `201 CREATED`
+  * Body: 
+    ```
+    { Insert IIIF Manifest here }
+    ```
+* Validation Failed (Missing information in request body)
+  * Status: `422 Unprocessable Entity`
+  * Body:
+    ```json
+    {
+       "errors": ["Unexpected error generating IIIF manifest."]
+    }
+    ```
 
 ## Deployment
 
