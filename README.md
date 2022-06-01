@@ -6,9 +6,13 @@ Marmite is an [ETL](https://www.webopedia.com/TERM/E/ETL.html) Sinatra applicati
 
 * [Requirements](#requirements)
 * [Functionalities](#functionalities)
+* [API Version 2](#api-version-2)
+  * [Get MARC21 XML](#get-marc21-xml)
+  * [Get Structural Metadata XML](#get-structural-metadata-xml)
+  * [Get IIIF Presentation Manifest](#get-iiif-presentation-manifest)
+  * [Create IIIF Presentation Manifest](#create-iiif-presentation-manifest)
 * [Development Setup](#development-setup)
 * [Running the Test Suite](#running-the-test-suite)
-* [API Version 2](#api-version-2)
 * [Deployment](#deployment)
 * [Contributing](#contributing)
 * [License](#license)
@@ -29,6 +33,139 @@ The application makes the following metadata formats available:
 | `marc21` | XML       | descriptive metadata transformed from Alma bib and holdings XML payloads, with minor term transformations and fixes for ease of machine processing |
 | `structural` | XML       | structural metadata transformed from dla structural XML payloads, in [Bulwark](https://github.com/upenn-libraries/bulwark)-compliant format |
 | `iiif_presentation` | JSON      | IIIF presentation 2.0 manifests |
+
+## API Version 2
+RESTful API to query for all available metadata formats. This API should be preferred over the previous endpoints. All request to this API are namespaced under `api/v2`.
+  
+### Get MARC21 XML
+Retrieves MARC XML from database cache, updating the cache if requested.
+#### Request
+```
+GET /api/v2/records/:bib_id/marc21
+```
+- **Path Parameter**
+  - `bib_id`: record's identifier (long or short format), required
+- **Query Parameter**
+  - `update`: updates or doesn't update record based on the value provided, optional, valid values are:
+       - `always`: explicitly refresh record
+       - `never`: explicitly don't refresh the record
+       - `{number}`: refreshes record when the last modification is older than the number of hours given
+
+#### Responses
+- **Successfully Creates or Updates Record**
+  - Status: `201 Created`
+  - Body:
+    ```xml
+    { INSERT MARC XML }
+    ```
+- **Successfully Retrieves Record**
+  - Status: `200 OK`
+  - Body:
+    ```xml
+    { INSERT MARC XML }
+    ```
+- **Record Not Found**
+  - Status: `404 Not Found`
+  - Body: 
+    ```json
+     { "errors": ["Bib not found in Alma for {INSERT BIB_ID HERE}"]}
+    ```
+- **Error in Processing**
+  - Status: `500 Internal Server Error`
+  - Body:
+    ```json
+    { "errors": ["MARC transformation error: 1:1: FATAL: Start tag expected, '\u003c' not found"] }
+    ```
+
+### Get Structural Metadata XML
+Retrieves structural metadata for the given bib_id either from the database cache or from the remote source. This structural metadata is no longer changing, therefore once its retrieved once it doesn't need to be updated.
+
+#### Request
+```
+GET /api/v2/records/:bib_id/structural
+```
+- **Path Parameter**
+  - `bib_id`: record's identifier (long or short format), required
+
+#### Responses
+- **Successful**
+  - Status: `200 OK`
+- **Record Not Found**
+  - Status: `404 Not Found`
+
+
+### Get IIIF Presentation Manifest
+Retrieves IIIF Presentation Manifest for given identifier.
+
+#### Request
+```
+GET /api/v2/records/:id/iiif_presentation
+```
+- **Path Parameters**
+  - `id`: identifier for iiif manifest, required
+
+#### Responses
+- **Successful** 
+  - Status: `200 OK`
+  - Body:
+    ```
+    { INSERT IIIF MANIFEST }
+    ```
+- **Resource Not Found**
+  - Status: `404 Not Found`
+  - Body: 
+    ```json
+    { "errors": ["Record not found."] }
+    ```
+
+### Create IIIF Presentation Manifest
+Saves the IIIF Presentation v2 Manifest provided in the POST body.
+
+#### Request
+```
+POST /api/v2/records/:id/iiif_presentation
+```
+
+- **Path Parameters**
+  - `id`: identifier for iiif manifest, required
+- **Body**
+  - JSON containing information necessary information to create IIIF manifest.
+  - Required
+  - Example:
+    ```json
+    {
+      "id": "12349-0394", # Should match the identifier in the path
+      "title": "An Amazing Item",
+      "viewing_direction": "left-to-right",
+      "viewing_hint": "individuals",
+      "image_server": "http:/iiif.library.upenn.edu/iiif/2", # URL to Image Server
+      "sequence": [
+        {
+          "label": "Page One",
+          "file": "path/to/file/on/image/server.jpeg",
+          "table_of_contents": [
+            { "text": "First Illuminated Image" }
+          ]
+        }
+      ]
+    }
+    ```
+
+#### Responses
+- **Successful**
+  - Status: `201 Created`
+  - Body: 
+    ```
+    { Insert IIIF Manifest here }
+    ```
+- **Validation Failed (Missing information in request body)**
+  - Status: `422 Unprocessable Entity`
+  - Body:
+    ```json
+    {
+       "errors": ["Unexpected error generating IIIF manifest."]
+    }
+    ```
 
 ## Development Setup
 ### Initial Setup
@@ -58,120 +195,6 @@ rake marmite:start
 rspec
 rake marmite:stop
 ```
-
-## API Version 2
-RESTful API to query for all available metadata formats. This API should be preferred over the previous endpoints. All request to this API are namespaced under `api/v2`.
-
-### Marc21
-GET `/api/v2/records/:bib_id/:format`
-  - This request creates a record for the bib_id and format combination, if its not already present. If a record is already present, it does not update it unless this is requested via the update parameter.  
-  - Note: `structural` never needs to be refreshed, refresh params can be ignored
-  - Request
-    - parameters (within request)
-      - `bib_id`: a records bibid, either the long or short format
-      - `format`: xml metadata formats
-        - valid formats: openn, marc21, structural, iiif_presentation
-    - query params
-      - `update`
-       - `always`: explicitly refresh record always, refreshes the record (aka. recreates the record, when appropriate) 
-       - `never`: explicitly don't refresh the record
-       - `{number}`: conditionally refresh the record, refreshes record when the last modification is older than the number of hours given
-  - Response
-    - Successful response 
-      - body: xml for everything but, iiif_presentation, which is json
-      - headers
-        - last modified
-        - created at
-      - status
-          - `200` if record was not recreated
-          - `201` if record is created or updated
-    - Error response:
-      - body: `{ errors: [{ "message": "" }, { "message": "" }]}`
-      - format: json
-      - status
-        - `404` if bibid is not valid
-        -  `500` if error creating metadata
-  
-### Get IIIF Presentation Manifest
-Retrieves IIIF Presentation Manifest for given identifier.
-
-```
-GET /api/v2/records/:id/iiif_presentation
-```
-
-#### Parameters
-
-| Name | In | Description |
-| ---- | -- | ----------- |
-| id   | path | identifier for iiif manifest |
-
-#### Responses
-* **Successful** 
-  * Status: `200 OK`
-  * Body:
-    ```
-    { INSERT IIIF MANIFEST }
-    ```
-* **Resource Not Found**
-  * Status: `404 NOT FOUND`
-  * Body: 
-    ```json
-    {
-      "errors": ["Record not found."]
-    }
-    ```
-
-### Create IIIF Presentation Manifest
-Create IIIF Presentation v2 Manifest using the data given in the body of the request.
-
-```
-POST /api/v2/records/:id/iiif_presentation
-```
-
-#### Parameters
-
-| Name | In | Description |
-| ---- | -- | ----------- |
-| id   | path | identifier for iiif manifest |
-
-#### Body
-JSON containing information necessary information to create IIIF manifest.
-
-Example:
-```json
-{
-  "id": "12349-0394", # Should match the identifier in the path
-  "title": "An Amazing Item",
-  "viewing_direction": "left-to-right",
-  "viewing_hint": "individuals",
-  "image_server": "http:/iiif.library.upenn.edu/iiif/2", # URL to Image Server
-  "sequence": [
-    {
-      "label": "Page One",
-      "file": "path/to/file/on/image/server.jpeg",
-      "table_of_contents": [
-        { "text": "First Illuminated Image" }
-      ]
-    }
-  ]
-}
-```
-
-#### Responses
-* Successful
-  * Status: `201 CREATED`
-  * Body: 
-    ```
-    { Insert IIIF Manifest here }
-    ```
-* Validation Failed (Missing information in request body)
-  * Status: `422 Unprocessable Entity`
-  * Body:
-    ```json
-    {
-       "errors": ["Unexpected error generating IIIF manifest."]
-    }
-    ```
 
 ## Deployment
 
