@@ -17,6 +17,7 @@ gem 'rake'
 gem 'sass'
 gem 'sinatra'
 gem 'sinatra-activerecord'
+gem 'sinatra-contrib'
 gem 'sprockets'
 gem 'typhoeus'
 

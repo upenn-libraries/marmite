@@ -1,6 +1,9 @@
+require 'sinatra/custom_logger'
+require 'logger'
+
 class BaseController < Sinatra::Base
-  # TODO: Figure out logging, currently I don't think its logging errors and we seem to be defining two loggers
-  use Rack::Logger
+  helpers Sinatra::CustomLogger
+
   use Rack::Deflater
 
   register Sinatra::ActiveRecordExtension
@@ -13,7 +16,6 @@ class BaseController < Sinatra::Base
 
   configure do
     set :protection, except: [:json_csrf]
-    enable :logging
-    use Rack::CommonLogger, STDOUT
+    set :logger, Logger.new(STDOUT)
   end
 end
