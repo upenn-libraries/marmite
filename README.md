@@ -54,31 +54,35 @@ GET /api/v2/records/:bib_id/marc21
 #### Responses
 - **Successfully Creates or Updates Record**
   - Status: `201 Created`
+  - Content Type: `text/xml`
   - Body:
     ```xml
     { INSERT MARC XML }
     ```
 - **Successfully Retrieves Record**
   - Status: `200 OK`
+  - Content Type: `text/xml`
   - Body:
     ```xml
     { INSERT MARC XML }
     ```
 - **Record Not Found**
   - Status: `404 Not Found`
+  - Content Type: `application/json`
   - Body: 
     ```json
      { "errors": ["Bib not found in Alma for {INSERT BIB_ID HERE}"]}
     ```
 - **Error in Processing**
   - Status: `500 Internal Server Error`
+  - Content Type: `application/json`
   - Body:
     ```json
     { "errors": ["MARC transformation error: 1:1: FATAL: Start tag expected, '\u003c' not found"] }
     ```
 
 ### Get Structural Metadata XML
-Retrieves structural metadata for the given bib_id either from the database cache or from the remote source. This structural metadata is no longer changing, therefore once its retrieved once it doesn't need to be updated.
+Retrieves structural metadata for the given bib_id either from the database cache or from the remote source. This structural metadata is no longer changing, therefore once its retrieved once it doesn't need to be updated. If a short bibnumber is provided, it is expanded and the xml returned will only reference the long bibnumber.
 
 #### Request
 ```
@@ -88,11 +92,27 @@ GET /api/v2/records/:bib_id/structural
   - `bib_id`: record's identifier (long or short format), required
 
 #### Responses
-- **Successful**
+- **Successfully Creates Record**
+  - Status: `201 Created`
+  - Content Type: `text/xml`
+  - Body:
+    ```
+    TODO
+    ```
+- **Successfully Retrieves Record**
   - Status: `200 OK`
+  - Content Type: `text/xml`
+  - Body:
+    ```
+    TODO
+    ```
 - **Record Not Found**
   - Status: `404 Not Found`
-
+  - Content Type: `application/json`
+  - Body:
+    ```
+    TODO
+    ```
 
 ### Get IIIF Presentation Manifest
 Retrieves IIIF Presentation Manifest for given identifier.
@@ -107,12 +127,14 @@ GET /api/v2/records/:id/iiif_presentation
 #### Responses
 - **Successful** 
   - Status: `200 OK`
+  - Content Type: `text/xml`
   - Body:
     ```
     { INSERT IIIF MANIFEST }
     ```
 - **Resource Not Found**
   - Status: `404 Not Found`
+  - Content Type: `application/json`
   - Body: 
     ```json
     { "errors": ["Record not found."] }
@@ -154,12 +176,14 @@ POST /api/v2/records/:id/iiif_presentation
 #### Responses
 - **Successful**
   - Status: `201 Created`
+  - Content Type: `application/json`
   - Body: 
     ```
     { Insert IIIF Manifest here }
     ```
 - **Validation Failed (Missing information in request body)**
-  - Status: `422 Unprocessable Entity`
+  - Status: `500 Internal Server Error`
+  - Content Type: `application/json`
   - Body:
     ```json
     {

@@ -1,6 +1,7 @@
 require_relative '../../controllers/base_controller'
 require_relative '../../services/alma_api'
 require_relative '../../services/blob_handler'
+require_relative '../../services/structural_metadata_service'
 require_relative '../../models/alma_bib'
 require_relative '../../models/iiif_presentation'
 require_relative '../../models/record'
@@ -42,15 +43,29 @@ class Api
     end
 
     get '/api/v2/records/:bib_id/structural' do |bib_id|
-      # Retrieve record from database if present, otherwise query service
-      # if (record = Record.find_by(bib_id: bib_id, format: 'structural'))
-      # If record is empty return 404 otherwise, return 202
-      # [200, record]
-      # else
-      #
-      # end
+      bib_id = long_bib_id(bib_id)
 
-    end # never "refresh"
+      # Retrieve record from database if present, otherwise query service
+      if (record = Record.find_by(bib_id: bib_id, format: Record::STRUCTURAL))
+        document = Nokogiri::XML.parse(record.uncompressed_blob)
+
+        if document.xpath('//record/pages/page').empty?
+          [404, error_response("Record not found.")]
+        else
+          [200, record.uncompressed_blob]
+        end
+      else
+        metadata = StructuralMetadataService.new(bib_id).fetch_and_transform
+        if metadata
+          record = Record.new(bib_id: bib_id, format: Record::STRUCTURAL)
+          record.uncompressed_blob = metadata
+          record.save!
+          [201, metadata]
+        else
+          [404, error_response('Record not found.')]
+        end
+      end
+    end
 
     # Pulls IIIF manifest from database and returns it.
     get '/api/v2/records/:id/iiif_presentation' do |id|
