@@ -1,4 +1,5 @@
 require 'open-uri'
+require 'nokogiri'
 
 # Class to query the structural metadata lookup service (hosted on mgibney's dev machine) and then transform the xml
 # into the expected xml format. This class should be short-lived because we will need to stop using this lookup service
@@ -63,6 +64,6 @@ class StructuralMetadataService
       }
     end
 
-    blob = structural.to_xml
+    structural.to_xml
   end
 end
