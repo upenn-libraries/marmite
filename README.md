@@ -222,32 +222,32 @@ rake marmite:stop
 
 ## Deployment
 
-### Environment Variables
-
-Prior to building new images, ensure that an `.env` file is present in the `/root/deployments/marmite/` directory, and 
+To deploy Marmite:
+1. Create versioned tag in Gitlab via a [GitLab Release](https://gitlab.library.upenn.edu/digital-repository/marmite/-/releases). Versioned tags should follow [Semantic Versioning](https://semver.org/).
+2. Update the image tag in the `docker-compose.yml` on `main` via a [new merge request](https://gitlab.library.upenn.edu/digital-repository/marmite/-/merge_requests/new).
+3. Wait for image to be created via [CI/CD pipeline](https://gitlab.library.upenn.edu/digital-repository/marmite/-/pipelines). Check that an image for the tagged release is available in the [container registry](https://gitlab.library.upenn.edu/digital-repository/marmite/container_registry).
+4. SSH into deployment server and go to deployment directory. Development Marmite runs on `colenda-dev`. Production Marmite runs on `mdproc`.
+   ```
+   ssh username@server
+   sudo su
+   cd /root/deployments/marmite/
+   ```
+5. Ensure that an `.env` file is present in the `/root/deployments/marmite/` directory, and 
 ensure that it contains any new or modified environment variables. The variables defined in this file will be present 
 in the environment of the generated image.
-
-### Dev/test
-
-Development Marmite runs on `colenda-dev`. To deploy a new Marmite image:
-
-```
-  ssh username@colenda-dev
-  sudo su
-  cd /root/deployments/marmite/
-  git pull (ensure you're pulling the desired branch)
-  docker-compose pull (pull/update images referenced in docker-compose file)
-  docker-compose up -d
-```
-
-### Production
-
-Development Marmite runs on `mdproc`. To deploy a new Marmite image in production, use the instructions above.
+6. Update `main` branch on deployment server
+   ```
+   git pull
+   ```
+7. Deploy application containers via docker-compose
+   ```
+   docker-compose pull (pull/update images referenced in docker-compose file)
+   docker-compose up -d
+   ```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at [https://gitlab.library.upenn.edu/digital-repository/marmite/-/issues](https://gitlab.library.upenn.edu/digital-repository/marmite/-/issues).
+Bug reports and pull requests are welcome on GitLab at [https://gitlab.library.upenn.edu/digital-repository/marmite/-/issues](https://gitlab.library.upenn.edu/digital-repository/marmite/-/issues).
 
 ## License
 
