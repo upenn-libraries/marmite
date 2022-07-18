@@ -25,6 +25,8 @@ GEM
       nokogiri (>= 1.4.3)
     ethon (0.14.0)
       ffi (>= 1.15.0)
+    factory_bot (6.2.1)
+      activesupport (>= 5.0.0)
     faraday (1.4.1)
       faraday-excon (~> 1.1)
       faraday-net_http (~> 1.0)
@@ -43,10 +45,14 @@ GEM
       activesupport (>= 3.2.18)
       faraday (>= 0.9)
       json
+    io-console (0.5.11)
+    irb (1.4.1)
+      reline (>= 0.3.0)
     json (2.5.1)
     method_source (1.0.0)
     mini_portile2 (2.5.1)
     minitest (5.14.4)
+    multi_json (1.15.0)
     multipart-post (2.1.1)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
@@ -71,6 +77,8 @@ GEM
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
+    reline (0.3.1)
+      io-console (~> 0.5)
     rexml (3.2.5)
     ripl (0.7.1)
       bond (~> 0.5.1)
@@ -95,10 +103,6 @@ GEM
       rspec-support (~> 3.10.0)
     rspec-support (3.10.2)
     ruby2_keywords (0.0.4)
-    rubyXL (3.4.17)
-      nokogiri (>= 1.10.8)
-      rubyzip (>= 1.3.0)
-    rubyzip (2.3.0)
     sass (3.7.4)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
@@ -112,11 +116,15 @@ GEM
     sinatra-activerecord (2.0.22)
       activerecord (>= 4.1)
       sinatra (>= 1.0)
+    sinatra-contrib (2.1.0)
+      multi_json
+      mustermann (~> 1.0)
+      rack-protection (= 2.1.0)
+      sinatra (= 2.1.0)
+      tilt (~> 2.0)
     sprockets (4.0.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
-    sprockets-helpers (1.4.0)
-      sprockets (>= 2.2)
     tilt (2.0.10)
     tux (0.3.0)
       ripl (>= 0.3.5)
@@ -141,8 +149,10 @@ DEPENDENCIES
   activesupport
   addressable
   equivalent-xml
+  factory_bot
   htmlentities
   iiif-presentation
+  irb
   json
   mysql2
   nokogiri
@@ -152,12 +162,11 @@ DEPENDENCIES
   rake
   rspec
   rspec-json_expectations
-  rubyXL
   sass
   sinatra
   sinatra-activerecord
+  sinatra-contrib
   sprockets
-  sprockets-helpers
   tux
   typhoeus
   webmock

@@ -9,16 +9,16 @@ gem 'activerecord'
 gem 'activesupport'
 gem 'htmlentities'
 gem 'iiif-presentation'
+gem 'irb', require: false
 gem 'json'
 gem 'mysql2'
 gem 'nokogiri'
 gem 'rake'
-gem 'rubyXL'
 gem 'sass'
 gem 'sinatra'
 gem 'sinatra-activerecord'
+gem 'sinatra-contrib'
 gem 'sprockets'
-gem 'sprockets-helpers'
 gem 'typhoeus'
 
 group :development, :test do
@@ -29,6 +29,7 @@ end
 
 group :test do
   gem 'equivalent-xml'
+  gem 'factory_bot'
   gem 'rack-test'
   gem 'rspec'
   gem 'rspec-json_expectations'
