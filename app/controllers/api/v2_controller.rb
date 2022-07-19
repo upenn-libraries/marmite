@@ -50,8 +50,10 @@ class Api
         document = Nokogiri::XML.parse(record.uncompressed_blob)
 
         if document.xpath('//record/pages/page').empty?
+          content_type 'application/json'
           [404, error_response("Record not found.")]
         else
+          content_type 'text/xml'
           [200, record.uncompressed_blob]
         end
       else
@@ -60,8 +62,10 @@ class Api
           record = Record.new(bib_id: bib_id, format: Record::STRUCTURAL)
           record.uncompressed_blob = metadata
           record.save!
+          content_type 'text/xml'
           [201, metadata]
         else
+          content_type 'application/json'
           [404, error_response('Record not found.')]
         end
       end

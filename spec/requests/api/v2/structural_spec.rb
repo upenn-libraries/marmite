@@ -29,6 +29,10 @@ RSpec.describe 'API V2 Structural Requests', type: :request do
           expect(last_response.status).to be 201
         end
 
+        it 'returns correct content type' do
+          expect(last_response.content_type).to eql 'text/xml;charset=utf-8'
+        end
+
         it 'returns expected xml' do
           expect(last_response.body).to be_equivalent_to expected_xml
         end
@@ -47,6 +51,11 @@ RSpec.describe 'API V2 Structural Requests', type: :request do
           expect(last_response.status).to be 404
         end
 
+        it 'returns correct content type' do
+          expect(last_response.content_type).to eql 'application/json'
+        end
+
+
         it 'returns error' do
           expect(JSON.parse(last_response.body)['errors'].first).to include 'Record not found.'
         end
@@ -63,6 +72,10 @@ RSpec.describe 'API V2 Structural Requests', type: :request do
           expect(last_response.status).to be 404
         end
 
+        it 'returns correct content type' do
+          expect(last_response.content_type).to eql 'application/json'
+        end
+
         it 'returns errors' do
           expect(JSON.parse(last_response.body)['errors'].first).to include 'Record not found.'
         end
@@ -74,6 +87,10 @@ RSpec.describe 'API V2 Structural Requests', type: :request do
 
         it 'returns 200' do
           expect(last_response.status).to be 200
+        end
+
+        it 'returns correct content type' do
+          expect(last_response.content_type).to eql 'text/xml;charset=utf-8'
         end
 
         it 'returns expected xml' do
