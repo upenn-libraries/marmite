@@ -19,6 +19,6 @@ class ApplicationController < BaseController
 
   # Render homepage with instructions
   get '/' do
-    erb :harvesting
+    erb :homepage
   end
 end

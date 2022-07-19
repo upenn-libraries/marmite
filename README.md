@@ -97,21 +97,21 @@ GET /api/v2/records/:bib_id/structural
   - Content Type: `text/xml`
   - Body:
     ```
-    TODO
+    { INSERT STRUCTURAL XML }
     ```
 - **Successfully Retrieves Record**
   - Status: `200 OK`
   - Content Type: `text/xml`
   - Body:
     ```
-    TODO
+    { INSERT STRUCTURAL XML }
     ```
 - **Record Not Found**
   - Status: `404 Not Found`
   - Content Type: `application/json`
   - Body:
-    ```
-    TODO
+    ```json
+    { "errors": ["Record not found."] }
     ```
 
 ### Get IIIF Presentation Manifest
