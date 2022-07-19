@@ -1,0 +1,17 @@
+<h1>Marmite</h1>
+<ul>
+  <li>
+    <strong>URL to harvest Marc XML:</strong>
+    <span>http://HOST:PORT/api/v2/records/BIB_ID/marc21</span>
+    <p>To refresh record provide the 'update' query param with one of three options: 'always', 'never', '{number}'. If a number is provided, the record is refreshed when the last modification date is older than the number of hours given.</p>
+  </li>
+  <li>
+    <strong>URL to harvest structural XML:</strong>
+    <span>http://HOST:PORT/api/v2/records/BIB_ID/structural</span>
+  </li>
+  <li>
+    <strong>URL to construct/harvest IIIF presentation manifest for a Colenda repository</strong>
+    <span>http://HOST:PORT/api/v2/records/REPO_ID/create?format=iiif_presentation</span>
+    <p>Use POST to create and GET to retrieve.</p>
+  </li>
+</ul>
