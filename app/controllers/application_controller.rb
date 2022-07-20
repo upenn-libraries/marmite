@@ -1,6 +1,7 @@
 require 'sinatra/base'
 require 'sinatra/activerecord'
 require 'sprockets'
+require 'honeybadger'
 
 require_relative './base_controller'
 require_relative './api/v1_controller'
