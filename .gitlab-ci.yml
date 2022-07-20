@@ -8,7 +8,9 @@ include:
       - ".remove_docker_image_from_registry.yml"
   - project: "devops/gitlab/ci-templates/ruby"
     ref: "sans-dind"
-    file: ".rspec.yml"
+    file:
+      - ".rspec.yml"
+      - ".rubocop.yml"
   - project: "devops/gitlab/ci-templates/sast"
     ref: "master"
     file:
@@ -20,6 +22,7 @@ stages:
   - .pre
   - push_tmp_image
   - test
+  - rubocop
   - sast
   - remove_tmp_image
   - push
@@ -58,6 +61,15 @@ rspec_test:
   before_script:
     - cp ${CI_PROJECT_DIR}/config/database.gitlab ${CI_PROJECT_DIR}/config/database.yml
     - bundle exec rake db:migrate
+  tags:
+    - build
+
+rubocop_test:
+  stage: test
+  needs:
+    - push_tmp_image_to_registry
+  extends:
+    - .rubocop
   tags:
     - build
 

@@ -13,6 +13,7 @@ Marmite is an [ETL](https://www.webopedia.com/TERM/E/ETL.html) Sinatra applicati
   * [Create IIIF Presentation Manifest](#create-iiif-presentation-manifest)
 * [Development Setup](#development-setup)
 * [Running the Test Suite](#running-the-test-suite)
+* [Rubocop](#rubocop)
 * [Deployment](#deployment)
 * [Contributing](#contributing)
 * [License](#license)
@@ -219,6 +220,19 @@ rake marmite:start
 rspec
 rake marmite:stop
 ```
+
+## Rubocop
+
+This application uses Rubocop to enforce Ruby and Rails style guidelines. We centralize our UPenn specific configuration in
+[upennlib-rubocop](https://gitlab.library.upenn.edu/digital-library-development-team/upennlib-rubocop).
+
+If there are rubocop offenses that you are not able to fix please do not edit the rubocop configuration instead regenerate the `rubocop_todo.yml` using the following command:
+
+```bash
+rubocop --auto-gen-config  --auto-gen-only-exclude --exclude-limit 10000
+```
+
+To change our default Rubocop config please open an MR in the `upennlib-rubocop` project.
 
 ## Deployment
 
