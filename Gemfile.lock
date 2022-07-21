@@ -39,6 +39,7 @@ GEM
     faraday-net_http_persistent (1.1.0)
     ffi (1.15.0)
     hashdiff (1.0.1)
+    honeybadger (4.8.0)
     htmlentities (4.3.4)
     i18n (1.8.10)
       concurrent-ruby (~> 1.0)
@@ -187,6 +188,7 @@ DEPENDENCIES
   addressable
   equivalent-xml
   factory_bot
+  honeybadger (~> 4.0)
   htmlentities
   iiif-presentation
   irb

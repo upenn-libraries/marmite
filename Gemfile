@@ -7,6 +7,7 @@ ruby '2.6.6'
 gem 'addressable'
 gem 'activerecord'
 gem 'activesupport'
+gem 'honeybadger', '~> 4.0'
 gem 'htmlentities'
 gem 'iiif-presentation'
 gem 'irb', require: false
