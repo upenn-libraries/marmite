@@ -63,7 +63,7 @@ rspec_test:
     MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     MYSQL_DATABASE: "marmite_test"
     RACK_ENV: "test"
-  script:
+  before_script:
     - cp ${CI_PROJECT_DIR}/config/database.gitlab ${CI_PROJECT_DIR}/config/database.yml
     - bundle exec rake db:migrate
   needs:
