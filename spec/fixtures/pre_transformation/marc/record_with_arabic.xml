@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bibs total_record_count="1">
+  <bib>
+    <mms_id>9914691793503681</mms_id>
+    <record_format>marc21</record_format>
+    <linked_record_id/>
+    <title>al-Fatḥ al-rabbānī fīmā dhahala ʻanhu al-Zurqānī.</title>
+    <author>Bannānī, Muḥammad ibn al-Ḥasan,</author>
+    <network_numbers>
+      <network_number>(PU)1469179-penndb-Voyager</network_number>
+      <network_number>(OCoLC)ocn122691500</network_number>
+      <network_number>(OCoLC)122691500</network_number>
+    </network_numbers>
+    <place_of_publication>[North Africa],</place_of_publication>
+    <date_of_publication>between A.H. 1268 (1851) and 1276 (1859)</date_of_publication>
+    <holdings link="https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs/9914691793503681/holdings"/>
+    <created_by>import</created_by>
+    <created_date>2017-06-06Z</created_date>
+    <last_modified_by>System</last_modified_by>
+    <last_modified_date>2022-06-17Z</last_modified_date>
+    <suppress_from_publishing>false</suppress_from_publishing>
+    <suppress_from_external_search>false</suppress_from_external_search>
+    <suppress_from_metadoor>false</suppress_from_metadoor>
+    <rank>74</rank>
+    <sync_with_oclc>BIBS</sync_with_oclc>
+    <sync_with_libraries_australia>NONE</sync_with_libraries_australia>
+    <originating_system>OTHER</originating_system>
+    <originating_system_id>1469179-penndb</originating_system_id>
+    <cataloging_level desc="Default Level">00</cataloging_level>
+    <brief_level desc="10- Full-level">10</brief_level>
+    <record>
+      <leader>07215ctm a2200781Ia 4500</leader>
+      <controlfield tag="001">9914691793503681</controlfield>
+      <controlfield tag="005">20220610184635.0</controlfield>
+      <controlfield tag="008">930927m18511859xx 000 0 ara d</controlfield>
+      <datafield ind1=" " ind2=" " tag="035">
+        <subfield code="a">(OCoLC)122691500</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="035">
+        <subfield code="a">(OCoLC)ocn122691500</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="035">
+        <subfield code="a">(PU)1469179-penndb-Voyager</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="040">
+        <subfield code="a">PAU</subfield>
+        <subfield code="b">eng</subfield>
+        <subfield code="c">PAU</subfield>
+        <subfield code="d">OCLCO</subfield>
+        <subfield code="d">OCLCQ</subfield>
+        <subfield code="d">OCLCF</subfield>
+        <subfield code="d">PAU</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="9" tag="099">
+        <subfield code="a">Ms. Codex 21</subfield>
+      </datafield>
+      <datafield ind1="1" ind2=" " tag="100">
+        <subfield code="6">880-01</subfield>
+        <subfield code="a">Bannānī, Muḥammad ibn al-Ḥasan,</subfield>
+        <subfield code="d">1720 or 1721-1780.</subfield>
+        <subfield code="0">http://id.loc.gov/authorities/names/no2009073561</subfield>
+      </datafield>
+      <datafield ind1="1" ind2=" " tag="880">
+        <subfield code="6">100-01//r</subfield>
+        <subfield code="a">بناني، محمد بن الحسن،</subfield>
+        <subfield code="d">1720 أو 1721-1780.</subfield>
+        <subfield code="0">http://id.loc.gov/authorities/names/no2009073561</subfield>
+      </datafield>
+      <datafield ind1="1" ind2="3" tag="245">
+        <subfield code="6">880-02</subfield>
+        <subfield code="a">al-Fatḥ al-rabbānī fīmā dhahala ʻanhu al-Zurqānī.</subfield>
+      </datafield>
+      <datafield ind1="1" ind2="2" tag="880">
+        <subfield code="6">245-02//r</subfield>
+        <subfield code="a">الفتح الرباني فيما ذهل عنه الزرقاني.</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="260">
+        <subfield code="a">[North Africa],</subfield>
+        <subfield code="c">between A.H. 1268 (1851) and 1276 (1859)</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="300">
+        <subfield code="a">4 volumes (221, 162, 248, 269 leaves) :</subfield>
+        <subfield code="b">paper ;</subfield>
+        <subfield code="c">v. 1-3: 220 x 175 (160 x 105) mm bound to 220 x 175 mm; v. 4: 195 x 150 (135 x 95) mm
+        </subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="336">
+        <subfield code="a">text</subfield>
+        <subfield code="b">txt</subfield>
+        <subfield code="2">rdacontent</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="337">
+        <subfield code="a">unmediated</subfield>
+        <subfield code="b">n</subfield>
+        <subfield code="2">rdamedia</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="338">
+        <subfield code="a">volume</subfield>
+        <subfield code="b">nc</subfield>
+        <subfield code="2">rdacarrier</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="520">
+        <subfield code="a">A commentary on Zurqānī's commentary on the Mukhtaṣar of Khalīl ibn Isḥāq al-Jundī. This
+          copy is in 4 volumes, with the fourth volume being in a less formal hand and of smaller dimensions.
+        </subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="500">
+        <subfield code="a">Title from introduction to first volume (f. 2v).</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="500">
+        <subfield code="a">Foliation: Modern foliation added in pencil, upper left recto, some misnumbering; catchwords
+          every verso, lower left.
+        </subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="500">
+        <subfield code="a">Layout: Long lines in all volumes (v. 1: 23; v. 2: 28; v. 3: 23; v. 4: 20); border-ruled;
+          frame-ruled; some marginalia.
+        </subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="500">
+        <subfield code="a">Script: Written in neat maghribi in brown ink; pointed, unvocalized.</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="500">
+        <subfield code="a">Decoration: Textblock border rules in double red and blue. Rubrications in red and blue or red
+          and green (particularly in v. 3).
+        </subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="500">
+        <subfield code="a">Binding: All volumes bound in bright red leather over pasteboard with flap (Type II). Covers
+          have gold tooled frame, corner decoration and outline of central mandorla with two pendants on the vertical
+          axis. Central mandorla is embossed, yellow-brown paper onlay. Flap has coordinating onlay inside a gold tooled
+          pendant. Doublures are plain paper cut with a decorative scalloped edge along one side. All but one of the flaps
+          have become disconnected.
+        </subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="500">
+        <subfield code="a">Origin: All volumes were copied by Muḥammad ibn Aḥmad ibn Ṣāliḥ Bannānī; some volumes
+          have dates in the colophons: v. 1: 1276 A.H. (f. 221r); v. 2: 1268 A.H. (f. 162v); v. 4: 1274 A.H. (f. 269v).
+        </subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="500">
+        <subfield code="a">One leaf with manuscript notations has been laid into v. 3.</subfield>
+      </datafield>
+      <datafield ind1="1" ind2=" " tag="561">
+        <subfield code="a">Formerly owned by Dr. Marcus Jastrow and Dr. Morris Jastrow, Jr.</subfield>
+      </datafield>
+      <datafield ind1="1" ind2=" " tag="561">
+        <subfield code="a">Accessioned, 1934.</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="524">
+        <subfield code="a">UPenn Ms. Codex 21.</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="506">
+        <subfield code="a">Volumes 1-4: Access to this item is subject to staff review.</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="546">
+        <subfield code="a">Arabic.</subfield>
+      </datafield>
+      <datafield ind1="1" ind2="0" tag="600">
+        <subfield code="a">Zurqānī, ʻAbd al-Bāqī ibn Yūsuf,</subfield>
+        <subfield code="d">1611-1688.</subfield>
+        <subfield code="t">Sharḥ Mukhtaṣar Khalīl.</subfield>
+      </datafield>
+      <datafield ind1="0" ind2="0" tag="600">
+        <subfield code="a">Khalīl ibn Isḥāq al-Jundī,</subfield>
+        <subfield code="d">-1365?</subfield>
+        <subfield code="t">Mukhtaṣar.</subfield>
+        <subfield code="0">http://id.loc.gov/authorities/names/n85237261</subfield>
+      </datafield>
+      <datafield ind1="0" ind2="7" tag="630">
+        <subfield code="a">Mukhtaṣar (Khalīl ibn Isḥāq al-Jundī)</subfield>
+        <subfield code="2">fast</subfield>
+        <subfield code="0">http://id.worldcat.org/fast/1363458</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="0" tag="650">
+        <subfield code="a">Islamic law</subfield>
+        <subfield code="v">Early works to 1800.</subfield>
+        <subfield code="0">http://id.loc.gov/authorities/subjects/sh2008104963</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="7" tag="650">
+        <subfield code="a">Islamic law.</subfield>
+        <subfield code="2">fast</subfield>
+        <subfield code="0">http://id.worldcat.org/fast/979949</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="7" tag="648">
+        <subfield code="a">Early works to 1800.</subfield>
+        <subfield code="2">fast</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="0" tag="650">
+        <subfield code="a">Malikites</subfield>
+        <subfield code="v">Early works to 1800.</subfield>
+        <subfield code="0">http://id.loc.gov/authorities/subjects/sh2008107241</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="7" tag="650">
+        <subfield code="a">Malikites.</subfield>
+        <subfield code="2">fast</subfield>
+        <subfield code="0">http://id.worldcat.org/fast/1006724</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="7" tag="655">
+        <subfield code="a">Manuscripts, Arabic</subfield>
+        <subfield code="y">19th century.</subfield>
+        <subfield code="2">local</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="7" tag="655">
+        <subfield code="a">Codices (bound manuscripts)</subfield>
+        <subfield code="2">aat</subfield>
+        <subfield code="0">http://vocab.getty.edu/aat/300224200</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="7" tag="655">
+        <subfield code="a">Commentaries.</subfield>
+        <subfield code="2">aat</subfield>
+        <subfield code="0">http://vocab.getty.edu/aat/300026098</subfield>
+      </datafield>
+      <datafield ind1="1" ind2=" " tag="700">
+        <subfield code="6">880-03</subfield>
+        <subfield code="a">Zurqānī, ʻAbd al-Bāqī ibn Yūsuf,</subfield>
+        <subfield code="d">1611-1688.</subfield>
+        <subfield code="t">Sharḥ Mukhtaṣar Khalīl.</subfield>
+        <subfield code="k">Selections.</subfield>
+      </datafield>
+      <datafield ind1="1" ind2=" " tag="880">
+        <subfield code="6">700-03//r</subfield>
+        <subfield code="a">زرقاني، عبد الباقي بن يوسف،</subfield>
+        <subfield code="d">1611- 1688.</subfield>
+        <subfield code="t">شرح مختصر خليل.</subfield>
+        <subfield code="k">Selections.</subfield>
+      </datafield>
+      <datafield ind1="0" ind2=" " tag="700">
+        <subfield code="6">880-04</subfield>
+        <subfield code="a">Khalīl ibn Isḥāq al-Jundī,</subfield>
+        <subfield code="d">-1365?</subfield>
+        <subfield code="t">Mukhtaṣar.</subfield>
+        <subfield code="k">Selections.</subfield>
+      </datafield>
+      <datafield ind1="0" ind2=" " tag="880">
+        <subfield code="6">700-04//r</subfield>
+        <subfield code="a">خليل بن اسحاق الجندي،</subfield>
+        <subfield code="d">1365؟</subfield>
+        <subfield code="t">مختصر.</subfield>
+        <subfield code="k">Selections.</subfield>
+      </datafield>
+      <datafield ind1="1" ind2=" " tag="700">
+        <subfield code="6">880-05</subfield>
+        <subfield code="a">Bannānī, Muḥammad ibn Aḥmad ibn Ṣāliḥ,</subfield>
+        <subfield code="e">scribe.</subfield>
+      </datafield>
+      <datafield ind1="1" ind2=" " tag="880">
+        <subfield code="6">700-05//r</subfield>
+        <subfield code="a">بناني، محمد احمد بن صالح.</subfield>
+      </datafield>
+      <datafield ind1="1" ind2=" " tag="700">
+        <subfield code="a">Jastrow, Marcus,</subfield>
+        <subfield code="d">1829-1903,</subfield>
+        <subfield code="e">former owner.</subfield>
+        <subfield code="0">http://id.loc.gov/authorities/names/n88606168</subfield>
+      </datafield>
+      <datafield ind1="1" ind2=" " tag="700">
+        <subfield code="a">Jastrow, Morris,</subfield>
+        <subfield code="c">Jr.,</subfield>
+        <subfield code="d">1861-1921,</subfield>
+        <subfield code="e">former owner.</subfield>
+        <subfield code="0">http://id.loc.gov/authorities/names/n50037841</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="852">
+        <subfield code="b">Kislak Center for Special Collections, Rare Books and Manuscripts</subfield>
+        <subfield code="a">University of Pennsylvania</subfield>
+        <subfield code="e">3420 Walnut Street, Philadelphia, Pennsylvania 19104-6206.</subfield>
+        <subfield code="j">Ms. Codex 21</subfield>
+      </datafield>
+      <datafield ind1="4" ind2="1" tag="856">
+        <subfield code="z">Digital facsimile for download (OPenn)</subfield>
+        <subfield code="u">http://openn.library.upenn.edu/Data/0002/html/mscodex21_v1.html</subfield>
+      </datafield>
+      <datafield ind1="4" ind2="1" tag="856">
+        <subfield code="z">Digital facsimile for download (OPenn)</subfield>
+        <subfield code="u">http://openn.library.upenn.edu/Data/0002/html/mscodex21_v2.html</subfield>
+      </datafield>
+      <datafield ind1="4" ind2="1" tag="856">
+        <subfield code="z">Digital facsimile for download (OPenn)</subfield>
+        <subfield code="u">http://openn.library.upenn.edu/Data/0002/html/mscodex21_v3.html</subfield>
+      </datafield>
+      <datafield ind1="4" ind2="1" tag="856">
+        <subfield code="z">Digital facsimile for download (OPenn)</subfield>
+        <subfield code="u">http://openn.library.upenn.edu/Data/0002/html/mscodex21_v4.html</subfield>
+      </datafield>
+      <datafield ind1="4" ind2="1" tag="856">
+        <subfield code="z">Digital facsimile for browsing v.1 (Colenda)</subfield>
+        <subfield code="u">https://colenda.library.upenn.edu/catalog/81431-p3319s86p</subfield>
+      </datafield>
+      <datafield ind1="4" ind2="1" tag="856">
+        <subfield code="z">Digital facsimile for browsing v.2 (Colenda)</subfield>
+        <subfield code="u">https://colenda.library.upenn.edu/catalog/81431-p3zc7s141</subfield>
+      </datafield>
+      <datafield ind1="4" ind2="1" tag="856">
+        <subfield code="z">Digital facsimile for browsing v.3 (Colenda)</subfield>
+        <subfield code="u">https://colenda.library.upenn.edu/catalog/81431-p3tm72708</subfield>
+      </datafield>
+      <datafield ind1="4" ind2="1" tag="856">
+        <subfield code="z">Digital facsimile for browsing v.4 (Colenda)</subfield>
+        <subfield code="u">https://colenda.library.upenn.edu/catalog/81431-p3pv6bd51</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="902">
+        <subfield code="a">MARCIVE 2022</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="950">
+        <subfield code="l">PAUR</subfield>
+        <subfield code="i">10/08/04 C</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="996">
+        <subfield code="a">hinge-right</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="998">
+        <subfield code="a">10/08/04</subfield>
+        <subfield code="t">d</subfield>
+        <subfield code="s">9554</subfield>
+        <subfield code="l">PAUR</subfield>
+        <subfield code="n">PU-Sp</subfield>
+        <subfield code="w">PAUR93A913</subfield>
+        <subfield code="d">09/27/93</subfield>
+        <subfield code="p">b</subfield>
+        <subfield code="h">940617</subfield>
+        <subfield code="h">940607</subfield>
+        <subfield code="h">940325</subfield>
+      </datafield>
+    </record>
+  </bib>
+</bibs>
