@@ -1,4 +1,6 @@
 require 'addressable'
+require 'faraday'
+require 'faraday/net_http'
 require 'iiif/presentation'
 require 'active_support/core_ext/numeric/conversions'
 
@@ -48,7 +50,7 @@ class IIIFPresentation
 
       # Retrieve image information from image server
       url = uri(image_server, "#{asset[:file]}/info.json")
-      info = JSON.parse(Net::HTTP.get(URI.parse(url)))
+      info = JSON.parse(Faraday.get(URI.parse(url)).body)
 
       # Adding canvas that contains image as an image annotation.
       sequence.canvases << canvas(

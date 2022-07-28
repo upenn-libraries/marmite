@@ -24,8 +24,6 @@ GEM
     diff-lcs (1.4.4)
     equivalent-xml (0.6.0)
       nokogiri (>= 1.4.3)
-    ethon (0.14.0)
-      ffi (>= 1.15.0)
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
     faraday (1.4.1)
@@ -162,8 +160,6 @@ GEM
       ripl-multi_line (>= 0.2.4)
       ripl-rack (>= 0.2.0)
       sinatra (>= 1.2.1)
-    typhoeus (1.4.0)
-      ethon (>= 0.9.0)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.2.0)
@@ -188,6 +184,8 @@ DEPENDENCIES
   addressable
   equivalent-xml
   factory_bot
+  faraday
+  faraday-net_http
   honeybadger (~> 4.0)
   htmlentities
   iiif-presentation
@@ -207,7 +205,6 @@ DEPENDENCIES
   sinatra-contrib
   sprockets
   tux
-  typhoeus
   upennlib-rubocop
   webmock
 
