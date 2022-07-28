@@ -1,6 +1,6 @@
 include:
   - project: "devops/gitlab/ci-templates/docker"
-    ref: "master"
+    ref: "multistage"
     file:
       - ".build_docker_image.yml"
       - ".push_docker_image.yml"
@@ -8,7 +8,9 @@ include:
       - ".remove_docker_image_from_registry.yml"
   - project: "devops/gitlab/ci-templates/ruby"
     ref: "sans-dind"
-    file: ".rspec.yml"
+    file:
+      - ".rspec.yml"
+      - ".rubocop.yml"
   - project: "devops/gitlab/ci-templates/sast"
     ref: "master"
     file:
@@ -17,38 +19,44 @@ include:
   - template: "Workflows/MergeRequest-Pipelines.gitlab-ci.yml"
 
 stages:
-  - .pre
-  - push_tmp_image
+  - build_and_push:tmp_image
   - test
   - sast
-  - remove_tmp_image
-  - push
-  - .post
+  - remove:tmp_image_from_registry
+  - push:final_image
+  - deploy
+  - remove:tmp_images_from_host
 
+# -- Start - build and push image
 build_image:
-  stage: .pre
+  stage: build_and_push:tmp_image
   extends:
     - .build_docker_image
+  variables:
+    CI_IMAGE_NAME: ${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}
   tags:
     - build
 
 push_tmp_image_to_registry:
-  stage: push_tmp_image
+  stage: build_and_push:tmp_image
   extends:
     - .push_docker_image
   needs:
     - build_image
   variables:
+    CI_IMAGE_NAME: ${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}
+    DOCKER_IMAGE_NAME: "${CI_PIPELINE_ID}"
     IMAGE_TAGS: ${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}
   tags:
     - build
+# -- End - build and push image
 
+# -- Start - test image
 rspec_test:
   stage: test
+  image: ${CI_REGISTRY_IMAGE}/${CI_PIPELINE_ID}:${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}
   services:
     - mysql:5.7
-  needs:
-    - push_tmp_image_to_registry
   extends:
     - .rspec
   variables:
@@ -58,65 +66,119 @@ rspec_test:
   before_script:
     - cp ${CI_PROJECT_DIR}/config/database.gitlab ${CI_PROJECT_DIR}/config/database.yml
     - bundle exec rake db:migrate
-  tags:
-    - build
-
-shiftleft_container_scanning:
-  stage: sast
-  extends:
-    - .shiftleft_container_scanning
   needs:
     - push_tmp_image_to_registry
   tags:
     - build
 
+rubocop_app_test:
+  stage: test
+  image: ${CI_REGISTRY_IMAGE}/${CI_PIPELINE_ID}:${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}
+  needs:
+    - push_tmp_image_to_registry
+  extends:
+    - .rubocop
+  tags:
+    - build
+# -- End - test image
+
+# -- Start - SAST images
 trivy_container_scanning:
   stage: sast
   extends:
     - .trivy_container_scanning
+  before_script:
+    - apk add --no-cache docker
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
+  after_script:
+    - docker logout ${CI_REGISTRY}
   needs:
-    - push_tmp_image_to_registry
+    - rspec_test
+    - rubocop_app_test
   variables:
-    CI_IMAGE_NAME: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}
+    CI_IMAGE_NAME: ${CI_REGISTRY_IMAGE}/${CI_PIPELINE_ID}:${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}
   tags:
     - build
   allow_failure: true
+# -- End - SAST images
 
-delete_tmp_image_from_registry:
-  stage: remove_tmp_image
+# -- Start - Remove temp image from registry
+remove_tmp_image_from_registry:
+  stage: remove:tmp_image_from_registry
   extends:
     - .remove_docker_image_from_registry
+  variables:
+    IMAGE_TAG: ${CI_PROJECT_PATH}/${CI_PIPELINE_ID}:${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}
   rules:
     - when: always
   needs:
-    - push_tmp_image_to_registry
-    - rspec_test
-    - shiftleft_container_scanning
     - trivy_container_scanning
   tags:
     - build
   allow_failure: true
 
+remove_tmp_container_registry:
+  stage: remove:tmp_image_from_registry
+  image: bash
+  before_script:
+    - apk add --no-cache curl jq
+  script:
+    - >
+      results=($(curl -H "JOB-TOKEN:${CI_JOB_TOKEN}" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/registry/repositories?tags_count=true" | jq '.[] | select(.name=="'"${CI_PIPELINE_ID}"'") | [.id,.tags_count]' | tr -d '[]," '))
+    - repository_id=${results[0]}
+    - tags_count=${results[1]}
+    - >
+      if [ -n "${repository_id}" ] && [ -n "${tags_count}" ] && [ "${tags_count}" -eq "0" ]; then
+        curl --request DELETE -H "JOB-TOKEN:${CI_JOB_TOKEN}" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/registry/repositories/${repository_id}"
+      fi
+  rules:
+    - when: always
+  needs:
+    - remove_tmp_image_from_registry
+  allow_failure: true
+  tags:
+    - build
+# -- Start - Remove temp image from registry
+
+# -- Start - push final images to registry
 push_image_to_registry:
-  stage: push
+  stage: push:final_image
   extends:
     - .push_docker_image
   needs:
-    - delete_tmp_image_from_registry
-    - shiftleft_container_scanning
+    - remove_tmp_image_from_registry
     - trivy_container_scanning
-    - rspec_test
+  variables:
+    CI_IMAGE_NAME: ${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}
+    TAG_IMAGE_WITH_TARGET: "false"
+  tags:
+    - build
+# -- End - push final images to registry
+
+# -- Start - remove images passed through pipeline
+remove_tmp_registry_image_from_host:
+  stage: remove:tmp_images_from_host
+  extends:
+    - .remove_docker_image
+  needs:
+    - trivy_container_scanning
+  variables:
+    CI_IMAGE_NAME: ${CI_REGISTRY_IMAGE}/${CI_PIPELINE_ID}:${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}
+  rules:
+    - when: always
   tags:
     - build
 
-remove_image:
-  stage: .post
+remove_tmp_image_from_host:
+  stage: remove:tmp_images_from_host
   extends:
     - .remove_docker_image
+  needs:
+    - push_image_to_registry
+  variables:
+    CI_IMAGE_NAME: ${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}
   rules:
     - when: always
-  needs:
-    - build_image
-    - push_image_to_registry
   tags:
     - build
+# -- End - remove images passed through pipeline

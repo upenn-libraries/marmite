@@ -7,6 +7,7 @@ ruby '2.6.6'
 gem 'addressable'
 gem 'activerecord'
 gem 'activesupport'
+gem 'honeybadger', '~> 4.0'
 gem 'htmlentities'
 gem 'iiif-presentation'
 gem 'irb', require: false
@@ -20,6 +21,7 @@ gem 'sinatra-activerecord'
 gem 'sinatra-contrib'
 gem 'sprockets'
 gem 'typhoeus'
+gem 'upennlib-rubocop'
 
 group :development, :test do
   gem 'pry'
