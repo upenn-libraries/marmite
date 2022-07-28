@@ -35,10 +35,9 @@ class Api
                content_type 'application/json'
                error
              else
-               content_type 'text/xml'
+               content_type 'text/xml', charset: 'utf-8'
                record.uncompressed_blob
              end
-
       [status, body]
     end
 
