@@ -187,6 +187,8 @@ DEPENDENCIES
   addressable
   equivalent-xml
   factory_bot
+  faraday
+  faraday-net_http
   htmlentities
   iiif-presentation
   irb
