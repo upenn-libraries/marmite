@@ -9,6 +9,7 @@ gem 'activerecord'
 gem 'activesupport'
 gem 'faraday'
 gem 'faraday-net_http'
+gem 'honeybadger', '~> 4.0'
 gem 'htmlentities'
 gem 'iiif-presentation'
 gem 'irb', require: false

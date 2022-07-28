@@ -1,6 +1,6 @@
 FROM ruby:2.6.6-alpine
 
-ENV RACK_ENV production
+ENV RACK_ENV deployment
 
 RUN apk add --no-cache build-base libcurl mariadb-dev
 
