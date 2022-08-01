@@ -11,14 +11,21 @@ RSpec.describe Record, type: :model do
 
   context 'short bib purge' do
     before do
-      described_class.create bib_id: '1234567890123456'
-      described_class.create bib_id: '123456'
+      described_class.create bib_id: '1234567890123456', format: 'marc21'
+      described_class.create bib_id: '123456', format: 'marc21'
+      described_class.create bib_id: 'blah-123456', format: 'iiif_presentation'
+      described_class.create bib_id: '01000', format: 'openn'
+      described_class.purge_all_short_bibs
     end
 
     it 'removes only short bib records' do
-      described_class.purge_all_short_bibs
-      expect(described_class.find_by(bib_id: '1234567890123456')).not_to be_nil
-      expect(described_class.find_by(bib_id: '1234567')).to be_nil
+      expect(described_class.exists?(bib_id: '1234567890123456', format: 'marc21')).to be true
+      expect(described_class.exists?(bib_id: '123456', format: 'marc21')).to be false
+    end
+
+    it 'leave records not having marc21 or structural format values' do
+      expect(described_class.exists?(bib_id: 'blah-123456', format: 'iiif_presentation')).to be true
+      expect(described_class.exists?(bib_id: '01000')).to be true
     end
   end
 

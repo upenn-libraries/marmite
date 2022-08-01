@@ -25,7 +25,7 @@ class Record < ActiveRecord::Base
 
   # Special one-time use method to delete all saved Records with a "short" bib id
   def self.purge_all_short_bibs
-    where('LENGTH(bib_id) < 15').delete_all
+    where("LENGTH(bib_id) < 15 AND format IN('marc21', 'structural')").delete_all
   end
 
   # @param [String] uncompressed_blob
