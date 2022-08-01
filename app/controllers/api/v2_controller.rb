@@ -11,7 +11,7 @@ class Api
     # pull XML from Alma, do some processing, and save a Record with the XML
     # as a blob. return the XML.
     get '/api/v2/records/:bib_id/marc21' do |bib_id|
-      record = Record.find_or_initialize_by bib_id: bib_id,
+      record = Record.find_or_initialize_by bib_id: long_bib_id(bib_id),
                                             format: Record::MARC_21
       update_blob = update_blob? params[:update], record
       status = if record.persisted? && !update_blob
@@ -71,10 +71,10 @@ class Api
     end
 
     # Pulls IIIF manifest from database and returns it.
-    get '/api/v2/records/:id/iiif_presentation' do |id|
+    get '/api/v2/records/:id/iiif_presentation' do |bib_id|
       content_type 'application/json'
 
-      if (record = Record.find_by(bib_id: id, format: Record::IIIF_PRESENTATION))
+      if (record = Record.find_by(bib_id: long_bib_id(bib_id), format: Record::IIIF_PRESENTATION))
         [200, record.uncompressed_blob]
       else
         [404, error_response("Record not found.")]
@@ -82,10 +82,10 @@ class Api
     end
 
     # Creates IIIF presentation manifest using the body of the post request.
-    post '/api/v2/records/:id/iiif_presentation' do |id|
+    post '/api/v2/records/:id/iiif_presentation' do |bib_id|
       data = JSON.parse(request.body.read)
 
-      record = Record.find_or_initialize_by(bib_id: id, format: Record::IIIF_PRESENTATION)
+      record = Record.find_or_initialize_by(bib_id: long_bib_id(bib_id), format: Record::IIIF_PRESENTATION)
       content_type 'application/json'
 
       begin

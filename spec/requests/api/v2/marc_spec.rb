@@ -21,10 +21,10 @@ RSpec.describe 'API V2 Marc Requests', type: :request do
         before { stub_alma_api_bib_not_found }
 
         it 'returns 404 and an error response' do
-          get '/api/v2/records/0000/marc21'
+          get '/api/v2/records/0000000000/marc21'
           expect(last_response.status).to eq 404
           parsed_response = JSON.parse(last_response.body)
-          expect(parsed_response['errors'].first).to include '0000'
+          expect(parsed_response['errors'].first).to include '0000000000'
         end
       end
 
@@ -32,7 +32,7 @@ RSpec.describe 'API V2 Marc Requests', type: :request do
         before { stub_alma_api_invalid_xml }
 
         it 'returns a 500 and an error response' do
-          get '/api/v2/records/0001/marc21'
+          get '/api/v2/records/0000000001/marc21'
           expect(last_response.status).to eq 500
           expect(last_response.headers).to include('Content-Type' => 'application/json')
           expect(JSON.parse(last_response.body)['errors'].first)
