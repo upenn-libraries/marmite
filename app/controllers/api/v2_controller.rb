@@ -11,7 +11,7 @@ class Api
     # pull XML from Alma, do some processing, and save a Record with the XML
     # as a blob. return the XML.
     get '/api/v2/records/:bib_id/marc21' do |bib_id|
-      record = Record.find_or_initialize_by bib_id: bib_id,
+      record = Record.find_or_initialize_by bib_id: long_bib_id(bib_id),
                                             format: Record::MARC_21
       update_blob = update_blob? params[:update], record
       status = if record.persisted? && !update_blob
