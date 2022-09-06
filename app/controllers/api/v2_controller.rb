@@ -1,7 +1,6 @@
 require_relative '../../controllers/base_controller'
 require_relative '../../services/alma_api'
 require_relative '../../services/blob_handler'
-require_relative '../../services/structural_metadata_service'
 require_relative '../../models/alma_bib'
 require_relative '../../models/iiif_presentation'
 require_relative '../../models/record'
@@ -56,17 +55,8 @@ class Api
           [200, record.uncompressed_blob]
         end
       else
-        metadata = StructuralMetadataService.new(bib_id).fetch_and_transform
-        if metadata
-          record = Record.new(bib_id: bib_id, format: Record::STRUCTURAL)
-          record.uncompressed_blob = metadata
-          record.save!
-          content_type 'text/xml'
-          [201, metadata]
-        else
-          content_type 'application/json'
-          [404, error_response('Record not found.')]
-        end
+        content_type 'application/json'
+        [404, error_response('Record not found.')]
       end
     end
 
