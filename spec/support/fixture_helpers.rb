@@ -19,7 +19,7 @@ module FixtureHelpers
     File.read(File.join('spec',
                         'fixtures',
                         'pre_transformation',
-                        'marc',
+                        'marc21',
                         "#{bib_id}.xml"))
   end
 
@@ -27,7 +27,7 @@ module FixtureHelpers
     File.read(File.join('spec',
                         'fixtures',
                         'pre_transformation',
-                        'marc',
+                        'marc21',
                         "#{bib_id}.xml"))
         .sub("Aristotle's De interpretatione", "Plato's The Republic") # hehe
   end
