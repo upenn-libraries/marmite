@@ -1,3 +1,5 @@
+require 'nokogiri'
+
 require_relative '../../controllers/base_controller'
 require_relative '../../services/alma_api'
 require_relative '../../services/blob_handler'
@@ -43,7 +45,7 @@ class Api
     get '/api/v2/records/:bib_id/structural' do |bib_id|
       bib_id = long_bib_id(bib_id)
 
-      # Retrieve record from database if present, otherwise query service
+      # Retrieve record from database if present, otherwise return not found
       if (record = Record.find_by(bib_id: bib_id, format: Record::STRUCTURAL))
         document = Nokogiri::XML.parse(record.uncompressed_blob)
 
