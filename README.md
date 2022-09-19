@@ -83,7 +83,7 @@ GET /api/v2/records/:bib_id/marc21
     ```
 
 ### Get Structural Metadata XML
-Retrieves structural metadata for the given bib_id either from the database cache or from the remote source. This structural metadata is no longer changing, therefore once its retrieved once it doesn't need to be updated. If a short bibnumber is provided, it is expanded and the xml returned will only reference the long bibnumber.
+Retrieves structural metadata for the given bib_id either from the database cache. This structural metadata is no longer being retrieve from an outside source. If a short bibnumber is provided, it is expanded and the xml returned will only reference the long bibnumber.
 
 #### Request
 ```
@@ -202,7 +202,7 @@ POST /api/v2/records/:id/iiif_presentation
 ### Start Development/Test Environment
 * Build development/test containers via Lando, run: `rake marmite:start`
 * Run `rackup` to start the application
-* Visit [http://localhost:9292/](http://localhost:9292/harvesting) to learn available commands and endpoints.
+* Visit [http://localhost:9292/](http://localhost:9292/) to learn available commands and endpoints.
 
 ### Stop Development/Test Environment
 To stop the Lando containers: `rake marmite:stop`
