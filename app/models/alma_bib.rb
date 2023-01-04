@@ -66,7 +66,12 @@ class AlmaBib
     all_datafields_unsorted = @record.xpath('//datafield')
 
     all_datafields_sorted = all_datafields_unsorted.sort do |a, b|
-      a.attribute('tag').value <=> b.attribute('tag').value
+      comp = a.attribute('tag').value <=> b.attribute('tag').value
+      if comp.zero?
+        a.content <=> b.content
+      else
+        comp
+      end
     end
 
     build_new_marcxml(leader, control, holdings, all_datafields_sorted)
