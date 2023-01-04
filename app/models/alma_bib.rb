@@ -66,12 +66,7 @@ class AlmaBib
     all_datafields_unsorted = @record.xpath('//datafield')
 
     all_datafields_sorted = all_datafields_unsorted.sort do |a, b|
-      comp = a.attribute('tag').value <=> b.attribute('tag').value
-      if comp.zero?
-        a.content <=> b.content
-      else
-        comp
-      end
+      compare_nodes a, b
     end
 
     build_new_marcxml(leader, control, holdings, all_datafields_sorted)
@@ -80,6 +75,11 @@ class AlmaBib
   end
 
   private
+
+  def compare_nodes(node_a, node_b)
+    comp = node_a.attribute('tag').value <=> node_b.attribute('tag').value
+    comp.zero? ? node_a.content <=> node_b.content : comp
+  end
 
   def build_new_marcxml(leader, control, holdings, all_datafields)
     builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
