@@ -76,6 +76,8 @@ class AlmaBib
 
   private
 
+  # Used when sorting data field nodes, first compares by tag value, then by node content, ensuring reliable
+  # sorting of nodes
   def compare_nodes(node_a, node_b)
     comp = node_a.attribute('tag').value <=> node_b.attribute('tag').value
     comp.zero? ? node_a.content <=> node_b.content : comp
