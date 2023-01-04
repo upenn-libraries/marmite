@@ -65,9 +65,11 @@ class AlmaBib
     control = @record.xpath('//record/controlfield')
     all_datafields_unsorted = @record.xpath('//datafield')
 
-    all_datafields_sorted = all_datafields_unsorted.sort_by { |n| n.attribute('tag').value }
+    # all_datafields_sorted = all_datafields_unsorted.sort_by do |n|
+    #   n.attribute('tag').value
+    # end
 
-    build_new_marcxml(leader, control, holdings, all_datafields_sorted)
+    build_new_marcxml(leader, control, holdings, all_datafields_unsorted)
   rescue StandardError => e
     raise MarcTransformationError, "MARC transformation error: #{e.message}"
   end
