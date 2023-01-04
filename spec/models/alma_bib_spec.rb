@@ -27,7 +27,7 @@ RSpec.describe AlmaBib, type: :model do
       doc = Nokogiri.XML(alma_bib.transform).remove_namespaces!
       elements = doc.search('//record/datafield[@tag="856"]')
       values = elements.collect(&:content).map(&:strip)
-      expect(values).to match_array ordered_values
+      expect(values).to eq ordered_values
     end
   end
 end
