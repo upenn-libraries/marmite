@@ -41,9 +41,11 @@ class AlmaBib
     @record.search('//record/datafield[@tag="650"]/subfield[@code="a"][starts-with(text(), "CHR ")]').remove
     @record.search('//record/datafield[@tag="650"]/subfield[@code="a"][starts-with(text(), "PRO ")]').remove
     @record.search('//record/datafield[@tag="650"][not(node())]').remove
+
+    # e.g., remove Alma availability nodes
     @record.search('//record/datafield[@tag="INT"]').remove
     @record.search('//record/datafield[@tag="INST"]').remove
-    @record.search('//record/datafield[@tag="AVA"]').remove # e.g., remove Alma availability nodes
+    @record.search('//record/datafield[@tag="AVA"]').remove
 
     collection_names = extract_collection_names
 
@@ -62,10 +64,7 @@ class AlmaBib
     leader = @record.xpath('//record/leader')
     control = @record.xpath('//record/controlfield')
     all_datafields_unsorted = @record.xpath('//datafield')
-
-    all_datafields_sorted = all_datafields_unsorted.sort_by { |n| n.attribute('tag').value }
-
-    build_new_marcxml(leader, control, holdings, all_datafields_sorted)
+    build_new_marcxml(leader, control, holdings, all_datafields_unsorted)
   rescue StandardError => e
     raise MarcTransformationError, "MARC transformation error: #{e.message}"
   end
