@@ -25,17 +25,6 @@ class AlmaBib
     holdings = extract_holdings
     unsanitized_values = handle_unsanitized_values
 
-    # add 999z to XML reader>record
-    if unsanitized_values.any?
-      Nokogiri::XML::Builder.with(@doc.at('record')) do |xml|
-        xml.datafield('ind1' => ' ', 'ind2' => ' ', 'tag' => '999') {
-          unsanitized_values.each do |value|
-            xml.subfield(value, 'code' => 'z')
-          end
-        }
-      end
-    end
-
     # remove some nodes from the xml based on xpath expressions
     # would be helpful to wrap these in descriptive methods
     @record.search('//record/datafield[@tag="650"]/subfield[@code="a"][starts-with(text(), "CHR ")]').remove
@@ -60,26 +49,22 @@ class AlmaBib
       end
     end
 
-    # ??????????????????????????????
-    leader = @record.xpath('//record/leader')
-    control = @record.xpath('//record/controlfield')
-    all_datafields_unsorted = @record.xpath('//datafield')
-    build_new_marcxml(leader, control, holdings, all_datafields_unsorted)
+    new_marcxml(holdings)
   rescue StandardError => e
     raise MarcTransformationError, "MARC transformation error: #{e.message}"
   end
 
   private
 
-  def build_new_marcxml(leader, control, holdings, all_datafields)
+  def new_marcxml(holdings)
     builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
       xml['marc'].records('xmlns:marc' => 'http://www.loc.gov/MARC21/slim',
                           'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
                           'xsi:schemaLocation' => 'http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd') {
         xml.record {
-          xml << leader.to_xml
-          xml << control.to_xml
-          all_datafields.each do |datafield|
+          xml << @record.xpath('//record/leader').to_xml
+          xml << @record.xpath('//record/controlfield').to_xml
+          @record.xpath('//datafield').each do |datafield|
             xml << datafield.to_xml
           end
           xml.holdings {
@@ -101,7 +86,7 @@ class AlmaBib
   # @return [Array]
   def extract_holdings
     holdings = []
-    # build holdings hash by iterating through 'special' AVA Alma MARC fields
+    # Build holdings hash by iterating through 'special' AVA Alma MARC fields
     for i in 0..(@record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="8"]').children.length - 1)
       holding_hash = {}
       holding_hash[:holding_id] = @record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="8"]').children[i].text unless @record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="8"]').children[i].nil?
