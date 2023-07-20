@@ -224,7 +224,7 @@ rake marmite:stop
 ## Rubocop
 
 This application uses Rubocop to enforce Ruby and Rails style guidelines. We centralize our UPenn specific configuration in
-[upennlib-rubocop](https://gitlab.library.upenn.edu/digital-library-development-team/upennlib-rubocop).
+[upennlib-rubocop](https://gitlab.library.upenn.edu/dld/upennlib-rubocop).
 
 If there are rubocop offenses that you are not able to fix please do not edit the rubocop configuration instead regenerate the `rubocop_todo.yml` using the following command:
 
@@ -237,9 +237,9 @@ To change our default Rubocop config please open an MR in the `upennlib-rubocop`
 ## Deployment
 
 To deploy Marmite:
-1. Create versioned tag in Gitlab via a [GitLab Release](https://gitlab.library.upenn.edu/digital-repository/marmite/-/releases). Versioned tags should follow [Semantic Versioning](https://semver.org/).
-2. Update the image tag in the `docker-compose.yml` on `main` via a [new merge request](https://gitlab.library.upenn.edu/digital-repository/marmite/-/merge_requests/new).
-3. Wait for image to be created via [CI/CD pipeline](https://gitlab.library.upenn.edu/digital-repository/marmite/-/pipelines). Check that an image for the tagged release is available in the [container registry](https://gitlab.library.upenn.edu/digital-repository/marmite/container_registry).
+1. Create versioned tag in Gitlab via a [GitLab Release](https://gitlab.library.upenn.edu/dld/digital-repository/marmite/-/releases). Versioned tags should follow [Semantic Versioning](https://semver.org/).
+2. Update the image tag in the `docker-compose.yml` on `main` via a [new merge request](https://gitlab.library.upenn.edu/dld/digital-repository/marmite/-/merge_requests/new).
+3. Wait for image to be created via [CI/CD pipeline](https://gitlab.library.upenn.edu/dld/digital-repository/marmite/-/pipelines). Check that an image for the tagged release is available in the [container registry](https://gitlab.library.upenn.edu/dld/digital-repository/marmite/container_registry).
 4. SSH into deployment server and go to deployment directory. Development Marmite runs on `colenda-dev`. Production Marmite runs on `mdproc`.
    ```
    ssh username@server
@@ -261,7 +261,7 @@ in the environment of the generated image.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitLab at [https://gitlab.library.upenn.edu/digital-repository/marmite/-/issues](https://gitlab.library.upenn.edu/digital-repository/marmite/-/issues).
+Bug reports and pull requests are welcome on GitLab at [https://gitlab.library.upenn.edu/dld/digital-repository/marmite/-/issues](https://gitlab.library.upenn.edu/dld/digital-repository/marmite/-/issues).
 
 ## License
 
