@@ -12,7 +12,7 @@ class AlmaBib
       config.options = Nokogiri::XML::ParseOptions::NOBLANKS
     end
     @doc.remove_namespaces!
-    @record = @doc.xpath '//bibs/bib/record'
+    @record = @doc.at_xpath '/bibs/bib/record'
   rescue StandardError => e
     raise MarcTransformationError, "MARC transformation error: #{e.message}"
   end
@@ -28,8 +28,8 @@ class AlmaBib
     copy_holdings
 
     # Removing some Alma-specific nodes we don't want to expose.
-    @record.search('//record/datafield[@tag="INT"]').remove
-    @record.search('//record/datafield[@tag="INST"]').remove
+    @record.xpath('./datafield[@tag="INT"]').remove
+    @record.xpath('./datafield[@tag="INST"]').remove
 
     new_marcxml
   rescue StandardError => e
@@ -44,10 +44,10 @@ class AlmaBib
                           'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
                           'xsi:schemaLocation' => 'http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd') do
         xml.record do
-          xml << @record.xpath('//record/leader').to_xml
-          xml << @record.xpath('//record/controlfield').to_xml
-          xml << @record.xpath('//record/datafield').to_xml
-          xml << @record.xpath('//record/holdings').to_xml
+          xml << @record.xpath('./leader').to_xml
+          xml << @record.xpath('./controlfield').to_xml
+          xml << @record.xpath('./datafield').to_xml
+          xml << @record.xpath('./holdings').to_xml
         end
       end
     }.to_xml
@@ -59,14 +59,14 @@ class AlmaBib
   def copy_holdings
     Nokogiri::XML::Builder.with(@doc.at('record')) do |xml|
       xml.holdings do
-        @record.xpath('//record/datafield[@tag="AVA"]').each do |holding|
-          next if holding.at_xpath('subfield[@code="8"]').blank?
+        @record.xpath('./datafield[@tag="AVA"]').each do |holding|
+          next if holding.at_xpath('./subfield[@code="8"]').blank?
 
           xml.holding do
-            xml.holding_id holding.at_xpath('subfield[@code="8"]')&.text
-            xml.call_number holding.at_xpath('subfield[@code="d"]')&.text
-            xml.library holding.at_xpath('subfield[@code="b"]')&.text
-            xml.location holding.at_xpath('subfield[@code="j"]')&.text
+            xml.holding_id holding.at_xpath('./subfield[@code="8"]')&.text
+            xml.call_number holding.at_xpath('./subfield[@code="d"]')&.text
+            xml.library holding.at_xpath('./subfield[@code="b"]')&.text
+            xml.location holding.at_xpath('./subfield[@code="j"]')&.text
           end
         end
       end
@@ -75,8 +75,8 @@ class AlmaBib
 
   # Moving Penn collection names from 710$a to 773$t
   def move_collection_names
-    @record.xpath('//record/datafield[@tag="710"]/subfield[@code="5"]').each do |subfield|
-      collection = subfield.parent.at_xpath('subfield[@code="a"]').text
+    @record.xpath('./datafield[@tag="710"]/subfield[@code="5"]').each do |subfield|
+      collection = subfield.parent.at_xpath('./subfield[@code="a"]').text
 
       Nokogiri::XML::Builder.with(@doc.at('record')) do |xml|
         xml.datafield('ind1' => '0', 'ind2' => '0', 'tag' => '773') do
@@ -91,14 +91,14 @@ class AlmaBib
   # Chronology values stored in the 650 field have to be removed because otherwise external
   # systems treat them as subjects.
   def remove_custom_chronology_value
-    @record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').each do |subfield|
+    @record.xpath('./datafield[@tag="650"]/subfield[@code="a"]').each do |subfield|
       subfield.parent.remove if subfield.text.start_with?('CHR ')
     end
   end
 
   # Provenance values stored on the 650 have to be moved to a more appropriate place.
   def move_custom_provenance_value
-    @record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').each do |subfield|
+    @record.xpath('./datafield[@tag="650"]/subfield[@code="a"]').each do |subfield|
       next unless subfield.text.start_with?('PRO ')
 
       # Move value to 561$a
