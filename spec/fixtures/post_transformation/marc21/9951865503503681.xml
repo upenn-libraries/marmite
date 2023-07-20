@@ -237,6 +237,21 @@
       <marc:subfield code="a">DLA</marc:subfield>
       <marc:subfield code="b">20111222</marc:subfield>
     </marc:datafield>
+    <marc:datafield ind1=" " ind2=" " tag="AVA">
+      <marc:subfield code="0">9951865503503681</marc:subfield>
+      <marc:subfield code="8">22335156650003681</marc:subfield>
+      <marc:subfield code="a">01UPENN_INST</marc:subfield>
+      <marc:subfield code="b">KislakCntr</marc:subfield>
+      <marc:subfield code="c">Manuscripts</marc:subfield>
+      <marc:subfield code="d">LJS 101</marc:subfield>
+      <marc:subfield code="e">available</marc:subfield>
+      <marc:subfield code="f">1</marc:subfield>
+      <marc:subfield code="g">0</marc:subfield>
+      <marc:subfield code="j">scmss</marc:subfield>
+      <marc:subfield code="k">8</marc:subfield>
+      <marc:subfield code="p">1</marc:subfield>
+      <marc:subfield code="q">Kislak Center for Special Collections, Rare Books and Manuscripts</marc:subfield>
+    </marc:datafield>
     <marc:holdings>
       <marc:holding>
         <marc:holding_id>22335156650003681</marc:holding_id>

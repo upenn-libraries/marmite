@@ -27,10 +27,9 @@ class AlmaBib
     move_collection_names
     copy_holdings
 
-    # e.g., remove Alma availability nodes
+    # Removing some Alma-specific nodes we don't want to expose.
     @record.search('//record/datafield[@tag="INT"]').remove
     @record.search('//record/datafield[@tag="INST"]').remove
-    @record.search('//record/datafield[@tag="AVA"]').remove
 
     new_marcxml
   rescue StandardError => e
@@ -54,6 +53,9 @@ class AlmaBib
     }.to_xml
   end
 
+  # Repackaging holding information. This is legacy code, in the future we would want to pull directly from
+  # the AVA datafield. Documentation for the AVA field is located here:
+  # https://developers.exlibrisgroup.com/alma/apis/docs/bibs/R0VUIC9hbG1hd3MvdjEvYmlicw==/
   def copy_holdings
     Nokogiri::XML::Builder.with(@doc.at('record')) do |xml|
       xml.holdings do
