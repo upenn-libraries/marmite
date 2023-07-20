@@ -17,123 +17,98 @@ class AlmaBib
     raise MarcTransformationError, "MARC transformation error: #{e.message}"
   end
 
-  # crazy XML parsing and restructuring
-  # TODO: refactor so that it's more clear what transformations are
-  #       being applied to this XML (and why?)
+  # Transforming MARCXML provided by Alma. Removing/fixing custom Penn metadata practices that lead to undesirable
+  # results when metadata is used by external systems.
+  #
   # @return [String] transformed XML
   def transform
-    holdings = extract_holdings
-    unsanitized_values = handle_unsanitized_values
-
-    # remove some nodes from the xml based on xpath expressions
-    # would be helpful to wrap these in descriptive methods
-    @record.search('//record/datafield[@tag="650"]/subfield[@code="a"][starts-with(text(), "CHR ")]').remove
-    @record.search('//record/datafield[@tag="650"]/subfield[@code="a"][starts-with(text(), "PRO ")]').remove
-    @record.search('//record/datafield[@tag="650"][not(node())]').remove
+    remove_custom_chronology_value
+    move_custom_provenance_value
+    move_collection_names
+    copy_holdings
 
     # e.g., remove Alma availability nodes
     @record.search('//record/datafield[@tag="INT"]').remove
     @record.search('//record/datafield[@tag="INST"]').remove
     @record.search('//record/datafield[@tag="AVA"]').remove
 
-    collection_names = extract_collection_names
-
-    # add back collection names to 773.....
-    if collection_names.any?
-      collection_names.each do |cn|
-        Nokogiri::XML::Builder.with(@doc.at('record')) do |xml|
-          xml.datafield('ind1' => '0', 'ind2' => '0', 'tag' => '773') {
-            xml.subfield(cn, 'code' => 't')
-          }
-        end
-      end
-    end
-
-    new_marcxml(holdings)
+    new_marcxml
   rescue StandardError => e
     raise MarcTransformationError, "MARC transformation error: #{e.message}"
   end
 
   private
 
-  def new_marcxml(holdings)
-    builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
+  def new_marcxml
+    Nokogiri::XML::Builder.new(encoding: 'UTF-8') { |xml|
       xml['marc'].records('xmlns:marc' => 'http://www.loc.gov/MARC21/slim',
                           'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
-                          'xsi:schemaLocation' => 'http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd') {
-        xml.record {
+                          'xsi:schemaLocation' => 'http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd') do
+        xml.record do
           xml << @record.xpath('//record/leader').to_xml
           xml << @record.xpath('//record/controlfield').to_xml
-          @record.xpath('//datafield').each do |datafield|
-            xml << datafield.to_xml
+          xml << @record.xpath('//record/datafield').to_xml
+          xml << @record.xpath('//record/holdings').to_xml
+        end
+      end
+    }.to_xml
+  end
+
+  def copy_holdings
+    Nokogiri::XML::Builder.with(@doc.at('record')) do |xml|
+      xml.holdings do
+        @record.xpath('//record/datafield[@tag="AVA"]').each do |holding|
+          next if holding.at_xpath('subfield[@code="8"]').blank?
+
+          xml.holding do
+            xml.holding_id holding.at_xpath('subfield[@code="8"]')&.text
+            xml.call_number holding.at_xpath('subfield[@code="d"]')&.text
+            xml.library holding.at_xpath('subfield[@code="b"]')&.text
+            xml.location holding.at_xpath('subfield[@code="j"]')&.text
           end
-          xml.holdings {
-            holdings.each do |holding|
-              xml.holding {
-                xml.holding_id holding[:holding_id] unless holding[:holding_id].nil?
-                xml.call_number holding[:call_number] unless holding[:call_number].nil?
-                xml.library holding[:library] unless holding[:library].nil?
-                xml.location holding[:location] unless holding[:location].nil?
-              }
-            end
-          }
-        }
-      }
-    end
-    builder.to_xml
-  end
-
-  # @return [Array]
-  def extract_holdings
-    holdings = []
-    # Build holdings hash by iterating through 'special' AVA Alma MARC fields
-    for i in 0..(@record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="8"]').children.length - 1)
-      holding_hash = {}
-      holding_hash[:holding_id] = @record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="8"]').children[i].text unless @record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="8"]').children[i].nil?
-      holding_hash[:call_number] = @record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="d"]').children[i].text unless @record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="d"]').children[i].nil?
-      holding_hash[:library] = @record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="b"]').children[i].text unless @record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="b"]').children[i].nil?
-      holding_hash[:location] = @record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="j"]').children[i].text unless @record.xpath('//record/datafield[@tag="AVA"]/subfield[@code="j"]').children[i].nil?
-      holdings << holding_hash
-    end
-    holdings
-  end
-
-  # @return [Array]
-  def extract_collection_names
-    collection_names = []
-    @record.xpath('//record/datafield[@tag="710"]').each do |xml_snippet|
-      if xml_snippet.children.search('subfield[@code="5"]').any?
-        xml_snippet.children.search('subfield[@code="a"]').children.each do |c_name|
-          collection_names << c_name.text
         end
       end
     end
-    collection_names
   end
 
-  # @return [Array]
-  def handle_unsanitized_values
-    unsanitized_values = []
-    for i in 0..(@record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children.length-1)
-      if @record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.start_with?('PRO ')
-        unsanitized_values << @record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text
-        provenance = @record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.gsub(/^PRO /, '')
-        Nokogiri::XML::Builder.with(@doc.at('record')) do |xml|
-          xml.datafield('ind1' => ' ', 'ind2' => ' ', 'tag' => '561') {
-            xml.subfield(provenance, 'code' => 'a')
-          }
+  # Moving Penn collection names from 710$a to 773$t
+  def move_collection_names
+    @record.xpath('//record/datafield[@tag="710"]/subfield[@code="5"]').each do |subfield|
+      collection = subfield.parent.at_xpath('subfield[@code="a"]').text
+
+      Nokogiri::XML::Builder.with(@doc.at('record')) do |xml|
+        xml.datafield('ind1' => '0', 'ind2' => '0', 'tag' => '773') do
+          xml.subfield(collection, 'code' => 't')
         end
       end
-      if @record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.start_with?('CHR ')
-        unsanitized_values << @record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text
-        date = @record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').children[i].text.gsub(/^CHR /, '')
-        Nokogiri::XML::Builder.with(@doc.at('record')) do |xml|
-          xml.datafield('ind1' => ' ', 'ind2' => ' ', 'tag' => '651') {
-            xml.subfield(date, 'code' => 'y')
-          }
-        end
-      end
+
+      subfield.parent.remove
     end
-    unsanitized_values
+  end
+
+  # Chronology values stored in the 650 field have to be removed because otherwise external
+  # systems treat them as subjects.
+  def remove_custom_chronology_value
+    @record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').each do |subfield|
+      subfield.parent.remove if subfield.text.start_with?('CHR ')
+    end
+  end
+
+  # Provenance values stored on the 650 have to be moved to a more appropriate place.
+  def move_custom_provenance_value
+    @record.xpath('//record/datafield[@tag="650"]/subfield[@code="a"]').each do |subfield|
+      next unless subfield.text.start_with?('PRO ')
+
+      # Move value to 561$a
+      provenance = subfield.text.gsub(/^PRO /, '')
+      Nokogiri::XML::Builder.with(@doc.at('record')) do |xml|
+        xml.datafield('ind1' => ' ', 'ind2' => ' ', 'tag' => '561') do
+          xml.subfield(provenance, 'code' => 'a')
+        end
+      end
+
+      # Remove field
+      subfield.parent.remove
+    end
   end
 end
