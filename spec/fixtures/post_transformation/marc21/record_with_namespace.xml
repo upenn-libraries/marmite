@@ -125,6 +125,22 @@
       <marc:subfield code="7">ari</marc:subfield>
       <marc:subfield code="8">OCLC</marc:subfield>
     </marc:datafield>
+    <marc:datafield ind1=" " ind2=" " tag="AVA">
+      <marc:subfield code="0">9924634593503681</marc:subfield>
+      <marc:subfield code="8">22385758500003681</marc:subfield>
+      <marc:subfield code="a">01UPENN_INST</marc:subfield>
+      <marc:subfield code="b">KatzLib</marc:subfield>
+      <marc:subfield code="c">Rare Book Giant</marc:subfield>
+      <marc:subfield code="d">DS109 .G74 1865</marc:subfield>
+      <marc:subfield code="e">available</marc:subfield>
+      <marc:subfield code="f">2</marc:subfield>
+      <marc:subfield code="g">0</marc:subfield>
+      <marc:subfield code="j">cjsrargiga</marc:subfield>
+      <marc:subfield code="k">0</marc:subfield>
+      <marc:subfield code="p">1</marc:subfield>
+      <marc:subfield code="q">Library at the Katz Center</marc:subfield>
+      <marc:subfield code="t">v.1-2</marc:subfield>
+    </marc:datafield>
     <marc:holdings>
       <marc:holding>
         <marc:holding_id>22385758500003681</marc:holding_id>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bibs total_record_count="1">
+  <bib>
+    <mms_id>993181873503681</mms_id>
+    <record_format>marc21
+    </record_format>
+    <linked_record_id/>
+    <title>An account of the Epidemic Fever as it occurred in Botetourt County Virginia during the summer of the year eighteen hundred and twenty-one /</title>
+    <author>Lynch, Micajah T.,</author>
+    <network_numbers>
+      <network_number>(PU)318187-penndb-Voyager</network_number>
+      <network_number>(OCoLC)ocm13610637</network_number>
+      <network_number>(OCoLC)13610637</network_number>
+    </network_numbers>
+    <date_of_publication>1823.</date_of_publication>
+    <publisher_const>Dissertation (MD)--School of Medicine University of Pennsylvania 1823</publisher_const>
+    <holdings link="https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs/993181873503681/holdings"/>
+    <created_by>import</created_by>
+    <created_date>2017-06-06Z</created_date>
+    <last_modified_by>System</last_modified_by>
+    <last_modified_date>2022-12-01Z</last_modified_date>
+    <suppress_from_publishing>false</suppress_from_publishing>
+    <suppress_from_external_search>false</suppress_from_external_search>
+    <suppress_from_metadoor>false</suppress_from_metadoor>
+    <rank>65</rank>
+    <sync_with_oclc>BIBS</sync_with_oclc>
+    <sync_with_libraries_australia>NONE</sync_with_libraries_australia>
+    <originating_system>OTHER</originating_system>
+    <originating_system_id>318187-penndb</originating_system_id>
+    <cataloging_level desc="Default Level">00</cataloging_level>
+    <brief_level desc="06- Less-than-full added from a batch process">06</brief_level>
+    <record>
+      <leader>02114ctm a2200421Mi 4500</leader>
+      <controlfield tag="001">993181873503681</controlfield>
+      <controlfield tag="005">20220609153903.0</controlfield>
+      <controlfield tag="008">830225s1823    xx       m    000 0 eng d</controlfield>
+      <datafield ind1=" " ind2=" " tag="035">
+        <subfield code="a">(OCoLC)13610637</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="035">
+        <subfield code="a">(OCoLC)ocm13610637</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="035">
+        <subfield code="a">(PU)318187-penndb-Voyager</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="040">
+        <subfield code="a">PAU</subfield>
+        <subfield code="b">eng</subfield>
+        <subfield code="e">rda</subfield>
+        <subfield code="c">PAU</subfield>
+        <subfield code="d">OCLCQ</subfield>
+        <subfield code="d">OCLCO</subfield>
+        <subfield code="d">OCLCF</subfield>
+      </datafield>
+      <datafield ind1="1" ind2=" " tag="100">
+        <subfield code="a">Lynch, Micajah T.,</subfield>
+        <subfield code="e">author.</subfield>
+      </datafield>
+      <datafield ind1="1" ind2="3" tag="245">
+        <subfield code="a">An account of the Epidemic Fever as it occurred in Botetourt County Virginia during the summer of the year eighteen hundred and twenty-one /</subfield>
+        <subfield code="c">By M. T. Lynch.</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="0" tag="264">
+        <subfield code="c">1823.</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="300">
+        <subfield code="a">10 leaves ;</subfield>
+        <subfield code="c">25 cm</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="336">
+        <subfield code="a">text</subfield>
+        <subfield code="b">txt</subfield>
+        <subfield code="2">rdacontent</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="337">
+        <subfield code="a">unmediated</subfield>
+        <subfield code="b">n</subfield>
+        <subfield code="2">rdamedia</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="338">
+        <subfield code="a">volume</subfield>
+        <subfield code="b">nc</subfield>
+        <subfield code="2">rdacarrier</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="502">
+        <subfield code="a">Dissertation (M.D.)--School of Medicine, University of Pennsylvania, 1823.</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="500">
+        <subfield code="a">"Passed March 22d 1823"--title page.</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="500">
+        <subfield code="a">Volume 16 number 4 in a collection of University of Pennsylvania medical dissertations bound together.</subfield></datafield><datafield ind1=" " ind2="0" tag="650"><subfield code="a">Fever</subfield>
+      <subfield code="z">Virginia</subfield>
+      <subfield code="z">Botetourt County.</subfield>
+    </datafield><datafield ind1=" " ind2="7" tag="650">
+      <subfield code="a">Fever.</subfield>
+      <subfield code="2">fast</subfield>
+      <subfield code="0">http://id.worldcat.org/fast/923528</subfield>
+    </datafield>
+      <datafield ind1=" " ind2="7" tag="651">
+        <subfield code="a">Virginia</subfield>
+        <subfield code="z">Botetourt County.</subfield>
+        <subfield code="2">fast</subfield>
+        <subfield code="0">http://id.worldcat.org/fast/1207230</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="7" tag="655">
+        <subfield code="a">Academic theses.</subfield>
+        <subfield code="2">lcgft</subfield>
+        <subfield code="0">http://id.loc.gov/authorities/genreForms/gf2014026039</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="7" tag="655">
+        <subfield code="a">Academic theses.</subfield>
+        <subfield code="2">fast</subfield>
+        <subfield code="0">http://id.worldcat.org/fast/1726453</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="0" tag="655">
+        <subfield code="a">Manuscripts, American.</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="4" tag="650">
+        <subfield code="a">CHR 1823</subfield>
+        <subfield code="5">PU</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="4" tag="650">
+        <subfield code="a">Medicine</subfield>
+        <subfield code="x">Penn dissertations.</subfield>
+      </datafield><datafield ind1=" " ind2="4" tag="650">
+      <subfield code="a">Penn dissertations</subfield>
+      <subfield code="x">Medicine.</subfield>
+    </datafield>
+      <datafield ind1="2" ind2=" " tag="710">
+        <subfield code="a">University of Pennsylvania Medical Dissertation Digital Library.</subfield>
+        <subfield code="5">PU</subfield>
+      </datafield>
+      <datafield ind1="2" ind2=" " tag="710">
+        <subfield code="a">University of Pennsylvania.</subfield>
+        <subfield code="b">School of Medicine,</subfield>
+        <subfield code="e">degree granting institution.</subfield>
+        <subfield code="0">http://id.loc.gov/authorities/names/n79066161</subfield>
+      </datafield>
+      <datafield ind1="4" ind2="1" tag="856">
+        <subfield code="z">Facsimile</subfield>
+        <subfield code="u">https://colenda.library.upenn.edu/catalog/81431-p3m902c6b</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="852">
+        <subfield code="b">Kislak Center for Special Collections, Rare Books and Manuscripts</subfield>
+        <subfield code="a">University of Pennsylvania</subfield>
+        <subfield code="e">3420 Walnut Street, Philadelphia, Pennsylvania 19104-6206.</subfield>
+        <subfield code="j">378.748 POM 16.4</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="902">
+        <subfield code="a">MARCIVE 2022</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="950">
+        <subfield code="l">RBC</subfield>
+        <subfield code="a">378.748</subfield>
+        <subfield code="b">POM16.4</subfield>
+        <subfield code="i">02/25/83 C</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="955">
+        <subfield code="l">RBC</subfield>
+        <subfield code="c">1</subfield>
+        <subfield code="q">g.Univ.</subfield>
+        <subfield code="i">02/25/83 C</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="AVA">
+        <subfield code="0">993181873503681</subfield>
+        <subfield code="8">22332490830003681</subfield>
+        <subfield code="a">01UPENN_INST</subfield>
+        <subfield code="b">KislakCntr</subfield>
+        <subfield code="c">Rare Book Collection</subfield>
+        <subfield code="d">378.748 POM 16.4</subfield>
+        <subfield code="e">available</subfield>
+        <subfield code="f">1</subfield>
+        <subfield code="g">0</subfield>
+        <subfield code="j">scrare</subfield>
+        <subfield code="k">1</subfield>
+        <subfield code="p">1</subfield>
+        <subfield code="q">Kislak Center for Special Collections, Rare Books and Manuscripts</subfield>
+      </datafield>
+    </record>
+  </bib>
+</bibs>
